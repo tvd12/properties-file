@@ -29,7 +29,6 @@ public class ClassFetcher {
 	/**
 	 * Read a value by key and return a class that has name is the value
 	 * 
-	 * @param T type of class
 	 * @param key corresponding class name (value in properties file)
 	 * @return a Class object
 	 * @throws PropertiesFileException when have no classes 
