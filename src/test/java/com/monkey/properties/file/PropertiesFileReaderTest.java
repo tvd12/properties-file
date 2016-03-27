@@ -4,19 +4,19 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.monkey.properties.file.PropertiesFileException;
-import com.monkey.properties.file.PropertiesFileReader;
+import com.tvd12.properties.file.PropertiesFileException;
+import com.tvd12.properties.file.PropertiesFileReader;
 
 public class PropertiesFileReaderTest {
 
 	@Test
 	public void testWithValidData() throws PropertiesFileException {
-		assertNotNull(PropertiesFileReader.read("classes.properties"));
+		assertNotNull(PropertiesFileReader.read(getClass(), "classes.properties"));
 	}
 	
 	@Test(expected = PropertiesFileException.class)
 	public void testWithInvalidData() throws PropertiesFileException {
-		PropertiesFileReader.read("classes1.properties");
+		PropertiesFileReader.read(getClass(), "classes1.properties");
 	}
 	
 }
