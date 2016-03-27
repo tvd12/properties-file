@@ -17,8 +17,8 @@ public class InstanceFactory {
 	/**
 	 * create a factory instance
 	 * 
-	 * @param propertiesFiles
-	 * @return
+	 * @param propertiesFiles list of properties file
+	 * @return: an instance of factory
 	 */
 	public static InstanceFactory newFactory(String... propertiesFiles) {
 		return new InstanceFactory(propertiesFiles);
@@ -39,7 +39,7 @@ public class InstanceFactory {
 	/**
 	 * Initialize factory with list of properties files
 	 * 
-	 * @param propertiesFiles
+	 * @param propertiesFiles list of properties file
 	 */
 	public static void initialize(String...propertiesFiles) {
 		getInstance(propertiesFiles);
@@ -48,8 +48,8 @@ public class InstanceFactory {
 	/**
 	 * Create new instance of class or interface
 	 * 
-	 * @param clazz
-	 * @return
+	 * @param clazz type of class of interface
+	 * @return an instance
 	 */
 	public static <T> T newInstance(Class<T> clazz) {
 		return defaultInstance.getInstance(clazz);
@@ -59,7 +59,7 @@ public class InstanceFactory {
 	 * Factory never throws exceptions, but it save errors
 	 * that's generated in creating instance
 	 * 
-	 * @return
+	 * @return list of errors
 	 */
 	public static List<Exception> getErrors() {
 		return defaultInstance.getExceptions();
@@ -68,8 +68,8 @@ public class InstanceFactory {
 	/**
 	 * Create new instance of class or interface
 	 * 
-	 * @param clazz
-	 * @return
+	 * @param clazz type of class or interface
+	 * @return an instance
 	 */
 	public <T> T getInstance(Class<T> clazz) {
 		String implementationClassName = null;
@@ -119,7 +119,7 @@ public class InstanceFactory {
 	 * Factory never throws exceptions, but it save errors
 	 * that's generated in creating instance
 	 * 
-	 * @return
+	 * @return list of errors
 	 */
 	public List<Exception> getExceptions() {
 		return exceptions;

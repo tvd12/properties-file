@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class PropertiesFileReader {
@@ -14,18 +16,18 @@ public class PropertiesFileReader {
 	/**
 	 * Read properties file in a path
 	 * 
-	 * @param propertiesFilePath
-	 * @return
-	 * @throws PropertiesFileException
+	 * @param propertiesFile properties file path
+	 * @return properties object
+	 * @throws PropertiesFileException when properties file not exists
 	 */
-	public static Properties read(String propertiesFilePath) 
+	public static Properties read(String propertiesFile) 
 			throws PropertiesFileException {
 		Properties prop = null;
 		try {
 			
-			InputStream inputStream = getResourceAsStream(propertiesFilePath); 
+			InputStream inputStream = getResourceAsStream(propertiesFile); 
 			if(inputStream == null)
-				inputStream = getInputStreamByAbsolutePath(propertiesFilePath);
+				inputStream = getInputStreamByAbsolutePath(propertiesFile);
 			
 			if(inputStream != null) 
 				(prop = new Properties()).load(inputStream);
@@ -34,21 +36,37 @@ public class PropertiesFileReader {
 			
 		} 
 		catch (IOException e) {
-			String msg = "Can not read properties file in path " + propertiesFilePath;
+			String msg = "Can not read properties file in path " + propertiesFile;
 			throw new PropertiesFileException(msg, e);
 		}
 	}
 	
 	/**
+	 * Read properties files
+	 * 
+	 * @param propertiesFiles list of properties files
+	 * @return list of properties object
+	 * @throws PropertiesFileException when properties file not exists
+	 */
+	public static List<Properties> read(String... propertiesFiles) 
+			throws PropertiesFileException {
+		List<Properties> result = new ArrayList<>();
+		for(String file : propertiesFiles) {
+			result.add(read(file));
+		}
+		return result;
+	}
+	
+	/**
 	 * Get a input stream from a file if it exists and be readable 
 	 * 
-	 * @param propertiesFilePath
-	 * @return
-	 * @throws FileNotFoundException
+	 * @param propertiesFile properties file path
+	 * @return an input stream object
+	 * @throws FileNotFoundException when properties file not exists
 	 */
-	private static InputStream getInputStreamByAbsolutePath(String propertiesFilePath) 
+	private static InputStream getInputStreamByAbsolutePath(String propertiesFile) 
 			throws FileNotFoundException {
-		File file = new File(propertiesFilePath);
+		File file = new File(propertiesFile);
 		InputStream inputStream = null;
 		if(file.exists()) 
 			inputStream = new FileInputStream(file);
@@ -58,19 +76,19 @@ public class PropertiesFileReader {
 	/**
 	 * Get a input stream from a file in project
 	 * 
-	 * @param propertiesFilePath
-	 * @return
-	 * @throws IOException 
+	 * @param propertiesFile properties file in class path
+	 * @return an inputstream object
+	 * @throws IOException when properties file not exists 
 	 */
-	private static InputStream getResourceAsStream(String propertiesFilePath) 
+	private static InputStream getResourceAsStream(String propertiesFile) 
 			throws IOException {
 		InputStream ip = PropertiesFileReader
 				.class
 				.getClassLoader()
-				.getResourceAsStream(propertiesFilePath);
+				.getResourceAsStream(propertiesFile);
 		if(ip == null)
 			throw new IOException("Please check file " 
-					+ propertiesFilePath
+					+ propertiesFile
 					+ " in classpath again");
 		return ip;
 	}
