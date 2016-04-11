@@ -14,7 +14,7 @@ public class InstanceFactoryTest {
 
 	@Before
 	public void init() {
-		InstanceFactory.initialize("classes.properties");
+		InstanceFactory.initialize(getClass(), "classes.properties");
 	}
 	
 	@Test
@@ -39,7 +39,7 @@ public class InstanceFactoryTest {
 	
 	@Test
 	public void testInstance() {
-		InstanceFactory factory = InstanceFactory.create("classes.properties");
+		InstanceFactory factory = InstanceFactory.create(getClass(), "classes.properties");
 		
 		Person person1 = factory.getInstance(Person.class);
 		Person person2 = factory.getInstance(Person.class);

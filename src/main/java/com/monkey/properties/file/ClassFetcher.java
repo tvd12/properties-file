@@ -9,9 +9,9 @@ public class ClassFetcher {
 
 	private List<Properties> propertiesList;
 	
-	private ClassFetcher(String... propertiesFiles) 
+	private ClassFetcher(Class<?> entry, String... propertiesFiles) 
 			throws PropertiesFileException {
-		propertiesList = PropertiesFileReader.read(propertiesFiles);
+		propertiesList = PropertiesFileReader.read(entry, propertiesFiles);
 	}
 	
 	/**
@@ -21,9 +21,9 @@ public class ClassFetcher {
 	 * @return an instance
 	 * @throws PropertiesFileException when can not read a properties file
 	 */
-	public static ClassFetcher newInstance(String... propertiesFiles) 
+	public static ClassFetcher newInstance(Class<?> entry, String... propertiesFiles) 
 			throws PropertiesFileException {
-		return new ClassFetcher(propertiesFiles);
+		return new ClassFetcher(entry, propertiesFiles);
 	}
 	
 	/**

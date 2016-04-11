@@ -11,12 +11,12 @@ public class PropertiesFileReaderTest {
 
 	@Test
 	public void testWithValidData() throws PropertiesFileException {
-		assertNotNull(PropertiesFileReader.read("classes.properties"));
+		assertNotNull(PropertiesFileReader.read(getClass(), "classes.properties"));
 	}
 	
 	@Test(expected = PropertiesFileException.class)
 	public void testWithInvalidData() throws PropertiesFileException {
-		PropertiesFileReader.read("classes1.properties");
+		PropertiesFileReader.read(getClass(), "classes1.properties");
 	}
 	
 }

@@ -16,8 +16,8 @@ public class InstanceFactory {
 	public static final int SINGLETON = 0x1;
 	public static final int PROTOTYPE = 0x2;
 	
-	private InstanceFactory(String... propertiesFiles) {
-		this.init(propertiesFiles);
+	private InstanceFactory(Class<?> entry, String... propertiesFiles) {
+		this.init(entry, propertiesFiles);
 	}
 	
 	/**
@@ -26,15 +26,15 @@ public class InstanceFactory {
 	 * @param propertiesFiles list of properties file
 	 * @return: an instance of factory
 	 */
-	public static InstanceFactory create(String... propertiesFiles) {
-		return new InstanceFactory(propertiesFiles);
+	public static InstanceFactory create(Class<?> entry, String... propertiesFiles) {
+		return new InstanceFactory(entry, propertiesFiles);
 	}
 	
-	private static InstanceFactory getInstance(String... propertiesFiles) {
+	private static InstanceFactory getInstance(Class<?> entry, String... propertiesFiles) {
 		if(defaultInstance == null) {
 			synchronized (InstanceFactory.class) {
 				if(defaultInstance == null) {
-					defaultInstance = new InstanceFactory(propertiesFiles);
+					defaultInstance = new InstanceFactory(entry, propertiesFiles);
 				}
 			}
 		}
@@ -47,8 +47,8 @@ public class InstanceFactory {
 	 * 
 	 * @param propertiesFiles list of properties file
 	 */
-	public static void initialize(String...propertiesFiles) {
-		getInstance(propertiesFiles);
+	public static void initialize(Class<?> entry, String...propertiesFiles) {
+		getInstance(entry, propertiesFiles);
 	}
 	
 	/**
@@ -147,18 +147,18 @@ public class InstanceFactory {
 		return object;
 	}
 	
-	private void init(String... propertiesFiles) {
+	private void init(Class<?> entry, String... propertiesFiles) {
 		for(String file : propertiesFiles) {
-			Properties properties =  readPropertiesFile(file);
+			Properties properties =  readPropertiesFile(entry, file);
 			if(properties != null) 
 				propertiesList.add(properties);
 		}
 	}
 	
-	private Properties readPropertiesFile(String file) {
+	private Properties readPropertiesFile(Class<?> entry, String file) {
 		Properties properties = null;
 		try {
-			properties = PropertiesFileReader.read(file);
+			properties = PropertiesFileReader.read(entry, file);
 		} catch (PropertiesFileException e) {
 			addException(e);
 		}

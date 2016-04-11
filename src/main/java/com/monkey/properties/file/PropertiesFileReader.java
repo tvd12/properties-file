@@ -18,14 +18,15 @@ public class PropertiesFileReader {
 	 * 
 	 * @param propertiesFile properties file path
 	 * @return properties object
+	 * @param entry which class loads properties
 	 * @throws PropertiesFileException when properties file not exists
 	 */
-	public static Properties read(String propertiesFile) 
+	public static Properties read(Class<?> entry, String propertiesFile) 
 			throws PropertiesFileException {
 		Properties prop = null;
 		try {
 			
-			InputStream inputStream = getResourceAsStream(propertiesFile); 
+			InputStream inputStream = getResourceAsStream(entry, propertiesFile); 
 			if(inputStream == null)
 				inputStream = getInputStreamByAbsolutePath(propertiesFile);
 			
@@ -46,13 +47,14 @@ public class PropertiesFileReader {
 	 * 
 	 * @param propertiesFiles list of properties files
 	 * @return list of properties object
+	 * @param entry which class loads properties
 	 * @throws PropertiesFileException when properties file not exists
 	 */
-	public static List<Properties> read(String... propertiesFiles) 
+	public static List<Properties> read(Class<?> entry, String... propertiesFiles) 
 			throws PropertiesFileException {
 		List<Properties> result = new ArrayList<>();
 		for(String file : propertiesFiles) {
-			result.add(read(file));
+			result.add(read(entry, file));
 		}
 		return result;
 	}
@@ -80,12 +82,15 @@ public class PropertiesFileReader {
 	 * @return an inputstream object
 	 * @throws IOException when properties file not exists 
 	 */
-	private static InputStream getResourceAsStream(String propertiesFile) 
-			throws IOException {
-		InputStream ip = PropertiesFileReader
-				.class
+	private static InputStream getResourceAsStream(Class<?> entry,
+			String propertiesFile) 
+					throws IOException {
+		InputStream ip = entry
 				.getClassLoader()
 				.getResourceAsStream(propertiesFile);
+		if(ip == null)
+			ip = entry
+			.getResourceAsStream(propertiesFile);
 		if(ip == null)
 			throw new IOException("Please check file " 
 					+ propertiesFile

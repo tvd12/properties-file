@@ -14,7 +14,7 @@ public class ClassFetcherTest {
 	
 	@Before
 	public void init() throws PropertiesFileException {
-		fetcher = ClassFetcher.newInstance("user_action_handlers.properties");
+		fetcher = ClassFetcher.newInstance(getClass(), "user_action_handlers.properties");
 	}
 	
 	@Test
