@@ -1,14 +1,20 @@
 package com.monkey.properties.file;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class InstanceFactory {
 	
 	private static InstanceFactory defaultInstance;
 	private List<Properties> propertiesList = new ArrayList<>();
+	private Map<Class<?>, Object> singletons = new HashMap<>();
 	private static List<Exception> exceptions = new ArrayList<>();
+	
+	public static final int SINGLETON = 0x1;
+	public static final int PROTOTYPE = 0x2;
 	
 	private InstanceFactory(String... propertiesFiles) {
 		this.init(propertiesFiles);
@@ -20,7 +26,7 @@ public class InstanceFactory {
 	 * @param propertiesFiles list of properties file
 	 * @return: an instance of factory
 	 */
-	public static InstanceFactory newFactory(String... propertiesFiles) {
+	public static InstanceFactory create(String... propertiesFiles) {
 		return new InstanceFactory(propertiesFiles);
 	}
 	
@@ -72,6 +78,37 @@ public class InstanceFactory {
 	 * @return an instance
 	 */
 	public <T> T getInstance(Class<T> clazz) {
+		return getInstance(clazz, PROTOTYPE);
+	}
+	
+	/**
+	 * get singleton instance
+	 * 
+	 * @param clazz interface or class
+	 * @return a singleton instance
+	 */
+	public static <T> T getSingleton(Class<T> clazz) {
+		return defaultInstance.getSingletonInstance(clazz);
+	}
+	
+	/**
+	 * get singleton instance
+	 * 
+	 * @param clazz interface or class
+	 * @return a singleton instance
+	 */
+	public <T> T getSingletonInstance(Class<T> clazz) {
+		Object result = checkSingleton(clazz);
+		return clazz.cast((result == null)
+				? getInstance(clazz, SINGLETON)
+				: result);
+	}
+	
+	private <T> Object checkSingleton(Class<T> clazz) {
+		return singletons.get(clazz);
+	}
+	
+	private <T> T getInstance(Class<T> clazz, int type) {
 		String implementationClassName = null;
 		for(Properties prop : propertiesList) {
 			implementationClassName = prop.getProperty(clazz.getName());
@@ -80,8 +117,12 @@ public class InstanceFactory {
 			break;
 		}
 		try {
-			return clazz.cast(Class.forName(implementationClassName)
-						.newInstance());
+			Class<?> implClazz = Class.forName(implementationClassName);
+			return clazz.cast((type == SINGLETON) 
+					? createSingleton(clazz, implClazz)
+					: implClazz.newInstance());
+			
+						
 		} catch (InstantiationException 
 				| IllegalAccessException 
 				| ClassNotFoundException e) {
@@ -89,6 +130,21 @@ public class InstanceFactory {
 			addException(new PropertiesFileException(msg, e));
 		}
 		return null;
+	}
+	
+	private <T> Object createSingleton(Class<T> baseClazz, Class<?> implClazz) 
+			throws InstantiationException, IllegalAccessException {
+		Object object = singletons.get(baseClazz);
+		if(object == null) {
+			synchronized (implClazz) {
+				object = singletons.get(baseClazz);
+				if(object == null) {
+					object = implClazz.newInstance();
+					singletons.put(baseClazz, object);
+				}
+			}
+		}
+		return object;
 	}
 	
 	private void init(String... propertiesFiles) {

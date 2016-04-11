@@ -53,12 +53,11 @@ public class ClassFetcher {
 	 * @throws PropertiesFileException when have no classes 
 	 * that's corresponding with key or class not exists
 	 */
-	public <T> Map<Object, Class<T>> getClasses() throws PropertiesFileException {
-		Map<Object, Class<T>> result = new HashMap<>();
+	public Map<Object, Class<?>> getClasses() throws PropertiesFileException {
+		Map<Object, Class<?>> result = new HashMap<>();
 		for(Properties prop : propertiesList) {
 			for(Object key : prop.keySet()) {
-				Class<T> clazz = getClass(prop, key);
-				result.put(key, clazz);
+				result.put(key, getClass(prop, key));
 			}
 		}
 		
