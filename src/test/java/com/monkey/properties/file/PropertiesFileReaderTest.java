@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.monkey.properties.file.PropertiesFileException;
-import com.monkey.properties.file.PropertiesFileReader;
+import com.tvd12.properties.file.PropertiesFileException;
+import com.tvd12.properties.file.PropertiesFileReader;
 
 public class PropertiesFileReaderTest {
 

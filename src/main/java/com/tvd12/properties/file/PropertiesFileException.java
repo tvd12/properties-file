@@ -1,4 +1,4 @@
-package com.monkey.properties.file;
+package com.tvd12.properties.file;
 
 public class PropertiesFileException extends Exception {
 	private static final long serialVersionUID = -2357054884838061118L;

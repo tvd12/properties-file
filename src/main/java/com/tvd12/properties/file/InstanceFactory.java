@@ -1,4 +1,4 @@
-package com.monkey.properties.file;
+package com.tvd12.properties.file;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +21,12 @@ public class InstanceFactory {
 	}
 	
 	/**
-	 * create a factory instance
+	 * Create a factory instance
 	 * 
+	 * @param entry which class you want to create a factory instance, 
+	 * because maybe InstanceFactory and properties file that you want 
+	 * to read be loaded from difference class loader, so we need
+	 * this param to connect to propertiesFiles's class loader 
 	 * @param propertiesFiles list of properties file
 	 * @return: an instance of factory
 	 */
@@ -44,6 +48,11 @@ public class InstanceFactory {
 	
 	/**
 	 * Initialize factory with list of properties files
+	 * 
+	 * * @param entry which class you want to init a factory instance, 
+     * because maybe InstanceFactory and properties file that you want 
+     * to read be loaded from difference class loader, so we need
+     * this param to connect to propertiesFiles's class loader
 	 * 
 	 * @param propertiesFiles list of properties file
 	 */

@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import com.monkey.properties.file.model.Constants;
 import com.monkey.properties.file.model.UserActionHandler;
+import com.tvd12.properties.file.ClassFetcher;
+import com.tvd12.properties.file.PropertiesFileException;
 
 import static org.junit.Assert.*;
 

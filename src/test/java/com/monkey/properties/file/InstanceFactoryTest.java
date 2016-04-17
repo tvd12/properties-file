@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.monkey.properties.file.model.Person;
+import com.tvd12.properties.file.InstanceFactory;
 
 public class InstanceFactoryTest {
 
