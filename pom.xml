@@ -9,7 +9,7 @@
 
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>properties-file</name>
