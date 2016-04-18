@@ -1,14 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+        <groupId>com.jcabi</groupId>
+        <artifactId>parent</artifactId>
+        <version>0.43</version>
+    </parent>
 
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>properties-file</name>
-	<url>http://maven.apache.org</url>
+	<url>http://www.tvd12.com/java/projects/properties-file</url>
 	<description>
 		A project support for interact with properties file
 	</description>
@@ -51,6 +56,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+<!-- 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -59,6 +65,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+-->
 
 	<build>
 		<pluginManagement>
@@ -68,13 +75,13 @@
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.5.1</version>
 					<configuration>
-						<!-- or whatever version you use -->
 						<source>1.7</source>
 						<target>1.7</target>
 					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
+<!-- 		
 		<plugins>
 			<plugin>
 				<artifactId>maven-gpg-plugin</artifactId>
@@ -148,5 +155,6 @@
 				</executions>
 			</plugin>
 		</plugins>
+-->
 	</build>
 </project>
