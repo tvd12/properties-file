@@ -36,7 +36,7 @@ Let's say you have a properties file that save pairs of interface and implementa
 ```java
 	com.tvd12.interface.IClassA=com.tvd12.implementation.ClassAImpl
 	com.tvd12.interface.IClassB=com.tvd12.implementation.ClassBImpl
-```java
+```
 and you want to create an instance of interface, you can do:
 Step 1: Init a factory, example:
 ```java
