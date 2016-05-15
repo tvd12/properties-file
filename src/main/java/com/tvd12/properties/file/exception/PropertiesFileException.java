@@ -1,5 +1,11 @@
-package com.tvd12.properties.file;
+package com.tvd12.properties.file.exception;
 
+/**
+ * An api exception
+ * 
+ * @author tavandung12
+ *
+ */
 public class PropertiesFileException extends Exception {
 	private static final long serialVersionUID = -2357054884838061118L;
 

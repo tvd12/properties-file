@@ -1,6 +1,6 @@
-package com.monkey.properties.file.model.impl;
+package com.monkey.properties.file.testing.model.impl;
 
-import com.monkey.properties.file.model.UserActionHandler;
+import com.monkey.properties.file.testing.model.UserActionHandler;
 
 public class UserBettingHandler implements UserActionHandler {
 
