@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Lists;
 import com.monkey.properties.file.testing.model.Constants;
 import com.monkey.properties.file.testing.model.UserActionHandler;
 import com.tvd12.properties.file.exception.PropertiesFileException;
@@ -25,6 +26,7 @@ public class ClassFetcherTest {
 	            .context(getClass())
 	            .file("user_action_handlers.properties")
 	            .files("user_action_handlers2.properties")
+	            .files(Lists.newArrayList("user_action_handlers2.properties"))
 	            .reader(new BaseFileReader())
 	            .build();
 	}

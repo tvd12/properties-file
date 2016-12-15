@@ -107,6 +107,7 @@ public class PropertiesBean extends BeanMap {
     /**
      * @see org.apache.commons.beanutils.BeanMap#getBean()
      * 
+     * @param <T> the type of bean object
      * @return mapped object
      */
     @SuppressWarnings("unchecked")

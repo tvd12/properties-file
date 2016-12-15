@@ -6,7 +6,7 @@ package com.tvd12.properties.file.exception;
  * @author tavandung12
  *
  */
-public class PropertiesFileException extends Exception {
+public class PropertiesFileException extends IllegalStateException {
 	private static final long serialVersionUID = -2357054884838061118L;
 
 	/**

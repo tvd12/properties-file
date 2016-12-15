@@ -118,6 +118,7 @@ public class PropertiesMapper {
     /**
      * map properties to object
      * 
+     * @param <T> the type of object
      * @return object after mapped
      */
     public <T> T map() {

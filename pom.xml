@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-        <groupId>com.jcabi</groupId>
-        <artifactId>parent</artifactId>
-        <version>0.43</version>
-    </parent>
+		<groupId>com.jcabi</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.43</version>
+	</parent>
 
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>properties-file</name>
@@ -17,18 +17,18 @@
 	<description>
 		A project support for interact with properties file
 	</description>
-	
+
 	<organization>
 		<name>Young Monkeys</name>
 		<url>http://www.tvd12.com</url>
 	</organization>
-	
+
 	<properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss</maven.build.timestamp.format>
-    </properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss</maven.build.timestamp.format>
+	</properties>
 
 	<licenses>
 		<license>
@@ -46,30 +46,30 @@
 			<organizationUrl>http://www.tvd12.com</organizationUrl>
 		</developer>
 	</developers>
-	
+
 	<scm>
 		<connection>scm:git:git@github.com:tavandung12/properties-file.git</connection>
 		<developerConnection>scm:git:git@github.com:tavandung12/properties-file.git</developerConnection>
 		<url>https://github.com/tavandung12/properties-file</url>
 	</scm>
-	
+
 	<issueManagement>
 		<system>Github</system>
 		<url>https://github.com/tavandung12/properties-file/issues</url>
 	</issueManagement>
-	
+
 	<ciManagement>
 		<system>travis</system>
 		<url>https://travis-ci.org/tavandung12/properties-file</url>
 	</ciManagement>
-	
+
 	<distributionManagement>
 		<site>
 			<id>tvd12</id>
 			<url>http://www.tvd12.com/</url>
 		</site>
 	</distributionManagement>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.reflections</groupId>
@@ -92,6 +92,11 @@
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -161,14 +166,16 @@
 						</goals>
 					</execution>
 					<execution>
-                        <id>default-report</id>
-                        <phase>prepare-package</phase>
-                        <goals><goal>report</goal></goals>
-                    </execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
-	<pluginManagement>
+		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->

@@ -96,6 +96,7 @@ public class InstanceFactory {
 	/**
 	 * Create new instance of class or interface
 	 * 
+	 * @param <T> the type of object
 	 * @param clazz type of class or interface
 	 * @return an instance
 	 */
@@ -106,6 +107,7 @@ public class InstanceFactory {
 	/**
 	 * get singleton instance
 	 * 
+	 * @param <T> the type of object
 	 * @param clazz interface or class
 	 * @return a singleton instance
 	 */
@@ -119,6 +121,7 @@ public class InstanceFactory {
 	/**
 	 * check whether has singleton instance related to @param class 
 	 * 
+	 * @param <T> the type of class
 	 * @param clazz class to check
 	 * @return an object or null
 	 */
@@ -129,6 +132,7 @@ public class InstanceFactory {
 	/**
 	 * Get implementation class of @param clazz and create new an instance
 	 * 
+	 * @param <T> the type of class
 	 * @param clazz class to get implementation class
 	 * @param type prototype or singleton
 	 * @return an object
@@ -151,6 +155,7 @@ public class InstanceFactory {
 	/**
 	 * create a singleton instance of @param baseClazz and save that instance to singletons set
 	 * 
+	 * @param <T> the type of class
 	 * @param baseClazz class to get implementation class
 	 * @param implClazz implementation
 	 * @return an object
@@ -180,6 +185,7 @@ public class InstanceFactory {
 	/**
 	 * create new instance for implementation class
 	 * 
+	 * @param <T> the type of class
 	 * @param implClazz implementation class
 	 * @return an object
 	 */

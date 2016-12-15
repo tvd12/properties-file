@@ -1,5 +1,6 @@
 package com.tvd12.properties.file.reader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,15 +15,12 @@ import java.util.Properties;
  * @author tavandung12
  *
  */
-public class ClassFetcher extends AbstractClassFetcher {
-    
-    //which class to get resource as stream
-    protected Class<?> context;
+public class FileClassFetcher extends AbstractClassFetcher {
     
     //array of properties file path to read
-    protected List<String> files;
+    protected List<File> files;
     
-    protected ClassFetcher(AbstractBuilder builder) {
+    protected FileClassFetcher(AbstractBuilder builder) {
         super(builder);
     }
     
@@ -33,7 +31,6 @@ public class ClassFetcher extends AbstractClassFetcher {
     protected void init(AbstractBuilder builder) {
         super.init(builder);
         Builder bd = (Builder)builder;
-        this.context = bd.context;
         this.files = bd.files;
     }
     
@@ -42,7 +39,7 @@ public class ClassFetcher extends AbstractClassFetcher {
      */
     @Override
     protected List<Properties> loadPropertiesList() {
-        return reader.read(context, files);
+        return reader.read(files);
     }
     
 	/**
@@ -53,22 +50,8 @@ public class ClassFetcher extends AbstractClassFetcher {
 	 */
 	public static class Builder extends AbstractBuilder {
 	    
-	    // class to get resource as stream
-	    private Class<?> context;
-	    
 	    // list of properties file paths to read
-	    private List<String> files = new ArrayList<>();
-	    
-	    /**
-	     * set context
-	     * 
-	     * @param context class to get resource as stream
-	     * @return this pointer
-	     */
-	    public Builder context(Class<?> context) {
-	        this.context = context;
-	        return this;
-	    }
+	    private List<File> files = new ArrayList<>();
 	    
 	    /**
 	     * add a file to read
@@ -76,7 +59,7 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * @param file file to read 
 	     * @return this pointer
 	     */
-	    public Builder file(String file) {
+	    public Builder file(File file) {
 	        files.add(file);
 	        return this;
 	    }
@@ -87,7 +70,7 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * @param propertiesFiles files to read
 	     * @return this pointer
 	     */
-	    public Builder files(String... propertiesFiles) {
+	    public Builder files(File... propertiesFiles) {
 	        files.addAll(Arrays.asList(propertiesFiles));
 	        return this;
 	    }
@@ -98,7 +81,7 @@ public class ClassFetcher extends AbstractClassFetcher {
          * @param propertiesFiles files to read
          * @return this pointer
          */
-        public Builder files(Collection<String> propertiesFiles) {
+        public Builder files(Collection<File> propertiesFiles) {
             files.addAll(propertiesFiles);
             return this;
         }
@@ -109,18 +92,17 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * @param reader properties file reader
 	     * @return this pointer
 	     */
-	    public Builder reader(FileReader reader) {
-	        this.reader = reader;
-	        return this;
-	    }
+        public Builder reader(FileReader reader) {
+            return (Builder) super.reader(reader);
+        }
 	    
 	    /**
 	     * build a ClassFetcher object
 	     * 
 	     * @return ClassFetcher object
 	     */
-	    public ClassFetcher build() {
-	        return new ClassFetcher(this);
+	    public FileClassFetcher build() {
+	        return new FileClassFetcher(this);
 	    }
 	}
 }

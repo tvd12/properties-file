@@ -55,7 +55,7 @@ public abstract class ClassStruct {
     /**
      * initialize with java class
      * 
-     * @param clazz
+     * @param clazz the class to parse
      */
 	protected void init(Class<?> clazz) {
 		this.clazz = clazz;

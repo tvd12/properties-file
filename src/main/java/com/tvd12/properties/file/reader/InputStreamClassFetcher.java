@@ -1,5 +1,6 @@
 package com.tvd12.properties.file.reader;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,15 +15,12 @@ import java.util.Properties;
  * @author tavandung12
  *
  */
-public class ClassFetcher extends AbstractClassFetcher {
-    
-    //which class to get resource as stream
-    protected Class<?> context;
+public class InputStreamClassFetcher extends AbstractClassFetcher {
     
     //array of properties file path to read
-    protected List<String> files;
+    protected List<InputStream> inputStreams;
     
-    protected ClassFetcher(AbstractBuilder builder) {
+    protected InputStreamClassFetcher(AbstractBuilder builder) {
         super(builder);
     }
     
@@ -33,8 +31,7 @@ public class ClassFetcher extends AbstractClassFetcher {
     protected void init(AbstractBuilder builder) {
         super.init(builder);
         Builder bd = (Builder)builder;
-        this.context = bd.context;
-        this.files = bd.files;
+        this.inputStreams = bd.inputStreams;
     }
     
     /* (non-Javadoc)
@@ -42,7 +39,7 @@ public class ClassFetcher extends AbstractClassFetcher {
      */
     @Override
     protected List<Properties> loadPropertiesList() {
-        return reader.read(context, files);
+        return reader.loadInputStreams(inputStreams);
     }
     
 	/**
@@ -53,53 +50,39 @@ public class ClassFetcher extends AbstractClassFetcher {
 	 */
 	public static class Builder extends AbstractBuilder {
 	    
-	    // class to get resource as stream
-	    private Class<?> context;
-	    
 	    // list of properties file paths to read
-	    private List<String> files = new ArrayList<>();
+	    private List<InputStream> inputStreams = new ArrayList<>();
 	    
 	    /**
-	     * set context
+	     * add an input stream to read
 	     * 
-	     * @param context class to get resource as stream
+	     * @param inputStream the input stream to read 
 	     * @return this pointer
 	     */
-	    public Builder context(Class<?> context) {
-	        this.context = context;
+	    public Builder inputStream(InputStream inputStream) {
+	        inputStreams.add(inputStream);
 	        return this;
 	    }
 	    
 	    /**
-	     * add a file to read
+	     * add multiple input streams
 	     * 
-	     * @param file file to read 
+	     * @param inputStreams the array of input streams to read
 	     * @return this pointer
 	     */
-	    public Builder file(String file) {
-	        files.add(file);
+	    public Builder inputStreams(InputStream... inputStreams) {
+	        this.inputStreams.addAll(Arrays.asList(inputStreams));
 	        return this;
 	    }
 	    
 	    /**
-	     * add multiple files
-	     * 
-	     * @param propertiesFiles files to read
-	     * @return this pointer
-	     */
-	    public Builder files(String... propertiesFiles) {
-	        files.addAll(Arrays.asList(propertiesFiles));
-	        return this;
-	    }
-	    
-	    /**
-         * add multiple files
+         * add multiple input streams
          * 
-         * @param propertiesFiles files to read
+         * @param inputStreams the list of input streams to read
          * @return this pointer
          */
-        public Builder files(Collection<String> propertiesFiles) {
-            files.addAll(propertiesFiles);
+        public Builder inputStreams(Collection<InputStream> inputStreams) {
+            this.inputStreams.addAll(inputStreams);
             return this;
         }
 	    
@@ -110,8 +93,7 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * @return this pointer
 	     */
 	    public Builder reader(FileReader reader) {
-	        this.reader = reader;
-	        return this;
+	        return (Builder) super.reader(reader);
 	    }
 	    
 	    /**
@@ -119,8 +101,8 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * 
 	     * @return ClassFetcher object
 	     */
-	    public ClassFetcher build() {
-	        return new ClassFetcher(this);
+	    public InputStreamClassFetcher build() {
+	        return new InputStreamClassFetcher(this);
 	    }
 	}
 }

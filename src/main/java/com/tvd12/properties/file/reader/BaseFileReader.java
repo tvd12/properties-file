@@ -7,10 +7,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
 
@@ -21,6 +24,15 @@ import com.tvd12.properties.file.exception.PropertiesFileException;
  *
  */
 public class BaseFileReader implements FileReader {
+    
+    /* (non-Javadoc)
+     * @see com.tvd12.properties.file.reader.FileReader#read(java.lang.Class, java.util.Collection)
+     */
+    @Override
+    public List<Properties> read(Class<?> context, Collection<String> propertiesFiles)
+            throws PropertiesFileException {
+        return read(context, propertiesFiles.toArray(new String[propertiesFiles.size()]));
+    }
 	
 	/* 
      * @see com.tvd12.properties.file.reader.FileReader#read(java.lang.Class, java.lang.String)
@@ -45,9 +57,8 @@ public class BaseFileReader implements FileReader {
     public List<Properties> read(Class<?> context, String... propertiesFiles) 
             throws PropertiesFileException {
         List<Properties> result = new ArrayList<>();
-        for(String file : propertiesFiles) {
+        for(String file : propertiesFiles)
             result.add(read(context, file));
-        }
         return result;
     }
     
@@ -67,6 +78,33 @@ public class BaseFileReader implements FileReader {
         return read(getClass(), propertiesFiles);
     }
     
+    /* (non-Javadoc)
+     * @see com.tvd12.properties.file.reader.FileReader#read(java.io.File)
+     */
+    @Override
+    public Properties read(File propertiesFile) throws PropertiesFileException {
+        return loadInputStream(getInputStreamByAbsolutePath(propertiesFile));
+    }
+    
+    /* (non-Javadoc)
+     * @see com.tvd12.properties.file.reader.FileReader#read(java.io.File[])
+     */
+    @Override
+    public List<Properties> read(File... propertiesFiles) throws PropertiesFileException {
+        List<Properties> result = new ArrayList<>();
+        for(File file : propertiesFiles)
+            result.add(read(file));
+        return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see com.tvd12.properties.file.reader.FileReader#read(java.util.Collection)
+     */
+    @Override
+    public List<Properties> read(Collection<File> propertiesFiles) throws PropertiesFileException {
+        return read(propertiesFiles.toArray(new File[propertiesFiles.size()]));
+    }
+    
 	/* 
      * @see com.tvd12.properties.file.reader.FileReader#loadInputStream(java.io.InputStream)
      */
@@ -80,6 +118,27 @@ public class BaseFileReader implements FileReader {
             throw new PropertiesFileException("Can not read properties file", e);
         }
 	    return properties;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.tvd12.properties.file.reader.FileReader#loadInputStreams(java.io.InputStream[])
+	 */
+	@Override
+	public List<Properties> loadInputStreams(InputStream... inputStreams)
+	        throws PropertiesFileException {
+	    List<Properties> result = new ArrayList<>();
+        for(InputStream inputStream : inputStreams)
+            result.add(loadInputStream(inputStream));
+        return result;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.tvd12.properties.file.reader.FileReader#loadInputStreams(java.util.Collection)
+	 */
+	@Override
+	public List<Properties> loadInputStreams(Collection<InputStream> inputStreams)
+	        throws PropertiesFileException {
+	    return loadInputStreams(inputStreams.toArray(new InputStream[inputStreams.size()]));
 	}
 	
 	/**
@@ -115,7 +174,9 @@ public class BaseFileReader implements FileReader {
         try {
             if(file.exists())
                 inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {}
+        } catch (FileNotFoundException e) {
+            getLogger().error("can't read file " + file, e);
+        }
         
         return inputStream;
     }
@@ -134,6 +195,10 @@ public class BaseFileReader implements FileReader {
 		if(ip == null)
 			ip = context.getResourceAsStream(propertiesFile);
 		return ip;
+	}
+	
+	private Logger getLogger() {
+	    return LoggerFactory.getLogger(getClass());
 	}
 	
 }

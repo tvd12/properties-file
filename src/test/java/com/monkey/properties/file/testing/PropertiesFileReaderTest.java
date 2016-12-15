@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Lists;
 import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.reader.Base64FileReader;
 import com.tvd12.properties.file.reader.BaseFileReader;
@@ -29,6 +30,21 @@ public class PropertiesFileReaderTest extends BaseTest {
 	@Test
     public void testWithValidData1() throws PropertiesFileException {
         assertNotNull(new BaseFileReader().read("classes.properties", "classes.properties"));
+    }
+	
+	@Test
+    public void testWithValidData2() throws PropertiesFileException {
+	    File file = new File(getClass()
+                .getClassLoader()
+                .getResource("classes.properties")
+                .getFile());
+        assertNotNull(new BaseFileReader().read(Lists.newArrayList(file, file)));
+    }
+	
+	@Test
+    public void testWithValidData3() throws PropertiesFileException {
+        assertNotNull(new BaseFileReader().loadInputStreams(
+                Lists.newArrayList(getClass().getClassLoader().getResourceAsStream("classes.properties"))));
     }
 	
 	@Test
