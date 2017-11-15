@@ -2,6 +2,7 @@ package com.tvd12.properties.file.reader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -20,7 +21,7 @@ public class Base64FileReader extends BaseFileReader {
      */
     @Override
     protected byte[] decode(InputStream inputStream) throws IOException {
-        String str = IOUtils.toString(inputStream);
+        String str = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         return Base64.decodeBase64(str);
     }
     

@@ -4,12 +4,12 @@
 	<parent>
 		<groupId>com.jcabi</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.43</version>
+		<version>0.49.2</version>
 	</parent>
 
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.0.3-SNAPSHOT</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>properties-file</name>
@@ -149,7 +149,6 @@
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
-				<version>4.1.0</version>
 				<configuration>
 					<timestampFormat>${maven.build.timestamp.format}</timestampFormat>
 				</configuration>
@@ -157,7 +156,6 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.6.201602180812</version>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>

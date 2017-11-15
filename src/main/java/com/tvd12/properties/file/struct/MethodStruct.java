@@ -5,8 +5,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.apache.commons.lang3.text.WordUtils;
-
 import com.tvd12.properties.file.annotation.Property;
 
 import lombok.Getter;
@@ -120,7 +118,9 @@ public abstract class MethodStruct {
 			mname = mname.substring(3);
 		if(mname.startsWith("is"))
 			mname = mname.substring(2);
-		return WordUtils.uncapitalize(mname);
+		if(mname.length() < 2)
+			return mname;
+		return mname.substring(0, 1).toLowerCase() + mname.substring(1);
 	}
 	
 	/**

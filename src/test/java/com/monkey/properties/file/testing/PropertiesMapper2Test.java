@@ -36,6 +36,7 @@ public class PropertiesMapper2Test {
         assertNotNull(object.getDate());
         assertEquals(object.getString(), "123");
         assertEquals(object.getString2(), "st2");
+        assertEquals(object.getNotExists(), null);
     }
     
     @Data
@@ -60,6 +61,14 @@ public class PropertiesMapper2Test {
     	
     	@Property("y")
     	private String string2 = "st2";
+    	
+    	@Property("notExist")
+    	private String notExists;
+    	
+    	@Property
+    	public void setA(String a) {
+    		
+    	}
     }
     
     public static class ClassB {
