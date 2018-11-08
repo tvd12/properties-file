@@ -1,21 +1,22 @@
 package com.monkey.properties.file.testing;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
 
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
 import com.monkey.properties.file.testing.model.Constants;
 import com.monkey.properties.file.testing.model.UserActionHandler;
 import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.ClassFetcher;
 import com.tvd12.test.reflect.MethodBuilder;
 import com.tvd12.test.reflect.MethodInvoker;
-import com.tvd12.properties.file.reader.BaseFileReader;
-
-import static org.testng.Assert.*;
 
 public class ClassFetcherTest {
 

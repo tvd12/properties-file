@@ -7,7 +7,6 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileClassFetcher;
 

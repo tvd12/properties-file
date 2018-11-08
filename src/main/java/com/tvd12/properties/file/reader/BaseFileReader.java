@@ -11,10 +11,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.tvd12.properties.file.exception.PropertiesFileException;
 
 /**
@@ -149,7 +145,9 @@ public class BaseFileReader implements FileReader {
 	 * @throws IOException if an I/O error occurs
 	 */
 	protected byte[] decode(InputStream inputStream) throws IOException {
-	    return IOUtils.toByteArray(inputStream);
+		byte[] answer = new byte[inputStream.available()];
+		inputStream.read(answer);
+		return answer;
 	}
 	
 	/**
@@ -170,15 +168,11 @@ public class BaseFileReader implements FileReader {
 	 * @return input stream
 	 */
 	private InputStream getInputStreamByAbsolutePath(File file) {
-        InputStream inputStream = null;
         try {
-            if(file.exists())
-                inputStream = new FileInputStream(file);
+        		return new FileInputStream(file);
         } catch (FileNotFoundException e) {
-            getLogger().error("can't read file " + file, e);
+            return null;
         }
-        
-        return inputStream;
     }
 	
 	/**
@@ -196,9 +190,4 @@ public class BaseFileReader implements FileReader {
 			ip = context.getResourceAsStream(propertiesFile);
 		return ip;
 	}
-	
-	private Logger getLogger() {
-	    return LoggerFactory.getLogger(getClass());
-	}
-	
 }

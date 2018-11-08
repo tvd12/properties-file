@@ -1,8 +1,8 @@
 package com.tvd12.properties.file.writer;
 
 import java.io.ByteArrayOutputStream;
-
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 
 public class Base64FileWriter extends BaseFileWriter {
 
@@ -11,7 +11,10 @@ public class Base64FileWriter extends BaseFileWriter {
      */
     @Override
     protected byte[] encode(ByteArrayOutputStream out) {
-        return Base64.encodeBase64(out.toByteArray());
+    		Encoder encoder = Base64.getEncoder();
+    		byte[] outBytes = out.toByteArray();
+    		byte[] answer = encoder.encode(outBytes);
+    		return answer;
     }
     
 }

@@ -11,6 +11,7 @@ import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
+import com.tvd12.properties.file.struct.PropertiesBean;
 
 import lombok.Data;
 
@@ -37,6 +38,36 @@ public class PropertiesMapper2Test {
         assertEquals(object.getString(), "123");
         assertEquals(object.getString2(), "st2");
         assertEquals(object.getNotExists(), null);
+        
+        PropertiesMapper propertiesMapper = new PropertiesMapper()
+                .data(properties)
+                .clazz(ClassA.class);
+        PropertiesBean pb = new PropertiesBean();
+        propertiesMapper.map(pb);
+        ClassA objectx =  propertiesMapper.map(pb);
+        assertEquals(objectx.getName(), "hello");
+        assertEquals(objectx.getAge(), 24);
+        assertEquals(objectx.getMoney(), 10);
+        assertEquals(objectx.getClazz(), ClassA.class);
+        assertNotNull(objectx.getDate());
+        assertEquals(objectx.getString(), "123");
+        assertEquals(objectx.getString2(), "st2");
+        assertEquals(objectx.getNotExists(), null);
+        
+        PropertiesMapper propertiesMapperx = new PropertiesMapper()
+                .data(properties)
+                .bean(new ClassA());
+        PropertiesBean pbx = new PropertiesBean();
+        propertiesMapper.map(pb);
+        ClassA objectxx =  propertiesMapperx.map(pbx);
+        assertEquals(objectxx.getName(), "hello");
+        assertEquals(objectxx.getAge(), 24);
+        assertEquals(objectxx.getMoney(), 10);
+        assertEquals(objectxx.getClazz(), ClassA.class);
+        assertNotNull(objectxx.getDate());
+        assertEquals(objectxx.getString(), "123");
+        assertEquals(objectxx.getString2(), "st2");
+        assertEquals(objectxx.getNotExists(), null);
     }
     
     @Data

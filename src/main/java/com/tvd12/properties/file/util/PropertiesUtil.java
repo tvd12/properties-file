@@ -1,15 +1,8 @@
 package com.tvd12.properties.file.util;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.converters.DateConverter;
-
-import com.tvd12.properties.file.constant.Constants;
-
 import java.util.Properties;
 import java.util.Set;
 
@@ -52,15 +45,6 @@ public class PropertiesUtil {
             answer.put(entry.getKey(), entry.getValue());
         }
         return answer;
-    }
-    
-    /**
-     * Register date converter object to ConvertUtils
-     */
-    public static void registerDateConverter() {
-        DateConverter converter = new DateConverter();
-        converter.setPatterns(Constants.DATE_FORMATS);
-        ConvertUtils.register(converter, Date.class);
     }
     
 }

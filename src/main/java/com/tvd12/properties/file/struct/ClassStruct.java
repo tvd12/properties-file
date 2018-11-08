@@ -1,10 +1,7 @@
 package com.tvd12.properties.file.struct;
 
-import static org.reflections.ReflectionUtils.withModifier;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -12,11 +9,10 @@ import java.util.Set;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.reflections.ReflectionUtils;
 
-import com.google.common.base.Predicates;
 import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.annotation.PropertyWrapper;
+import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 
 /**
  * 
@@ -191,14 +187,13 @@ public abstract class ClassStruct {
      * 
      * @return set of java fields
      */
-	@SuppressWarnings("unchecked")
     protected Set<Field> getAnnotatedFields() {
+		Set<Field> fields = null;
 	    if(isWrapper)
-	        return ReflectionUtils
-	                .getAllFields(clazz, Predicates.not(
-	                        withModifier(Modifier.FINAL)));
-	    return new HashSet<>(FieldUtils
-	            .getFieldsListWithAnnotation(clazz, Property.class));
+	        fields = ReflectionClassUtils.getValidFields(clazz);
+	    else
+	    		fields = new HashSet<>(FieldUtils.getFieldsListWithAnnotation(clazz, Property.class));
+	    return fields;
 	}
 	
 	/**
@@ -210,13 +205,13 @@ public abstract class ClassStruct {
      * 
      * @return set of java methods
      */
-	@SuppressWarnings("unchecked")
     protected Set<Method> getAnnotatedMethods() {
+		Set<Method> methods = null;
 	    if(isWrapper)
-            return ReflectionUtils
-                    .getAllMethods(clazz, withModifier(Modifier.PUBLIC));
-        return new HashSet<>(MethodUtils
-                .getMethodsListWithAnnotation(clazz, Property.class));
+	    		methods = ReflectionClassUtils.getPublicMethods(clazz);
+	    else
+	    		methods = new HashSet<>(MethodUtils.getMethodsListWithAnnotation(clazz, Property.class));
+	    return methods;
 	}
 	
 	/**

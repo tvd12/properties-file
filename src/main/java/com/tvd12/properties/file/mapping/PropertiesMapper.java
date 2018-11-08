@@ -122,10 +122,29 @@ public class PropertiesMapper {
      * @return object after mapped
      */
     public <T> T map() {
-        PropertiesBean answer = 
+        PropertiesBean mapping = 
                 new PropertiesBean(newBeanInstance());
-        answer.putAll(getProperties());
-        return answer.getObject();
+        mapping.putAll(getProperties());
+        T answer = mapping.getObject();
+        return answer;
+    }
+    
+    /**
+     * map properties to object
+     * 
+     * @param <T> the type of object
+     * @param mapping a custom of properties bean mapping
+     * @return object after mapped
+     */
+    public <T> T map(PropertiesBean mapping) {
+    		if(bean != null)
+    			mapping.init(bean);
+    		else
+    			mapping.init(clazz);
+    		mapping.putAll(getProperties());
+        T answer = mapping.getObject();
+        return answer;
+    		
     }
     
     /**
