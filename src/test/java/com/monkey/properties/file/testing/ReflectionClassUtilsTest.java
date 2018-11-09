@@ -18,9 +18,18 @@ public class ReflectionClassUtilsTest extends BaseTest {
 	}
 	
 	@Test
-	public void test() {
+	public void test1() {
 		Set<Method> publicMethods = ReflectionClassUtils.getPublicMethods(ClassA.class);
 		assertEquals(publicMethods.size(), 1);
+	}
+	
+	@Test
+	public void test2() {
+		ReflectionClassUtils.flatSuperClasses(InterfaceA.class);
+		ReflectionClassUtils.flatSuperClasses(ClassA.class, true);
+	}
+	
+	public static interface InterfaceA {
 	}
 	
 	public abstract class ClassA {

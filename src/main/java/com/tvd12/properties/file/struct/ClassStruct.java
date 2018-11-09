@@ -7,9 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
-
 import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.annotation.PropertyWrapper;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
@@ -32,12 +29,13 @@ public abstract class ClassStruct {
 	protected boolean isWrapper;
 	
 	//list of method structure
-	protected List<MethodStruct> methods
-        = new ArrayList<>();
+	protected List<MethodStruct> methods = new ArrayList<>();
 	
 	//set of keys
-	protected Set<Object> keys 
-	        = new HashSet<>();
+	protected Set<Object> keys = new HashSet<>();
+	
+	protected Set<Field> annotatedFields;
+	protected Set<Method> annotatedMethods;
 	
 	/**
 	 * construct with java class
@@ -91,11 +89,11 @@ public abstract class ClassStruct {
         isWrapper = clazz
                 .isAnnotationPresent(PropertyWrapper.class);
         if(isWrapper)   return;
-        List<Field> fields = FieldUtils
-                .getFieldsListWithAnnotation(clazz, Property.class);
-        List<Method> methods = MethodUtils
-                .getMethodsListWithAnnotation(clazz, Property.class);
-        isWrapper = fields.isEmpty() && methods.isEmpty();
+        annotatedFields = ReflectionClassUtils
+                .getFieldsWithAnnotation(clazz, Property.class);
+        annotatedMethods = ReflectionClassUtils
+                .getMethodsWithAnnotation(clazz, Property.class);
+        isWrapper = annotatedFields.isEmpty() && annotatedMethods.isEmpty();
     }
 
     /**
@@ -192,7 +190,7 @@ public abstract class ClassStruct {
 	    if(isWrapper)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
-	    		fields = new HashSet<>(FieldUtils.getFieldsListWithAnnotation(clazz, Property.class));
+	    		fields = annotatedFields;
 	    return fields;
 	}
 	
@@ -210,7 +208,7 @@ public abstract class ClassStruct {
 	    if(isWrapper)
 	    		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
-	    		methods = new HashSet<>(MethodUtils.getMethodsListWithAnnotation(clazz, Property.class));
+	    		methods = annotatedMethods;
 	    return methods;
 	}
 	
