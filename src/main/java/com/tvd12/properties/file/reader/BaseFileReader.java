@@ -38,6 +38,8 @@ public class BaseFileReader implements FileReader {
 			throws PropertiesFileException {
         InputStream inputStream = getResourceAsStream(context, propertiesFile); 
         if(inputStream == null)
+        		inputStream = getResourceAsStream(context, "/" + propertiesFile);
+        if(inputStream == null)
             inputStream = getInputStreamByAbsolutePath(propertiesFile);
         if(inputStream == null)
             throw new PropertiesFileException("Can not read properties file in path " 
