@@ -21,6 +21,16 @@ public interface FileReader {
     Properties read(Class<?> context, String propertiesFile) throws PropertiesFileException;
     
     /**
+     * Read properties file in a path
+     *
+     * @param propertiesFile properties file path
+     * @param classLoader the class loader
+     * @return properties object
+     * @throws PropertiesFileException when properties file not exists or can't read properties
+     */
+    Properties read(ClassLoader classLoader, String propertiesFile) throws PropertiesFileException;
+    
+    /**
      * Read properties files in multiple paths
      * 
      * @param propertiesFiles list of properties files
@@ -34,11 +44,31 @@ public interface FileReader {
      * Read properties files in multiple paths
      * 
      * @param propertiesFiles list of properties files
+     * @param classLoader the class loader 
+     * @return list of properties object
+     * @throws PropertiesFileException when properties file not exists or can't read properties
+     */
+    List<Properties> read(ClassLoader classLoader, String... propertiesFiles) throws PropertiesFileException;
+    
+    /**
+     * Read properties files in multiple paths
+     * 
+     * @param propertiesFiles list of properties files
      * @param context which class to get resource as stream
      * @return list of properties object
      * @throws PropertiesFileException when properties file not exists or can't read properties
      */
     List<Properties> read(Class<?> context, Collection<String> propertiesFiles) throws PropertiesFileException;
+    
+    /**
+     * Read properties files in multiple paths
+     * 
+     * @param propertiesFiles list of properties files
+     * @param classLoader the class loader
+     * @return list of properties object
+     * @throws PropertiesFileException when properties file not exists or can't read properties
+     */
+    List<Properties> read(ClassLoader classLoader, Collection<String> propertiesFiles) throws PropertiesFileException;
     
     /**
      * Read properties file in a path

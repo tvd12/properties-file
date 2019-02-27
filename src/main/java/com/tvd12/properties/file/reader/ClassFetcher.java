@@ -17,7 +17,7 @@ import java.util.Properties;
 public class ClassFetcher extends AbstractClassFetcher {
     
     //which class to get resource as stream
-    protected Class<?> context;
+    protected ClassLoader classLoader;
     
     //array of properties file path to read
     protected List<String> files;
@@ -33,7 +33,7 @@ public class ClassFetcher extends AbstractClassFetcher {
     protected void init(AbstractBuilder builder) {
         super.init(builder);
         Builder bd = (Builder)builder;
-        this.context = bd.context;
+        this.classLoader = bd.classLoader;
         this.files = bd.files;
     }
     
@@ -42,7 +42,7 @@ public class ClassFetcher extends AbstractClassFetcher {
      */
     @Override
     protected List<Properties> loadPropertiesList() {
-        return reader.read(context, files);
+        return reader.read(classLoader, files);
     }
     
 	/**
@@ -54,7 +54,7 @@ public class ClassFetcher extends AbstractClassFetcher {
 	public static class Builder extends AbstractBuilder {
 	    
 	    // class to get resource as stream
-	    private Class<?> context;
+	    private ClassLoader classLoader;
 	    
 	    // list of properties file paths to read
 	    private List<String> files = new ArrayList<>();
@@ -66,7 +66,18 @@ public class ClassFetcher extends AbstractClassFetcher {
 	     * @return this pointer
 	     */
 	    public Builder context(Class<?> context) {
-	        this.context = context;
+	        this.classLoader = context.getClassLoader();
+	        return this;
+	    }
+	    
+	    /**
+	     * set class loader
+	     * 
+	     * @param classLoader loader class loader to get resource as stream
+	     * @return this pointer
+	     */
+	    public Builder classLoader(ClassLoader classLoader) {
+	        this.classLoader = classLoader;
 	        return this;
 	    }
 	    

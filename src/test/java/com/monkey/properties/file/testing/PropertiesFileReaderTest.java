@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.testng.annotations.Test;
 
@@ -24,11 +26,17 @@ public class PropertiesFileReaderTest extends BaseTest {
 	@Test
 	public void testWithValidData() throws PropertiesFileException {
 		assertNotNull(new BaseFileReader().read("classes.properties"));
+		assertNotNull(new BaseFileReader().read(getClass(), "classes.properties"));
 	}
 	
 	@Test
     public void testWithValidData1() throws PropertiesFileException {
         assertNotNull(new BaseFileReader().read("classes.properties", "classes.properties"));
+        assertNotNull(new BaseFileReader().read(getClass(), "classes.properties", "classes.properties"));
+        List<String> list = new ArrayList<>();
+        list.add("classes.properties");
+        list.add("classes.properties");
+        assertNotNull(new BaseFileReader().read(getClass(), list));
     }
 	
 	@Test
@@ -37,6 +45,7 @@ public class PropertiesFileReaderTest extends BaseTest {
                 .getClassLoader()
                 .getResource("classes.properties")
                 .getFile());
+        assertNotNull(new BaseFileReader().read(Lists.newArrayList(file, file)));
         assertNotNull(new BaseFileReader().read(Lists.newArrayList(file, file)));
     }
 	

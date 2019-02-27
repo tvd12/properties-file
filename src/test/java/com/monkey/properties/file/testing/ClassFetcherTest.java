@@ -5,6 +5,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
@@ -25,6 +26,7 @@ public class ClassFetcherTest {
 	public ClassFetcherTest() throws PropertiesFileException {
 	    fetcher = new ClassFetcher.Builder()
 	            .context(getClass())
+	            .classLoader(Thread.currentThread().getContextClassLoader())
 	            .file("user_action_handlers.properties")
 	            .files("user_action_handlers2.properties")
 	            .files(Lists.newArrayList("user_action_handlers2.properties"))
@@ -39,7 +41,7 @@ public class ClassFetcherTest {
 	        .file("user_action_handlers.properties")
 	        .reader(new BaseFileReader() {
 	            @Override
-	            public List<Properties> read(Class<?> entry, String... propertiesFiles)
+	            public List<Properties> read(ClassLoader classLoader, Collection<String> propertiesFiles)
 	                    throws PropertiesFileException {
 	                throw new PropertiesFileException("");
 	            }

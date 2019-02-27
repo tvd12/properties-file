@@ -29,12 +29,17 @@ public abstract class AbstractClassFetcher {
      * @param builder builder
      */
     protected AbstractClassFetcher(AbstractBuilder builder) {
+    		this.reader = builder.reader;
         this.init(builder);
         this.load();
     }
     
+    /**
+     * Initialize properties
+     * 
+     * @param builder the builder
+     */
     protected void init(AbstractBuilder builder) {
-        this.reader = builder.reader;
     }
     
     /**

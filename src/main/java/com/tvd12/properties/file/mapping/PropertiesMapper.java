@@ -23,9 +23,6 @@ public class PropertiesMapper {
     //mapped class to hold data
     private Class<?> clazz;
     
-    //class to get resource as stream
-    private Class<?> context;
-    
     //properties object to map
     private Properties properties;
     
@@ -34,6 +31,9 @@ public class PropertiesMapper {
     
     //properties file reader
     private FileReader reader;
+    
+    //class to get resource as stream
+    private ClassLoader classLoader;
     
     /**
      * set mapped class
@@ -54,7 +54,7 @@ public class PropertiesMapper {
      * @return this pointer
      */
     public PropertiesMapper context(Class<?> context) {
-        this.context = context;
+        this.classLoader = context.getClassLoader();
         return this;
     }
     
@@ -169,11 +169,9 @@ public class PropertiesMapper {
      * @return properties object
      */
     private Properties getProperties() {
-        if(context == null)
-            context = clazz;
         try {
             if(properties == null)
-                properties = reader.read(context, propertiesFile);
+                properties = reader.read(classLoader, propertiesFile);
         } catch (PropertiesFileException e) {
             throw new IllegalStateException(e);
         }
