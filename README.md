@@ -4,11 +4,11 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file)
 [![Javadocs](https://www.javadoc.io/badge/com.tvd12/properties-file.svg)](https://www.javadoc.io/doc/com.tvd12/properties-file)
 
-#Synopsis
+# Synopsis
 
 This project support for interact with properties file
 
-#Code Example
+# Code Example
 
 **1. Get all classes're mapped to keys in properties file**
 ```java
@@ -115,11 +115,11 @@ public class RoomConfig {
     // your code
 ```
 
-#Motivation
+# Motivation
 
 Because sometimes we want to make loose coupling source code, we want to use factory design pattern, we want to map a properties file to object, convert an object to map, so I make this project for that mean
 
-#Installation
+# Installation
 
 ```xml
 	<dependency>
@@ -128,19 +128,19 @@ Because sometimes we want to make loose coupling source code, we want to use fac
 		<version>1.0.8</version>
 	</dependency>
 ```
-#API Reference
+# API Reference
 
 http://www.javadoc.io/doc/com.tvd12/properties-file
 
-#Tests
+# Tests
 
 mvn test
 
-#Contributors
+# Contributors
 
 None
 
-#License
+# License
 
 - Apache License, Version 2.0
 	
