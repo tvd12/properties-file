@@ -1,7 +1,5 @@
 package com.monkey.properties.file.testing;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
@@ -15,8 +13,8 @@ public class ClassStructTest {
 	@Test
 	public void testContainsKey() {
 		ClassWrapperA wrapper = new ClassWrapperA(A.class);
-		assertTrue(wrapper.containsKey("value"));
-		assertFalse(wrapper.containsKey("abccc"));
+		assert wrapper.containsKey("value");
+		assert !wrapper.containsKey("abccc");
 		assertEquals(wrapper.keySet().size(), 1);
 		assertEquals(wrapper.methodCount(), 1);
 	}

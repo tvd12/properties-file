@@ -5,7 +5,7 @@ package com.monkey.properties.file.testing;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileClassFetcher;
