@@ -25,11 +25,13 @@ public class PropertiesMapper2Test {
         properties.put("clazz", ClassA.class);
         properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
         properties.put("x", "123");
+        properties.put("valid", "true");
         
         ClassA object = new PropertiesMapper()
                 .data(properties)
                 .clazz(ClassA.class)
                 .map();
+        assertEquals(object.isValid(), true);
         assertEquals(object.getName(), "hello");
         assertEquals(object.getAge(), 24);
         assertEquals(object.getMoney(), 10);
@@ -95,6 +97,9 @@ public class PropertiesMapper2Test {
     	
     	@Property("notExist")
     	private String notExists;
+    	
+    	@Property("valid")
+    	private boolean valid;
     	
     	@Property
     	public void setA(String a) {

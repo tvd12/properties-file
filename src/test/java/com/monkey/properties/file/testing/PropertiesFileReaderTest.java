@@ -15,7 +15,6 @@ import java.util.List;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
-import com.tvd12.properties.file.reader.Base64FileReader;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.test.base.BaseTest;
 import com.tvd12.test.reflect.MethodBuilder;
@@ -54,11 +53,6 @@ public class PropertiesFileReaderTest extends BaseTest {
         assertNotNull(new BaseFileReader().loadInputStreams(
                 Lists.newArrayList(getClass().getClassLoader().getResourceAsStream("classes.properties"))));
     }
-	
-	@Test(expectedExceptions = {IllegalArgumentException.class})
-	public void testReadBase64Data() throws PropertiesFileException {
-	    assertNotNull(new Base64FileReader().read("hello.properties"));
-	}
 	
 	@Test(expectedExceptions = {PropertiesFileException.class})
 	public void testWithInvalidData() throws PropertiesFileException {

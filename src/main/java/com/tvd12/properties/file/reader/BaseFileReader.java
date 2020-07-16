@@ -130,7 +130,14 @@ public class BaseFileReader implements FileReader {
 	        throws PropertiesFileException {
 	    Properties properties = new Properties();
 	    try {
-	        properties.load(new ByteArrayInputStream(decode(inputStream)));
+	    	byte[] contentBytes = decode(inputStream);
+	    	ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
+	    	try {
+	    		properties.load(stream);
+	    	}
+	    	finally {
+	    		stream.close();
+			}
 	    } catch (IOException e) {
             throw new PropertiesFileException("Can not read properties file", e);
         }
@@ -166,9 +173,14 @@ public class BaseFileReader implements FileReader {
 	 * @throws IOException if an I/O error occurs
 	 */
 	protected byte[] decode(InputStream inputStream) throws IOException {
-		byte[] answer = new byte[inputStream.available()];
-		inputStream.read(answer);
-		return answer;
+		try {
+			byte[] answer = new byte[inputStream.available()];
+			inputStream.read(answer);
+			return answer;
+		}
+		finally {
+			inputStream.close();
+		}
 	}
 	
 	/**
@@ -190,8 +202,9 @@ public class BaseFileReader implements FileReader {
 	 */
 	private InputStream getInputStreamByAbsolutePath(File file) {
         try {
-        		return new FileInputStream(file);
-        } catch (FileNotFoundException e) {
+        	return new FileInputStream(file);
+        } 
+        catch (FileNotFoundException e) {
             return null;
         }
     }

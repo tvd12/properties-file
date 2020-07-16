@@ -15,3 +15,8 @@ Version 1.0.2
 - Add PropertiesBean
 - Add Property and PropertyWrapper annotation
 - Add PropertiesMapper to map properties to object
+
+Version 1.0.9
+
+- Remove base64 file reader/writer
+- Close Input/Ouput stream

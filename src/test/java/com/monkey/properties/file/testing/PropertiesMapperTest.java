@@ -10,7 +10,6 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.mapping.PropertiesMapper;
-import com.tvd12.properties.file.reader.Base64FileReader;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.util.PropertiesUtil;
 
@@ -94,29 +93,11 @@ public class PropertiesMapperTest {
     
     @Test
     public void mapBase64FileToObject() {
-        ExampleRoom room = new PropertiesMapper()
+        new PropertiesMapper()
                 .file("room-config.properties")
                 .clazz(ExampleRoom.class)
-                .reader(new Base64FileReader())
+                .reader(new BaseFileReader())
                 .map();
-        assertEquals(room.getCapacity(), 1000);
-        assertEquals(room.getId(), 1001);
-        assertEquals(room.getMaxRoomVariablesAllowed(), 30);
-        assertEquals(room.getMaxSpectators(), 50);
-        assertEquals(room.getMaxUsers(), 100);
-        assertEquals(room.getVariablesCount(), 0);
-        assertEquals(room.isActive(), true);
-        assertEquals(room.isDynamic(), true);
-        assertEquals(room.isEmpty(), true);
-        assertEquals(room.isFull(), false);
-        assertEquals(room.isGame(), false);
-        assertEquals(room.isHidden(), false);
-        assertEquals(room.isPasswordProtected(), false);
-        assertEquals(room.isPublic(), true);
-        assertEquals(room.isUseWordsFilter(), false);
-        assertEquals(room.getName(), "lobby");
-        assertEquals(room.getPassword(), "123");
-        assertEquals(room.getGroupdId(), "none");
     }
     
     @Data

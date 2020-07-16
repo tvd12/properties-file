@@ -51,11 +51,11 @@ public class BaseFileWriter implements FileWriter {
     public void write(Properties properties, File file) 
             throws PropertiesFileException {
         try {
-        		if(!file.exists())
-        			file.createNewFile();
-        		ByteArrayOutputStream out = write(properties);
-        		byte[] bytes = encode(out);
-        		writeBytes0(file, bytes);
+    		if(!file.exists())
+    			file.createNewFile();
+    		ByteArrayOutputStream out = write(properties);
+    		byte[] bytes = encode(out);
+    		writeBytes0(file, bytes);
         }
         catch(IOException e) {
             throw new PropertiesFileException("Can not write properties to file", e);
@@ -70,12 +70,12 @@ public class BaseFileWriter implements FileWriter {
      * @throws IOException exception
      */
     protected void writeBytes0(File file, byte[] bytes) throws IOException {
-    		FileOutputStream fos = newFileOutputStream(file);
-    		try {
-    			fos.write(bytes);
-    		}
-    		finally {
-    			fos.close();
+		FileOutputStream fos = newFileOutputStream(file);
+		try {
+			fos.write(bytes);
+		}
+		finally {
+			fos.close();
 		}
     }
     
@@ -87,7 +87,7 @@ public class BaseFileWriter implements FileWriter {
      * @throws FileNotFoundException exception
      */
     protected FileOutputStream newFileOutputStream(File file) throws FileNotFoundException {
-    		return new FileOutputStream(file);
+    	return new FileOutputStream(file);
     }
 
     /**
@@ -96,8 +96,14 @@ public class BaseFileWriter implements FileWriter {
      * @param out a ByteArrayOutputStream object
      * @return encoded byte array
      */
-    protected byte[] encode(ByteArrayOutputStream out) {
-        return out.toByteArray();
+    protected byte[] encode(ByteArrayOutputStream out) throws IOException {
+    	try {
+    		byte[] bytes = out.toByteArray();
+        	return bytes;
+    	}
+    	finally {
+			out.close();
+		}
     }
     
 }
