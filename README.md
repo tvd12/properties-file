@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/tvd12/properties-file.svg?branch=master)](https://travis-ci.org/tvd12/properties-file)
-[![Dependency Status](https://www.versioneye.com/user/projects/5717990efcd19a00415b1f61/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5717990efcd19a00415b1f61)
 [![Coverage Status](https://coveralls.io/repos/github/tvd12/properties-file/badge.svg?branch=master)](https://coveralls.io/github/tvd12/properties-file?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file)
 [![Javadocs](https://www.javadoc.io/badge/com.tvd12/properties-file.svg)](https://www.javadoc.io/doc/com.tvd12/properties-file)
@@ -24,19 +23,7 @@ and you want to map it to RoomConfig object, you can do:
 ```java
 	RoomConfig room = new PropertiesMapper()
 		.file("room-config.properties")
-		.clazz(ExampleRoom.class)
-		.reader(new BaseFileReader())
-		.map();
-```
-
-and if you encode properties file with base64 you can do:
-
-```java
-	RoomConfig room = new PropertiesMapper()
-		.file("room-config.properties")
-		.clazz(ExampleRoom.class)
-		.reader(new Base64FileReader())
-		.map();
+		.map(ExampleRoom.class);
 ```
 
 **2. Convert an object to a map**
