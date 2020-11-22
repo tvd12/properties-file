@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileReader;
 import com.tvd12.properties.file.struct.PropertiesBean;
 
@@ -122,11 +123,19 @@ public class PropertiesMapper {
      * @return object after mapped
      */
     public <T> T map() {
-        PropertiesBean mapping = 
-                new PropertiesBean(newBeanInstance());
-        mapping.putAll(getProperties());
-        T answer = mapping.getObject();
-        return answer;
+        return map(new PropertiesBean(newBeanInstance()));
+    }
+    
+    /**
+     * map properties to object
+     * 
+     * @param clazz mapped class
+     * @param <T> the type of object
+     * @return object after mapped
+     */
+    public <T> T map(Class<T> clazz) {
+    	this.clazz(clazz);
+        return map(new PropertiesBean(newBeanInstance()));
     }
     
     /**
@@ -137,11 +146,13 @@ public class PropertiesMapper {
      * @return object after mapped
      */
     public <T> T map(PropertiesBean mapping) {
-    		if(bean != null)
-    			mapping.init(bean);
-    		else
-    			mapping.init(clazz);
-    		mapping.putAll(getProperties());
+    	if(reader == null)
+    		reader = new BaseFileReader();
+		if(bean != null)
+			mapping.init(bean);
+		else
+			mapping.init(clazz);
+		mapping.putAll(getProperties());
         T answer = mapping.getObject();
         return answer;
     		

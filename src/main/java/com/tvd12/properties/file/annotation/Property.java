@@ -23,4 +23,11 @@ public @interface Property {
      */
     public String value() default "";
     
+    /**
+     * Map to group of property
+     * 
+     * @return string the prefix of group
+     */
+    public String group() default "";
+    
 }

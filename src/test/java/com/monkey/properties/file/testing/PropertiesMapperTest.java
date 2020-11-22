@@ -56,21 +56,21 @@ public class PropertiesMapperTest {
     }
     
     @Test
-    public void testMapBeanToProperties() {
-        ClassA object = new ClassA();
-        object.setName("hello");
-        object.setAge(24);
-        object.setMoney(1000);
-        object.setClazz(ClassA.class);
-        object.setDate(new Date());
+    public void testMapPropertiesToBeanWithMapClazz() {
+        Properties properties = new Properties();
+        properties.setProperty("name", "hello");
+        properties.put("age", 24);
+        properties.put("clazz", ClassA.class);
+        properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
         
-//        Properties properties = new PropertiesBean(object)
-//                .toProperties();
-//        assertEquals(properties.getProperty("name"), "hello");
-//        assertEquals(properties.get("age"), 24);
-//        assertEquals(properties.get("money"), 1000L);
-//        assertEquals(properties.get("clazz"), ClassA.class);
-//        assertNotNull(properties.get("date"));
+        ClassA object = new PropertiesMapper()
+                .data(PropertiesUtil.toMap(properties))
+                .map(ClassA.class);
+        assertEquals(object.getName(), "hello");
+        assertEquals(object.getAge(), 24);
+        assertEquals(object.getMoney(), 10);
+        assertEquals(object.getClazz(), ClassA.class);
+        assertNotNull(object.getDate());
     }
     
     @Test(expectedExceptions = {IllegalStateException.class})
