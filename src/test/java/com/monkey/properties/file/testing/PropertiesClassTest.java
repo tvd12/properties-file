@@ -1,7 +1,5 @@
 package com.monkey.properties.file.testing;
 
-import static org.testng.Assert.assertEquals;
-
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
@@ -16,35 +14,14 @@ public class PropertiesClassTest extends BaseTest {
     @Test
     public void notWrapperTest() {
         PropertiesBean map = new PropertiesBean(ClassA.class);
-        assertEquals(map.getWriteMethod("n").getName(), "setName");
         map.put("length", 1);
         map.put("value", "zzz");
         map.put("value", "yyy");
     }
     
     @Test
-    public void wrapperTest() {
-//        ClassWrapper wrapper = new ClassWrapper(ClassB.class);
-//        ClassUnwrapper unwrapper = new ClassUnwrapper(ClassB.class);
-//        PropertiesBean map = new PropertiesBean();
-//        map.setWrapper(wrapper);
-//        map.setUnwrapper(unwrapper);
-//        map.setBean(wrapper.newInstance());
-//        assertTrue(map.containsKey("n"));
-//        assertTrue(map.containsKey("msg"));
-//        assertEquals(map.getReadMethod("n").getName(), "getName");
-//        assertEquals(map.getWriteMethod("n").getName(), "setName");
-//        assertEquals(map.put("length", 1), 0);
-//        assertEquals(map.put("value", "zzz"), null);
-//        assertEquals(map.put("value", "yyy"), "zzz");
-//        assertEquals(map.get("visible"), true);
-//        assertEquals(map.keySet().size(), 8);
-    }
-    
-    @Test
     public void wrapperTest2() {
         PropertiesBean map = new PropertiesBean(ClassC.class);
-        assertEquals(map.getWriteMethod("name").getName(), "setName");
         map.put("length", 1);
         map.put("value", "zzz");
         map.put("value", "yyy");

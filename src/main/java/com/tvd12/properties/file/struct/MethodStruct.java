@@ -71,7 +71,7 @@ public abstract class MethodStruct {
             return getMethod(new PropertyDescriptor(
                     name, clazz));
         } catch (IntrospectionException e) {
-            throw new IllegalStateException(e);
+            return null;
         }
     }
 	

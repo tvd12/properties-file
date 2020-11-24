@@ -136,14 +136,13 @@ public abstract class ClassStruct {
     }
     
     /**
-     * Get method by key
+     * Get method structure by key
      *  
      * @param key key
-     * @return a method object or null
+     * @return a method structure or null
      */
-    protected Method getMethod(String key) {
-    	MethodStruct cover = methods.get(key);
-    	return cover != null ? cover.getMethod() : null;
+    protected MethodStruct getMethodStruct(String key) {
+    	return methods.get(key);
     }
 
     /**

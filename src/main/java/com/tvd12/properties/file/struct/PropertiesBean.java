@@ -1,6 +1,7 @@
 package com.tvd12.properties.file.struct;
 
-import java.lang.reflect.Method;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -60,24 +61,28 @@ public class PropertiesBean {
         return (T)bean;
     }
 
-    protected Method getWriteMethod(Object key) {
-        return getWriteMethod(key.toString());
+    protected MethodStruct getWriteMethodStruct(Object key) {
+    	return wrapper.getMethodStruct(key.toString());
     }
 
-    public Method getWriteMethod(String key) {
-        return wrapper.getMethod(key);
-    }
-    
     public void put(Object key, Object value) {
-    	Method method = getWriteMethod(key);
-        if(method == null)
+    	MethodStruct methodStruct = getWriteMethodStruct(key);
+        if(methodStruct == null)
             return;
         if(value instanceof String)
             value = ((String) value).trim();
         try {
-    		Class argumentType = getWriteArgumentType(method);
+    		Class argumentType = getWriteArgumentType(methodStruct);
     		Object argument = transform(argumentType, value);
-    		method.invoke(bean, argument);
+    		if(methodStruct.getMethod() != null) {
+    			methodStruct.getMethod().invoke(bean, argument);
+    		}
+    		else {
+    			Field field = methodStruct.getField();
+    			if(!Modifier.isPublic(field.getModifiers()))
+    				field.setAccessible(true);
+    			field.set(bean, argument);
+    		}
         }
         catch (Exception e) {
     		printError("put value: " + value + " with key: " + key + " error", e);
@@ -92,10 +97,10 @@ public class PropertiesBean {
         }
     }
     
-    protected Class getWriteArgumentType(Method method) {
-    		Class<?>[] parameterTypes = method.getParameterTypes();
-    		Class answer = parameterTypes[0];
-    		return answer;
+    protected Class getWriteArgumentType(MethodStruct methodStruct) {
+    	if(methodStruct.getField() != null)
+    		return methodStruct.getField().getType();
+		return methodStruct.getMethod().getParameterTypes()[0];
     }
     
 	protected Object transform(Class newType, Object value) {

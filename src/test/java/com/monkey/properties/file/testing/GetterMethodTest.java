@@ -27,7 +27,7 @@ public class GetterMethodTest {
         assertEquals(getterMethod.getMethodName(), "getName");
     }
     
-    @Test(expectedExceptions = {IllegalStateException.class})
+    @Test
     public void getMethodByFieldInvalidCaseTest() throws NoSuchFieldException, SecurityException {
         Field field = ClassB.class.getDeclaredField("name");
         GetterMethod getterMethod = new GetterMethod();

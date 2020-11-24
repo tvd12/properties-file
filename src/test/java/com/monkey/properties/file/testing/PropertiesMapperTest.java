@@ -73,6 +73,24 @@ public class PropertiesMapperTest {
         assertNotNull(object.getDate());
     }
     
+    @Test
+    public void testMapPropertiesToBeanWithFields() {
+    	Properties properties = new Properties();
+        properties.setProperty("name", "hello");
+        properties.put("age", 24);
+        properties.put("clazz", ClassC.class);
+        properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+        
+        ClassC object = new PropertiesMapper()
+                .data(PropertiesUtil.toMap(properties))
+                .map(ClassC.class);
+        assertEquals(object.name, "hello");
+        assertEquals(object.age, 24);
+        assertEquals(object.money, 10);
+        assertEquals(object.clazz, ClassC.class);
+        assertNotNull(object.date);
+    }
+    
     @Test(expectedExceptions = {IllegalStateException.class})
     public void newBeanInstanceInvalidCaseTest() {
         new PropertiesMapper()
@@ -113,5 +131,15 @@ public class PropertiesMapperTest {
     
     public static class ClassB {
         protected ClassB() {}
+    }
+    
+    public static class ClassC {
+        public String name;
+        public int age;
+        protected long money = 10;
+        
+        protected Date date;
+        
+        protected Class<?> clazz;
     }
 }
