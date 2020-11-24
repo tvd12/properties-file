@@ -10,6 +10,7 @@ import java.util.Properties;
 
 import com.tvd12.properties.file.bean.Transformer;
 import com.tvd12.properties.file.constant.Constants;
+import com.tvd12.properties.file.util.Logger;
 
 /**
  * 
@@ -29,8 +30,7 @@ public class PropertiesBean {
 	private static final Map<Class, Transformer> TRANSFORMERS =
             Collections.unmodifiableMap(createTypeTransformers());
 	
-	public PropertiesBean() {
-	}
+	public PropertiesBean() {}
 
     public PropertiesBean(Class<?> clazz) {
         init(clazz);
@@ -41,11 +41,11 @@ public class PropertiesBean {
     }
     
     public void init(Class<?> clazz) {
-    		if(!inited) {
-    			this.inited = true;
-    			this.wrapper = new ClassWrapper(clazz);
-    			this.bean = wrapper.newInstance();
-    		}
+		if(!inited) {
+			this.inited = true;
+			this.wrapper = new ClassWrapper(clazz);
+			this.bean = wrapper.newInstance();
+		}
     }
     
     public void init(Object bean) {
@@ -69,26 +69,26 @@ public class PropertiesBean {
     }
     
     public void put(Object key, Object value) {
-    		Method method = getWriteMethod(key);
+    	Method method = getWriteMethod(key);
         if(method == null)
             return;
         if(value instanceof String)
             value = ((String) value).trim();
         try {
-        		Class argumentType = getWriteArgumentType(method);
-        		Object argument = transform(argumentType, value);
-        		method.invoke(bean, argument);
+    		Class argumentType = getWriteArgumentType(method);
+    		Object argument = transform(argumentType, value);
+    		method.invoke(bean, argument);
         }
         catch (Exception e) {
-        		printError("put value: " + value + " with key: " + key + " error", e);
+    		printError("put value: " + value + " with key: " + key + " error", e);
 			return;
 		}
     }
     
     public void putAll(Properties properties) {
         for(Object key : properties.keySet()) {
-        		Object value = properties.get(key);
-        		put(key, value);
+    		Object value = properties.get(key);
+    		put(key, value);
         }
     }
     
@@ -115,7 +115,7 @@ public class PropertiesBean {
     }
     
     protected void printError(String message, Throwable throwable) {
-    		System.out.println(message + "\n" + throwable);
+    	Logger.print(message, throwable);
     }
     
     private static Map<Class, Transformer> createTypeTransformers() {
@@ -168,17 +168,17 @@ public class PropertiesBean {
 		transformers.put(Date.class, new Transformer() {
             @Override
             public Object transform(Object value) {
-            		String str = value.toString();
-            		for(String pattern : Constants.DATE_FORMATS) {
-            			SimpleDateFormat format = new SimpleDateFormat(pattern);
-            			try {
-            				return format.parse(str);
-            			}
-            			catch(Exception e) {
-            				//ignore
-            			}
-            		}
-            		throw new IllegalArgumentException("has no pattern to format date string: " + str);
+        		String str = value.toString();
+        		for(String pattern : Constants.DATE_FORMATS) {
+        			SimpleDateFormat format = new SimpleDateFormat(pattern);
+        			try {
+        				return format.parse(str);
+        			}
+        			catch(Exception e) {
+        				//ignore
+        			}
+        		}
+        		throw new IllegalArgumentException("has no pattern to format date string: " + str);
             }
         });
         

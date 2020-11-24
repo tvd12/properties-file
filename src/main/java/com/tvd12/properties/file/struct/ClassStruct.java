@@ -2,9 +2,8 @@ package com.tvd12.properties.file.struct;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import com.tvd12.properties.file.annotation.Property;
@@ -28,14 +27,11 @@ public abstract class ClassStruct {
 	//true if class annotated with @PropertyWrapper annotation or has no @Property annotation in class
 	protected boolean isWrapper;
 	
-	//list of method structure
-	protected List<MethodStruct> methods = new ArrayList<>();
-	
-	//set of keys
-	protected Set<Object> keys = new HashSet<>();
-	
 	protected Set<Field> annotatedFields;
 	protected Set<Method> annotatedMethods;
+	
+	//map of method structure and key
+	protected Map<String, MethodStruct> methods = new HashMap<>();
 	
 	/**
 	 * construct with java class
@@ -122,11 +118,7 @@ public abstract class ClassStruct {
     protected abstract boolean validateMethod(Method method);
     
     protected boolean containsKey(String key) {
-        for(MethodStruct cover : methods)  {
-            if(cover.getKey().equals(key))
-                return true;
-        }
-        return false;
+    	return methods.containsKey(key);
     }
     
     /**
@@ -136,7 +128,7 @@ public abstract class ClassStruct {
      * @return true or false
      */
     protected boolean containsMethod(Method method) {
-        for(MethodStruct cover : methods)  {
+        for(MethodStruct cover : methods.values())  {
             if(cover.getMethod().equals(method))
                 return true;
         }
@@ -150,11 +142,8 @@ public abstract class ClassStruct {
      * @return a method object or null
      */
     protected Method getMethod(String key) {
-        for(MethodStruct cover : methods) {
-            if(cover.getKey().equals(key))
-                return cover.getMethod();
-        }
-        return null;
+    	MethodStruct cover = methods.get(key);
+    	return cover != null ? cover.getMethod() : null;
     }
 
     /**
@@ -163,17 +152,7 @@ public abstract class ClassStruct {
      * @param method MethodStruct object to add
      */
     protected void addMethod(MethodStruct method) {
-        methods.add(method);
-        addKey(method);
-    }
-    
-    /**
-     * add key to key set
-     * 
-     * @param method which MethodStruct object related to key
-     */
-    protected void addKey(MethodStruct method) {
-        keys.add(method.getKey());
+        methods.put(method.getKey(), method);
     }
     
     /**
@@ -190,7 +169,7 @@ public abstract class ClassStruct {
 	    if(isWrapper)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
-	    		fields = annotatedFields;
+    		fields = annotatedFields;
 	    return fields;
 	}
 	
@@ -206,9 +185,9 @@ public abstract class ClassStruct {
     protected Set<Method> getAnnotatedMethods() {
 		Set<Method> methods = null;
 	    if(isWrapper)
-	    		methods = ReflectionClassUtils.getPublicMethods(clazz);
+    		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
-	    		methods = annotatedMethods;
+    		methods = annotatedMethods;
 	    return methods;
 	}
 	
@@ -229,8 +208,8 @@ public abstract class ClassStruct {
 	 * 
 	 * @return set of keys
 	 */
-	public Set<Object> keySet() {
-	    return keys;
+	public Set<String> keySet() {
+	    return methods.keySet();
 	}
 	
 	/**
