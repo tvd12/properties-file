@@ -2,6 +2,7 @@ package com.tvd12.properties.file.struct;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -140,6 +141,25 @@ public abstract class MethodStruct {
         if(mname.length() > 0)
             return mname;
         return field.getName();
+	}
+	
+	/**
+	 * Get annotation annotated to field or method
+	 * 
+	 * @param <T> the annotation type
+	 * @param annotationClass the annotation class
+	 * @return the annotation
+	 */
+	protected <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+		if(field != null) {
+			if(field.isAnnotationPresent(annotationClass))
+				return field.getAnnotation(annotationClass);
+		}
+		if(method != null) {
+			if(method.isAnnotationPresent(annotationClass))
+				return method.getAnnotation(annotationClass);
+		}
+		return null;
 	}
 	
 }

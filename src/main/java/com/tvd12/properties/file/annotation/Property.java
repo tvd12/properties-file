@@ -28,6 +28,6 @@ public @interface Property {
      * 
      * @return string the prefix of group
      */
-    public String group() default "";
+    public String prefix() default "";
     
 }

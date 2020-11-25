@@ -3,9 +3,12 @@ package com.monkey.properties.file.testing;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Date;
+import java.util.Properties;
 
 import org.testng.annotations.Test;
 
+import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyWrapper;
 import com.tvd12.properties.file.struct.PropertiesBean;
 
 import lombok.Data;
@@ -36,6 +39,15 @@ public class PropertiesBeanTest {
 		assertEquals(classA.getFloatValue(), 3.0F);
 		assertEquals(classA.getLongValue(), 4);
 		assertEquals(classA.getShortValue(), 5);
+		
+		Properties dataSourceProperties = new Properties();
+		dataSourceProperties.put("datasource.username", "hello");
+		dataSourceProperties.put("datasource.password", "world");
+		
+		PropertiesBean mapping3 = new PropertiesBean(classA);
+		mapping3.put("dataSourceConfig", null, dataSourceProperties);
+		assert classA.dataSourceConfig.username.equals("hello");
+		assert classA.dataSourceConfig.password.equals("world");
 	}
 	
 	@Test
@@ -45,6 +57,7 @@ public class PropertiesBeanTest {
 	}
 	
 	@Data
+	@PropertyWrapper
 	public static class ClassA {
 		public String value;
 		public char charValue;
@@ -53,11 +66,19 @@ public class PropertiesBeanTest {
 		public float floatValue;
 		public long longValue;
 		public short shortValue;
+		@Property(prefix = "datasource")
+		public DataSourceConfig dataSourceConfig;
 	}
 	
 	@Data
 	public static class ClassB {
 		public Date date;
+	}
+	
+	@Data
+	public static class DataSourceConfig {
+		private String username;
+		private String password;
 	}
 	
 }

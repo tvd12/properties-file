@@ -9,9 +9,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.bean.Transformer;
 import com.tvd12.properties.file.constant.Constants;
+import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.util.Logger;
+import com.tvd12.properties.file.util.PropertyAnnotations;
 
 /**
  * 
@@ -27,6 +30,7 @@ public class PropertiesBean {
 	private Object bean;
     private ClassWrapper wrapper;
     private volatile boolean inited = false;
+    private ClassLoader classLoader;
     
 	private static final Map<Class, Transformer> TRANSFORMERS =
             Collections.unmodifiableMap(createTypeTransformers());
@@ -38,7 +42,12 @@ public class PropertiesBean {
     }
     
     public PropertiesBean(Object bean) {
-        init(bean);
+        this(bean, null);
+    }
+    
+    public PropertiesBean(Object bean, ClassLoader classLoader) {
+    	this.classLoader = classLoader;
+        this.init(bean);
     }
     
     public void init(Class<?> clazz) {
@@ -66,14 +75,17 @@ public class PropertiesBean {
     }
 
     public void put(Object key, Object value) {
+    	put(key, value, null);
+    }
+    
+    public void put(Object key, Object value, Properties properties) {
     	MethodStruct methodStruct = getWriteMethodStruct(key);
         if(methodStruct == null)
             return;
         if(value instanceof String)
             value = ((String) value).trim();
         try {
-    		Class argumentType = getWriteArgumentType(methodStruct);
-    		Object argument = transform(argumentType, value);
+    		Object argument = transform(methodStruct, value, properties);
     		if(methodStruct.getMethod() != null) {
     			methodStruct.getMethod().invoke(bean, argument);
     		}
@@ -93,7 +105,7 @@ public class PropertiesBean {
     public void putAll(Properties properties) {
         for(Object key : properties.keySet()) {
     		Object value = properties.get(key);
-    		put(key, value);
+    		put(key, value, properties);
         }
     }
     
@@ -101,6 +113,22 @@ public class PropertiesBean {
     	if(methodStruct.getField() != null)
     		return methodStruct.getField().getType();
 		return methodStruct.getMethod().getParameterTypes()[0];
+    }
+    
+    protected Object transform(
+    		MethodStruct methodStruct, Object value, Properties properties) {
+    	String prefix = "";
+    	Property propertyAnno = methodStruct.getAnnotation(Property.class);
+    	if(propertyAnno != null)
+    		prefix = PropertyAnnotations.getPrefix(propertyAnno);
+        Class argumentType = getWriteArgumentType(methodStruct);
+        if(properties == null || prefix.isEmpty())
+    		return transform(argumentType, value);
+        return new PropertiesMapper()
+        		.data(properties)
+        		.classLoader(classLoader)
+        		.propertyPrefix(prefix)
+        		.map(argumentType);
     }
     
 	protected Object transform(Class newType, Object value) {

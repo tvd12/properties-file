@@ -47,4 +47,26 @@ public class PropertiesUtil {
         return answer;
     }
     
+    /**
+     * Get all properties have key start with prefix
+     * 
+     * @param properties the properties all
+     * @param prefix the key prefix
+     * @return a properties object
+     */
+    @SuppressWarnings({ "rawtypes" })
+    public static Properties getPropertiesByPrefix(Map properties, String prefix) {
+        Properties answer = new Properties();
+        for(Object key : properties.keySet()) {
+        	String keyString = key.toString();
+            if(keyString.startsWith(prefix)) {
+            	String newKey = keyString;
+            	if(keyString.length() > prefix.length() + 1)
+            		newKey = keyString.substring(prefix.length() + 1);
+            	answer.put(newKey, properties.get(key));
+            }
+        }
+        return answer;
+    }
+    
 }

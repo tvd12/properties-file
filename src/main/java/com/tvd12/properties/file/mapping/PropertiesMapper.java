@@ -9,6 +9,7 @@ import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileReader;
 import com.tvd12.properties.file.struct.PropertiesBean;
+import com.tvd12.properties.file.util.PropertiesUtil;
 
 /**
  * Support for mapping a properties object or properties file to object
@@ -36,6 +37,9 @@ public class PropertiesMapper {
     //class to get resource as stream
     private ClassLoader classLoader;
     
+    // property prefix
+    private String propertyPrefix;
+    
     /**
      * set mapped class
      * 
@@ -51,11 +55,22 @@ public class PropertiesMapper {
      * 
      * set class that used to get resource as stream
      * 
-     * @param context class to get resource as tream
+     * @param context class to get resource as stream
      * @return this pointer
      */
     public PropertiesMapper context(Class<?> context) {
-        this.classLoader = context.getClassLoader();
+        return classLoader(context.getClassLoader());
+    }
+    
+    /**
+     * 
+     * set classLoader that used to get resource as stream
+     * 
+     * @param classLoader class to get resource as stream
+     * @return this pointer
+     */
+    public PropertiesMapper classLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
         return this;
     }
     
@@ -95,6 +110,17 @@ public class PropertiesMapper {
     }
     
     /**
+     * Set property prefix
+     * 
+     * @param propertyPrefix the property prefix
+     * @return this pointer
+     */
+    public PropertiesMapper propertyPrefix(String propertyPrefix) {
+    	this.propertyPrefix = propertyPrefix;
+    	return this;
+    }
+    
+    /**
      * set properties file that contains data to map
      * 
      * @param propertiesFilePath properties file path
@@ -122,8 +148,11 @@ public class PropertiesMapper {
      * @param <T> the type of object
      * @return object after mapped
      */
-    public <T> T map() {
-        return map(new PropertiesBean(newBeanInstance()));
+    @SuppressWarnings("unchecked")
+	public <T> T map() {
+    	if(bean == null && clazz == null)
+    		this.clazz = Properties.class;
+        return (T) map(clazz);
     }
     
     /**
@@ -133,9 +162,12 @@ public class PropertiesMapper {
      * @param <T> the type of object
      * @return object after mapped
      */
-    public <T> T map(Class<T> clazz) {
+    @SuppressWarnings("unchecked")
+	public <T> T map(Class<T> clazz) {
     	this.clazz(clazz);
-        return map(new PropertiesBean(newBeanInstance()));
+    	if(clazz != null && Map.class.isAssignableFrom(clazz))
+    		return (T)properties;
+        return map(new PropertiesBean(newBeanInstance(), classLoader));
     }
     
     /**
@@ -183,6 +215,8 @@ public class PropertiesMapper {
         try {
             if(properties == null)
                 properties = reader.read(classLoader, propertiesFile);
+            if(propertyPrefix != null)
+            	properties = PropertiesUtil.getPropertiesByPrefix(properties, propertyPrefix);
         } catch (PropertiesFileException e) {
             throw new IllegalStateException(e);
         }

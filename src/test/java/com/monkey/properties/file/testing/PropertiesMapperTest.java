@@ -91,6 +91,15 @@ public class PropertiesMapperTest {
         assertNotNull(object.date);
     }
     
+    @Test
+    public void testWithNoClassCase() {
+    	Properties properties = new Properties();
+    	Object output = new PropertiesMapper()
+    		.data(properties)
+    		.map();
+    	assert properties == output;
+    }
+    
     @Test(expectedExceptions = {IllegalStateException.class})
     public void newBeanInstanceInvalidCaseTest() {
         new PropertiesMapper()
