@@ -3,6 +3,8 @@ package com.tvd12.properties.file.struct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.tvd12.properties.file.mapping.MappingLevel;
+
 /**
  * Holds all GetterMethod objects
  * 
@@ -15,9 +17,10 @@ public class ClassUnwrapper extends ClassStruct {
      * Construct with java class
      * 
      * @param clazz java class
+     * @param mappingLevel the mapping level
      */
-    public ClassUnwrapper(Class<?> clazz) {
-        super(clazz);
+    public ClassUnwrapper(Class<?> clazz, MappingLevel mappingLevel) {
+        super(clazz, mappingLevel);
     }
 	
     /**

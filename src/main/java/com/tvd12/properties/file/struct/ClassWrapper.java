@@ -3,6 +3,8 @@ package com.tvd12.properties.file.struct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.tvd12.properties.file.mapping.MappingLevel;
+
 import lombok.Getter;
 
 /**
@@ -20,9 +22,10 @@ public class ClassWrapper extends ClassStruct {
      * Construct with java class
      * 
      * @param clazz java class
+     * @param mappingLevel the mapping level
      */
-	public ClassWrapper(Class<?> clazz) {
-        super(clazz);
+	public ClassWrapper(Class<?> clazz, MappingLevel mappingLevel) {
+        super(clazz, mappingLevel);
     }
 	
 	/**

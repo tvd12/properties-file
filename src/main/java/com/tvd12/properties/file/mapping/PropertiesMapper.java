@@ -8,6 +8,7 @@ import java.util.Properties;
 import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileReader;
+import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 import com.tvd12.properties.file.struct.PropertiesBean;
 import com.tvd12.properties.file.util.PropertiesUtil;
 
@@ -39,6 +40,9 @@ public class PropertiesMapper {
     
     // property prefix
     private String propertyPrefix;
+    
+    // mapping level
+    private MappingLevel mappingLevel = MappingLevel.ALL;
     
     /**
      * set mapped class
@@ -121,6 +125,17 @@ public class PropertiesMapper {
     }
     
     /**
+     * Set mapping level
+     * 
+     * @param mappingLevel the mapping level
+     * @return this pointer
+     */
+    public PropertiesMapper mappingLevel(MappingLevel mappingLevel) {
+    	this.mappingLevel = mappingLevel;
+    	return this;
+    }
+    
+    /**
      * set properties file that contains data to map
      * 
      * @param propertiesFilePath properties file path
@@ -167,7 +182,7 @@ public class PropertiesMapper {
     	this.clazz(clazz);
     	if(clazz != null && Map.class.isAssignableFrom(clazz))
     		return (T)properties;
-        return map(new PropertiesBean(newBeanInstance(), classLoader));
+        return map(new PropertiesBean(newBeanInstance(), mappingLevel, classLoader));
     }
     
     /**
@@ -180,10 +195,6 @@ public class PropertiesMapper {
     public <T> T map(PropertiesBean mapping) {
     	if(reader == null)
     		reader = new BaseFileReader();
-		if(bean != null)
-			mapping.init(bean);
-		else
-			mapping.init(clazz);
 		mapping.putAll(getProperties());
         T answer = mapping.getObject();
         return answer;
@@ -196,13 +207,10 @@ public class PropertiesMapper {
      * @return
      */
     private Object newBeanInstance() {
-        try {
-            if(bean == null)
-                bean = clazz.newInstance();
-            clazz = bean.getClass();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalStateException("Can not create new bean instance", e);
-        }
+    	if(bean == null)
+            bean = ReflectionClassUtils.newInstance(clazz);
+    	else
+    		clazz = bean.getClass();
         return bean;
     }
     

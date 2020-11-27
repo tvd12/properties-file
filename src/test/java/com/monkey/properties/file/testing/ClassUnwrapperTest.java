@@ -3,6 +3,7 @@ package com.monkey.properties.file.testing;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.struct.ClassUnwrapper;
 
 import lombok.Data;
@@ -11,13 +12,8 @@ public class ClassUnwrapperTest {
 
     @Test
     public void test() {
-        new ClassUnwrapper(ClassA.class);
-        new ClassUnwrapper(ClassB.class);
-    }
-    
-    @Test(expectedExceptions = {IllegalStateException.class})
-    public void testNewInstanceInvalidCase() {
-        new ClassUnwrapper(ClassA.class).newInstance();
+        new ClassUnwrapper(ClassA.class, MappingLevel.ALL);
+        new ClassUnwrapper(ClassB.class, MappingLevel.ALL);
     }
     
     public static class ClassA {
@@ -45,17 +41,17 @@ public class ClassUnwrapperTest {
     
     @Data
     public class ClassB {
-    		@Property
-    		public String value;
-    		
-    		@Property
-    		public boolean hasValue() {
-    			return true;
-    		}
-    		
-    		@Property
-    		public boolean isNow() {
-    			return true;
-    		}
+		@Property
+		public String value;
+		
+		@Property
+		public boolean hasValue() {
+			return true;
+		}
+		
+		@Property
+		public boolean isNow() {
+			return true;
+		}
     }
 }

@@ -6,8 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.annotation.PropertyWrapper;
+import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 
 /**
@@ -23,9 +22,7 @@ public abstract class ClassStruct {
     //java class to parse
 	protected Class<?> clazz;
 	
-	//whether class annotated with @PropertyWrapper annotation
-	//true if class annotated with @PropertyWrapper annotation or has no @Property annotation in class
-	protected boolean isWrapper;
+	protected MappingLevel mappingLevel;
 	
 	protected Set<Field> annotatedFields;
 	protected Set<Method> annotatedMethods;
@@ -37,22 +34,15 @@ public abstract class ClassStruct {
 	 * construct with java class
 	 * 
 	 * @param clazz java class
+	 * @param mappingLevel the mapping level
 	 */
-    public ClassStruct(Class<?> clazz) {
-        init(clazz);
-    }
-	
-    /**
-     * initialize with java class
-     * 
-     * @param clazz the class to parse
-     */
-	protected void init(Class<?> clazz) {
-		this.clazz = clazz;
-		this.checkIsWrapper();
+    public ClassStruct(Class<?> clazz, MappingLevel mappingLevel) {
+    	this.clazz = clazz;
+    	this.mappingLevel = mappingLevel;
 		this.initWithFields();
         this.initWithMethods();
-	}
+    }
+	
 	
 	/**
 	 * get all annotated fields and get their reader or setter method
@@ -74,22 +64,6 @@ public abstract class ClassStruct {
                 continue;
             addMethod(initWithMethod(method));
         }
-    }
-    
-    /**
-     * check whether class annotated with @PropertyWrapper annotation
-     * or class has any fields or methods annotated with @Property annotation
-     * 
-     */
-    protected void checkIsWrapper() {
-        isWrapper = clazz
-                .isAnnotationPresent(PropertyWrapper.class);
-        if(isWrapper)   return;
-        annotatedFields = ReflectionClassUtils
-                .getFieldsWithAnnotation(clazz, Property.class);
-        annotatedMethods = ReflectionClassUtils
-                .getMethodsWithAnnotation(clazz, Property.class);
-        isWrapper = annotatedFields.isEmpty() && annotatedMethods.isEmpty();
     }
 
     /**
@@ -129,7 +103,7 @@ public abstract class ClassStruct {
      */
     protected boolean containsMethod(Method method) {
         for(MethodStruct cover : methods.values())  {
-            if(cover.getMethod().equals(method))
+            if(cover.getMethod() != null && cover.getMethod().equals(method))
                 return true;
         }
         return false;
@@ -165,7 +139,7 @@ public abstract class ClassStruct {
      */
     protected Set<Field> getAnnotatedFields() {
 		Set<Field> fields = null;
-	    if(isWrapper)
+	    if(mappingLevel == MappingLevel.ALL)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
     		fields = annotatedFields;
@@ -183,24 +157,11 @@ public abstract class ClassStruct {
      */
     protected Set<Method> getAnnotatedMethods() {
 		Set<Method> methods = null;
-	    if(isWrapper)
+		if(mappingLevel == MappingLevel.ALL)
     		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
     		methods = annotatedMethods;
 	    return methods;
-	}
-	
-	/**
-	 * create new an instance of java class
-	 * 
-	 * @return an object
-	 */
-	public Object newInstance() {
-	    try {
-            return clazz.newInstance();
-        } catch (Exception e) {
-           throw new IllegalStateException("Can not create instance of class " + clazz, e);
-        }
 	}
 	
 	/**

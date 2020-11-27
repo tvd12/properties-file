@@ -7,7 +7,6 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.annotation.PropertyWrapper;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
 
 import lombok.Getter;
@@ -82,7 +81,6 @@ public class PropertiesMapper3Test {
 	
 	@Setter
 	@Getter
-	@PropertyWrapper
 	public static class ClassD extends ClassC{
 		private String valueD;
 	}

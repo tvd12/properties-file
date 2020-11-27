@@ -12,7 +12,9 @@ import java.util.Properties;
 import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.bean.Transformer;
 import com.tvd12.properties.file.constant.Constants;
+import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
+import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 import com.tvd12.properties.file.util.Logger;
 import com.tvd12.properties.file.util.PropertyAnnotations;
 
@@ -29,41 +31,25 @@ public class PropertiesBean {
 
 	private Object bean;
     private ClassWrapper wrapper;
-    private volatile boolean inited = false;
     private ClassLoader classLoader;
     
 	private static final Map<Class, Transformer> TRANSFORMERS =
             Collections.unmodifiableMap(createTypeTransformers());
 	
-	public PropertiesBean() {}
-
     public PropertiesBean(Class<?> clazz) {
-        init(clazz);
+        this(ReflectionClassUtils.newInstance(clazz));
     }
     
     public PropertiesBean(Object bean) {
-        this(bean, null);
+        this(bean, MappingLevel.ALL, null);
     }
     
-    public PropertiesBean(Object bean, ClassLoader classLoader) {
+    public PropertiesBean(
+    		Object bean, 
+    		MappingLevel mappingLevel, ClassLoader classLoader) {
+    	this.bean = bean;
     	this.classLoader = classLoader;
-        this.init(bean);
-    }
-    
-    public void init(Class<?> clazz) {
-		if(!inited) {
-			this.inited = true;
-			this.wrapper = new ClassWrapper(clazz);
-			this.bean = wrapper.newInstance();
-		}
-    }
-    
-    public void init(Object bean) {
-		if(!inited) {
-			this.inited = true;
-			this.bean = bean;
-			this.wrapper = new ClassWrapper(bean.getClass());
-		}
+    	this.wrapper = new ClassWrapper(bean.getClass(), mappingLevel);
     }
     
     public <T> T getObject() {

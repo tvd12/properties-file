@@ -8,7 +8,6 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.annotation.PropertyWrapper;
 import com.tvd12.properties.file.struct.PropertiesBean;
 
 import lombok.Data;
@@ -17,14 +16,10 @@ public class PropertiesBeanTest {
 
 	@Test
 	public void test() {
-		PropertiesBean mapping1 = new PropertiesBean();
-		mapping1.init(ClassA.class);
-		mapping1.init(ClassA.class);
+		new PropertiesBean(ClassA.class);
 
 		ClassA classA = new ClassA();
-		PropertiesBean mapping2 = new PropertiesBean();
-		mapping2.init(classA);
-		mapping2.init(new ClassA());
+		PropertiesBean mapping2 = new PropertiesBean(classA);
 		
 		mapping2.put("charValue", "c");
 		mapping2.put("byteValue", "1");
@@ -57,7 +52,6 @@ public class PropertiesBeanTest {
 	}
 	
 	@Data
-	@PropertyWrapper
 	public static class ClassA {
 		public String value;
 		public char charValue;

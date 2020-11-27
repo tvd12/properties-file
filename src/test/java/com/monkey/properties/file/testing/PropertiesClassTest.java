@@ -3,7 +3,6 @@ package com.monkey.properties.file.testing;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.annotation.PropertyWrapper;
 import com.tvd12.properties.file.struct.PropertiesBean;
 import com.tvd12.test.base.BaseTest;
 
@@ -84,7 +83,6 @@ public class PropertiesClassTest extends BaseTest {
     }
     
     @Data
-    @PropertyWrapper
     public static class ClassB {
         @Property("n")
         private String name;

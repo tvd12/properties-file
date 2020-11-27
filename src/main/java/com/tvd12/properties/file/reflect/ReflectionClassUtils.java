@@ -9,7 +9,14 @@ import java.util.Set;
 
 public final class ReflectionClassUtils {
 
-	private ReflectionClassUtils() {
+	private ReflectionClassUtils() {}
+	
+	public static Object newInstance(Class<?> clazz) {
+	    try {
+            return clazz.newInstance();
+        } catch (Exception e) {
+           throw new IllegalStateException("Can not create instance of class " + clazz, e);
+        }
 	}
 	
 	public static Set<Field> getValidFields(Class<?> clazz) {

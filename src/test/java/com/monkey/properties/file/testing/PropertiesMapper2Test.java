@@ -44,7 +44,7 @@ public class PropertiesMapper2Test {
         PropertiesMapper propertiesMapper = new PropertiesMapper()
                 .data(properties)
                 .clazz(ClassA.class);
-        PropertiesBean pb = new PropertiesBean();
+        PropertiesBean pb = new PropertiesBean(ClassA.class);
         propertiesMapper.map(pb);
         ClassA objectx =  propertiesMapper.map(pb);
         assertEquals(objectx.getName(), "hello");
@@ -59,7 +59,7 @@ public class PropertiesMapper2Test {
         PropertiesMapper propertiesMapperx = new PropertiesMapper()
                 .data(properties)
                 .bean(new ClassA());
-        PropertiesBean pbx = new PropertiesBean();
+        PropertiesBean pbx = new PropertiesBean(ClassA.class);
         propertiesMapper.map(pb);
         ClassA objectxx =  propertiesMapperx.map(pbx);
         assertEquals(objectxx.getName(), "hello");

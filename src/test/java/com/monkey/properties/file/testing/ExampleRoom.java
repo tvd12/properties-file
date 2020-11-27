@@ -1,12 +1,10 @@
 package com.monkey.properties.file.testing;
 
 import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.annotation.PropertyWrapper;
 
 import lombok.Getter;
 import lombok.Setter;
 
-@PropertyWrapper
 public class ExampleRoom {
 
     @Setter @Getter
