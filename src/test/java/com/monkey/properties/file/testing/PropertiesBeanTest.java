@@ -27,6 +27,7 @@ public class PropertiesBeanTest {
 		mapping2.put("floatValue", "3.0");
 		mapping2.put("longValue", "4");
 		mapping2.put("shortValue", "5");
+		mapping2.put("not found", "not found");
 		
 		assertEquals(classA.getCharValue(), 'c');
 		assertEquals(classA.getByteValue(), 1);

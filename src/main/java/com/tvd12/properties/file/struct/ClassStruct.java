@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 
@@ -20,15 +21,14 @@ import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 public abstract class ClassStruct {
 	
     //java class to parse
-	protected Class<?> clazz;
+	protected final Class<?> clazz;
 	
-	protected MappingLevel mappingLevel;
+	protected final MappingLevel mappingLevel;
 	
-	protected Set<Field> annotatedFields;
-	protected Set<Method> annotatedMethods;
+	protected final MethodFilter methodFilter;
 	
 	//map of method structure and key
-	protected Map<String, MethodStruct> methods = new HashMap<>();
+	protected final Map<String, MethodStruct> methods;
 	
 	/**
 	 * construct with java class
@@ -39,6 +39,8 @@ public abstract class ClassStruct {
     public ClassStruct(Class<?> clazz, MappingLevel mappingLevel) {
     	this.clazz = clazz;
     	this.mappingLevel = mappingLevel;
+    	this.methods = new HashMap<>();
+    	this.methodFilter = methodFilter();
 		this.initWithFields();
         this.initWithMethods();
     }
@@ -48,7 +50,7 @@ public abstract class ClassStruct {
 	 * get all annotated fields and get their reader or setter method
 	 */
     private void initWithFields() {
-        Set<Field> fields = getAnnotatedFields();
+        Set<Field> fields = getAcceptedFields();
         for(Field field : fields) {
             addMethod(initWithField(field));
         }
@@ -58,9 +60,9 @@ public abstract class ClassStruct {
      * get all annotated methods and filter duplicated method
      */
     private void initWithMethods() {
-        Set<Method> methods = getAnnotatedMethods();
+        Set<Method> methods = getAcceptedMethods();
         for(Method method : methods) {
-            if(!methodFilter().filter(method))
+            if(!methodFilter.filter(method))
                 continue;
             addMethod(initWithMethod(method));
         }
@@ -129,38 +131,34 @@ public abstract class ClassStruct {
     }
     
     /**
-     * If class annotated with PropertyWrapper annotation then return all fields in class.
-     * If class not annotated with PropertyWrapper annotation and has no fields or methods annotated
-     * with Property annotation then return all fields
-     * If class not annotated with PropertyWrapper and has any fields and methods annotated with
+     * If mappingLevel == MappingLevel.ALL then return all fields in class.
+     * If mappingLevel == MappingLevel.ANNOTATION any fields and methods annotated with
      * Property annotation then return annotated fields 
      * 
      * @return set of java fields
      */
-    protected Set<Field> getAnnotatedFields() {
+    protected Set<Field> getAcceptedFields() {
 		Set<Field> fields = null;
 	    if(mappingLevel == MappingLevel.ALL)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
-    		fields = annotatedFields;
+    		fields = ReflectionClassUtils.getFieldsWithAnnotation(clazz, Property.class);
 	    return fields;
 	}
 	
 	/**
-     * If class annotated with PropertyWrapper annotation then return all methods in class.
-     * If class not annotated with PropertyWrapper annotation and has no fields or methods annotated
-     * with Property annotation then return all methods
-     * If class not annotated with PropertyWrapper and has any fields and methods annotated with
+     * If mappingLevel == MappingLevel.ALL then return all methods in class.
+     * If mappingLevel == MappingLevel.ANNOTATION any fields and methods annotated with
      * Property annotation then return annotated methods 
      * 
      * @return set of java methods
      */
-    protected Set<Method> getAnnotatedMethods() {
+    protected Set<Method> getAcceptedMethods() {
 		Set<Method> methods = null;
 		if(mappingLevel == MappingLevel.ALL)
     		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
-    		methods = annotatedMethods;
+    		methods = ReflectionClassUtils.getMethodsWithAnnotation(clazz, Property.class);
 	    return methods;
 	}
 	
@@ -187,8 +185,7 @@ public abstract class ClassStruct {
 	    return new MethodFilter() {
             @Override
             public boolean filter(Method method) {
-                return !containsMethod(method)
-                        && validateMethod(method);
+            	return validateMethod(method) && !containsMethod(method);
             }
         };
 	}

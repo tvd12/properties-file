@@ -68,10 +68,10 @@ public class PropertiesBean {
     	MethodStruct methodStruct = getWriteMethodStruct(key);
         if(methodStruct == null)
             return;
-        if(value instanceof String)
-            value = ((String) value).trim();
         try {
     		Object argument = transform(methodStruct, value, properties);
+    		if(argument == null)
+    			return;
     		if(methodStruct.getMethod() != null) {
     			methodStruct.getMethod().invoke(bean, argument);
     		}
@@ -89,7 +89,7 @@ public class PropertiesBean {
     }
     
     public void putAll(Properties properties) {
-        for(Object key : properties.keySet()) {
+        for(Object key : wrapper.keySet()) {
     		Object value = properties.get(key);
     		put(key, value, properties);
         }
@@ -108,8 +108,14 @@ public class PropertiesBean {
     	if(propertyAnno != null)
     		prefix = PropertyAnnotations.getPrefix(propertyAnno);
         Class argumentType = getWriteArgumentType(methodStruct);
-        if(properties == null || prefix.isEmpty())
-    		return transform(argumentType, value);
+        if(properties == null || prefix.isEmpty()) {
+        	if(value == null)
+        		return null;
+        	Object v = value;
+        	if(v instanceof String)
+                v = ((String) value).trim();
+    		return transform(argumentType, v);
+        }
         return new PropertiesMapper()
         		.data(properties)
         		.classLoader(classLoader)

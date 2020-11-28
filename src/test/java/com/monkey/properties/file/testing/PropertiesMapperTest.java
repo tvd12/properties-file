@@ -9,11 +9,14 @@ import java.util.Properties;
 
 import org.testng.annotations.Test;
 
+import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.util.PropertiesUtil;
 
 import lombok.Data;
+import lombok.Setter;
 
 public class PropertiesMapperTest {
 
@@ -80,6 +83,8 @@ public class PropertiesMapperTest {
         properties.put("age", 24);
         properties.put("clazz", ClassC.class);
         properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+        properties.put("datasource.username", "hello");
+		properties.put("datasource.password", "world");
         
         ClassC object = new PropertiesMapper()
                 .data(PropertiesUtil.toMap(properties))
@@ -89,6 +94,39 @@ public class PropertiesMapperTest {
         assertEquals(object.money, 10);
         assertEquals(object.clazz, ClassC.class);
         assertNotNull(object.date);
+        
+        assertEquals(object.dataSourceConfig.username, "hello");
+        assertEquals(object.dataSourceConfig.password, "world");
+        Properties dataSourceProperties = PropertiesUtil.getPropertiesByPrefix(properties, "datasource");
+        assertEquals(object.dataSourceProperties, dataSourceProperties);
+        System.out.println("dataSourceProperties: " + dataSourceProperties);
+    }
+    
+    @Test
+    public void testMapPropertiesToBeanWithAnntations() {
+    	Properties properties = new Properties();
+        properties.setProperty("name", "hello");
+        properties.put("age", 24);
+        properties.put("clazz", ClassC.class);
+        properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+        properties.put("datasource.username", "hello");
+		properties.put("datasource.password", "world");
+        
+		ClassD object = new PropertiesMapper()
+                .data(PropertiesUtil.toMap(properties))
+                .mappingLevel(MappingLevel.ANNOTATION)
+                .map(ClassD.class);
+        assertEquals(object.name, "hello");
+        assertEquals(object.age, 24);
+        assertEquals(object.money, 10);
+        assertEquals(object.clazz, ClassC.class);
+        assertNotNull(object.date);
+        
+        assertEquals(object.dataSourceConfig.username, "hello");
+        assertEquals(object.dataSourceConfig.password, "world");
+        Properties dataSourceProperties = PropertiesUtil.getPropertiesByPrefix(properties, "datasource");
+        assertEquals(object.dataSourceProperties, dataSourceProperties);
+        System.out.println("dataSourceProperties: " + dataSourceProperties);
     }
     
     @Test
@@ -150,5 +188,58 @@ public class PropertiesMapperTest {
         protected Date date;
         
         protected Class<?> clazz;
+        
+        @Property(prefix = "datasource")
+        protected DataSourceConfig dataSourceConfig;
+        
+        @Property(prefix = "datasource")
+        protected Properties dataSourceProperties;
     }
+    
+    public static class ClassD extends ClassDBase implements IClassD {
+    	@Property
+        protected long money = 10;
+        
+    	@Property
+        protected Date date;
+        
+    	@Property
+        protected Class<?> clazz;
+        
+    	@Setter
+        protected DataSourceConfig dataSourceConfig;
+        
+    	@Setter
+        protected Properties dataSourceProperties;
+    }
+    
+    public static class ClassDBase {
+    	@Property
+        public String name;
+    	@Property
+        public int age;
+    }
+    
+    public static interface IClassD extends IIClassD {
+    	
+        @Property(prefix = "datasource")
+        public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
+
+        @Property(prefix = "datasource")
+        public void setDataSourceProperties(Properties dataSourceProperties);
+    }
+    
+    public static interface IIClassD {
+    	
+        @Property(prefix = "datasource")
+        public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
+
+        @Property(prefix = "datasource")
+        public void setDataSourceProperties(Properties dataSourceProperties);
+    }
+    
+	public static class DataSourceConfig {
+		protected String username;
+		protected String password;
+	}
 }

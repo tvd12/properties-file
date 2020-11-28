@@ -181,7 +181,7 @@ public class PropertiesMapper {
 	public <T> T map(Class<T> clazz) {
     	this.clazz(clazz);
     	if(clazz != null && Map.class.isAssignableFrom(clazz))
-    		return (T)properties;
+    		return (T)getProperties();
         return map(new PropertiesBean(newBeanInstance(), mappingLevel, classLoader));
     }
     
