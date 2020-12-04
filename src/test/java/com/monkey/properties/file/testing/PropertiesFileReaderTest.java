@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.reader.BaseFileReader;
+import com.tvd12.properties.file.util.InputStreamUtil;
 import com.tvd12.test.base.BaseTest;
 import com.tvd12.test.reflect.MethodBuilder;
 import com.tvd12.test.reflect.ReflectMethodUtil;
@@ -75,7 +76,7 @@ public class PropertiesFileReaderTest extends BaseTest {
 	@Test
 	public void getInputStreamByAbsolutePathTest() {
 	    Method method = MethodBuilder.create()
-                .clazz(BaseFileReader.class)
+                .clazz(InputStreamUtil.class)
                 .method("getInputStreamByAbsolutePath")
                 .argument(File.class)
                 .build();

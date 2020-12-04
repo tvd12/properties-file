@@ -2,8 +2,6 @@ package com.tvd12.properties.file.reader;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -12,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.util.InputStreamUtil;
 
 /**
  * Support for reading properties file and store the data to properties object
@@ -51,14 +50,7 @@ public class BaseFileReader implements FileReader {
 	
 	@Override
 	public Properties read(ClassLoader classLoader, String propertiesFile) throws PropertiesFileException {
-		InputStream inputStream = getResourceAsStream(classLoader, propertiesFile); 
-        if(inputStream == null)
-        		inputStream = getResourceAsStream(classLoader, "/" + propertiesFile);
-        if(inputStream == null)
-            inputStream = getInputStreamByAbsolutePath(propertiesFile);
-        if(inputStream == null)
-            throw new PropertiesFileException("Can not read properties file in path " 
-                    + propertiesFile); 
+		InputStream inputStream = InputStreamUtil.getInputStream(classLoader, propertiesFile);
         return loadInputStream(inputStream);
 	}
 	
@@ -84,7 +76,7 @@ public class BaseFileReader implements FileReader {
      */
     @Override
     public Properties read(String propertiesFile) throws PropertiesFileException {
-        return read(getDefaultClassLoader(), propertiesFile);
+        return read(InputStreamUtil.getDefaultClassLoader(), propertiesFile);
     }
     
     /* 
@@ -92,7 +84,7 @@ public class BaseFileReader implements FileReader {
      */
     @Override
     public List<Properties> read(String... propertiesFiles) throws PropertiesFileException {
-        return read(getDefaultClassLoader(), propertiesFiles);
+        return read(InputStreamUtil.getDefaultClassLoader(), propertiesFiles);
     }
     
     /* (non-Javadoc)
@@ -100,7 +92,9 @@ public class BaseFileReader implements FileReader {
      */
     @Override
     public Properties read(File propertiesFile) throws PropertiesFileException {
-        return loadInputStream(getInputStreamByAbsolutePath(propertiesFile));
+        return loadInputStream(
+        		InputStreamUtil.getInputStreamByAbsolutePath(propertiesFile)
+        );
     }
     
     /* (non-Javadoc)
@@ -183,56 +177,4 @@ public class BaseFileReader implements FileReader {
 		}
 	}
 	
-	/**
-	 * Get a input stream from a file if it exists and be readable 
-	 * 
-	 * @param propertiesFile properties file path
-	 * @return an input stream object
-	 */
-	private InputStream getInputStreamByAbsolutePath(String propertiesFile) {
-		return getInputStreamByAbsolutePath(new File(propertiesFile));
-	}
-	
-	/**
-	 * 
-	 * Get a input stream from a file if it exists and be readable
-	 * 
-	 * @param file properties file
-	 * @return input stream
-	 */
-	private InputStream getInputStreamByAbsolutePath(File file) {
-        try {
-        	return new FileInputStream(file);
-        } 
-        catch (FileNotFoundException e) {
-            return null;
-        }
-    }
-	
-	/**
-	 * Get a input stream from a file in project
-	 * 
-	 * @param classLoader the class loader
-	 * @param propertiesFile properties file in class path
-	 * @return an inputstream object
-	 */
-	private InputStream getResourceAsStream(ClassLoader classLoader,
-			String propertiesFile) {
-		ClassLoader acceptClassLoader = classLoader;
-		if(acceptClassLoader == null)
-			acceptClassLoader = getDefaultClassLoader();
-		InputStream ip = acceptClassLoader.getResourceAsStream(propertiesFile);
-		if(ip == null)
-			ip = ClassLoader.getSystemResourceAsStream(propertiesFile);
-		return ip;
-	}
-	
-	/**
-	 * Get default class loader
-	 * 
-	 * @return the current thread's class loader
-	 */
-	protected ClassLoader getDefaultClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
 }
