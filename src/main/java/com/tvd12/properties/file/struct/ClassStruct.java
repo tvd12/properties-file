@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 
@@ -30,15 +30,21 @@ public abstract class ClassStruct {
 	//map of method structure and key
 	protected final Map<String, MethodStruct> methods;
 	
+	protected final PropertyAnnotations propertyAnnotations;
+	
 	/**
 	 * construct with java class
 	 * 
 	 * @param clazz java class
 	 * @param mappingLevel the mapping level
 	 */
-    public ClassStruct(Class<?> clazz, MappingLevel mappingLevel) {
+    public ClassStruct(
+    		Class<?> clazz, 
+    		MappingLevel mappingLevel, 
+    		PropertyAnnotations propertyAnnotations) {
     	this.clazz = clazz;
     	this.mappingLevel = mappingLevel;
+    	this.propertyAnnotations = propertyAnnotations;
     	this.methods = new HashMap<>();
     	this.methodFilter = methodFilter();
 		this.initWithFields();
@@ -133,7 +139,7 @@ public abstract class ClassStruct {
     /**
      * If mappingLevel == MappingLevel.ALL then return all fields in class.
      * If mappingLevel == MappingLevel.ANNOTATION any fields and methods annotated with
-     * Property annotation then return annotated fields 
+     * PropertyForTest annotation then return annotated fields 
      * 
      * @return set of java fields
      */
@@ -142,14 +148,16 @@ public abstract class ClassStruct {
 	    if(mappingLevel == MappingLevel.ALL)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
-    		fields = ReflectionClassUtils.getFieldsWithAnnotation(clazz, Property.class);
+    		fields = ReflectionClassUtils.getFieldsWithAnnotations(
+    				clazz, 
+    				propertyAnnotations.getAnnotationClasses());
 	    return fields;
 	}
 	
 	/**
      * If mappingLevel == MappingLevel.ALL then return all methods in class.
      * If mappingLevel == MappingLevel.ANNOTATION any fields and methods annotated with
-     * Property annotation then return annotated methods 
+     * PropertyForTest annotation then return annotated methods 
      * 
      * @return set of java methods
      */
@@ -158,7 +166,9 @@ public abstract class ClassStruct {
 		if(mappingLevel == MappingLevel.ALL)
     		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
-    		methods = ReflectionClassUtils.getMethodsWithAnnotation(clazz, Property.class);
+    		methods = ReflectionClassUtils.getMethodsWithAnnotations(
+    				clazz, 
+    				propertyAnnotations.getAnnotationClasses());
 	    return methods;
 	}
 	

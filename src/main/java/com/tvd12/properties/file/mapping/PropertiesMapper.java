@@ -5,6 +5,8 @@ import static com.tvd12.properties.file.util.PropertiesUtil.toProperties;
 import java.util.Map;
 import java.util.Properties;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotation;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.reader.BaseFileReader;
@@ -47,6 +49,8 @@ public class PropertiesMapper {
     
     // the value converter
     private ValueConverter valueConverter;
+    
+    private PropertyAnnotations propertyAnnotations;
     
     /**
      * set mapped class
@@ -140,6 +144,30 @@ public class PropertiesMapper {
     }
     
     /**
+     * Add an property annotation
+     * 
+     * @param annotation the property annotation
+     * @return this pointer
+     */
+    public PropertiesMapper addPropertyAnnotation(PropertyAnnotation annotation) {
+    	if(propertyAnnotations == null)
+    		propertyAnnotations = new PropertyAnnotations();
+    	this.propertyAnnotations.addPropertyAnnotation(annotation);
+    	return this;
+    }
+    
+    /**
+     * Set PropertyAnnotations
+     * 
+     * @param propertyAnnotations the PropertyAnnotations
+     * @return this pointer
+     */
+    public PropertiesMapper propertyAnnotations(PropertyAnnotations propertyAnnotations) {
+    	this.propertyAnnotations = propertyAnnotations;
+    	return this;
+    }
+    
+    /**
      * set properties file that contains data to map
      * 
      * @param propertiesFilePath properties file path
@@ -197,11 +225,14 @@ public class PropertiesMapper {
     	this.clazz(clazz);
     	if(clazz != null && Map.class.isAssignableFrom(clazz))
     		return (T)getProperties();
+    	if(propertyAnnotations == null)
+    		propertyAnnotations = new PropertyAnnotations();
         return map(
         		new PropertiesBean(
 	        		newBeanInstance(), 
 	        		mappingLevel, 
 	        		valueConverter, 
+	        		propertyAnnotations,
 	        		classLoader
 	        	));
     }

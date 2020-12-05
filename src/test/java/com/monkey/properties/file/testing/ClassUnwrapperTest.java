@@ -3,6 +3,7 @@ package com.monkey.properties.file.testing;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.struct.ClassUnwrapper;
 
@@ -12,8 +13,8 @@ public class ClassUnwrapperTest {
 
     @Test
     public void test() {
-        new ClassUnwrapper(ClassA.class, MappingLevel.ALL);
-        new ClassUnwrapper(ClassB.class, MappingLevel.ALL);
+        new ClassUnwrapper(ClassA.class, MappingLevel.ALL, new PropertyAnnotations());
+        new ClassUnwrapper(ClassB.class, MappingLevel.ALL, new PropertyAnnotations());
     }
     
     public static class ClassA {

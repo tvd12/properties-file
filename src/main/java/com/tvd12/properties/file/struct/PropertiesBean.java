@@ -4,14 +4,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Properties;
 
-import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.io.DefaultValueConverter;
 import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 import com.tvd12.properties.file.util.Logger;
-import com.tvd12.properties.file.util.PropertyAnnotations;
 
 /**
  * 
@@ -28,16 +27,29 @@ public class PropertiesBean {
     private final ClassWrapper wrapper;
     private final ClassLoader classLoader;
     private final ValueConverter valueConverter;
+    private final PropertyAnnotations propertyAnnotations;
     
     public PropertiesBean(Class<?> clazz) {
-        this(ReflectionClassUtils.newInstance(clazz));
+    	this(clazz, new PropertyAnnotations());
     }
     
-    public PropertiesBean(Object bean) {
+    public PropertiesBean(
+    		Class<?> clazz, 
+    		PropertyAnnotations propertyAnnotations) {
+        this(
+			ReflectionClassUtils.newInstance(clazz),
+			propertyAnnotations
+        );
+    }
+    
+    public PropertiesBean(
+    		Object bean, 
+    		PropertyAnnotations propertyAnnotations) {
         this(
     		bean, 
     		MappingLevel.ALL,
     		DefaultValueConverter.getInstance(),
+    		propertyAnnotations,
     		null
         );
     }
@@ -46,10 +58,12 @@ public class PropertiesBean {
     		Object bean, 
     		MappingLevel mappingLevel,
     		ValueConverter valueConverter,
+    		PropertyAnnotations propertyAnnotations,
     		ClassLoader classLoader) {
     	this.bean = bean;
     	this.classLoader = classLoader;
-    	this.wrapper = new ClassWrapper(bean.getClass(), mappingLevel);
+    	this.propertyAnnotations = propertyAnnotations;
+    	this.wrapper = new ClassWrapper(bean.getClass(), mappingLevel, propertyAnnotations);
     	this.valueConverter = valueConverter != null ? valueConverter : DefaultValueConverter.getInstance();
     }
     
@@ -85,7 +99,6 @@ public class PropertiesBean {
         }
         catch (Exception e) {
     		printError("put value: " + value + " with key: " + key + " error", e);
-    		e.printStackTrace();
 			return;
 		}
     }
@@ -105,10 +118,7 @@ public class PropertiesBean {
     
     protected Object transform(
     		MethodStruct methodStruct, Object value, Properties properties) {
-    	String prefix = "";
-    	Property propertyAnno = methodStruct.getAnnotation(Property.class);
-    	if(propertyAnno != null)
-    		prefix = PropertyAnnotations.getPrefix(propertyAnno);
+    	String prefix = methodStruct.getPropertyPrefix();
         Class argumentType = getWriteArgumentType(methodStruct);
         if(properties == null || prefix.isEmpty()) {
         	if(value == null)
@@ -123,6 +133,7 @@ public class PropertiesBean {
         		.classLoader(classLoader)
         		.propertyPrefix(prefix)
         		.valueConverter(valueConverter)
+        		.propertyAnnotations(propertyAnnotations)
         		.map(argumentType);
     }
     

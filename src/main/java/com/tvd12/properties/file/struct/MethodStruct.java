@@ -2,12 +2,12 @@ package com.tvd12.properties.file.struct;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 
 /**
@@ -28,8 +28,15 @@ public abstract class MethodStruct {
 	//java field to get setter or getter method
 	protected Field field;
 	
-	//key is value of @Property annotation or field name or method name
+	//key is value of @PropertyForTest annotation or field name or method name
 	protected String key;
+	
+	@Getter(AccessLevel.NONE)
+	protected final PropertyAnnotations propertyAnnotations;
+	
+	public MethodStruct(PropertyAnnotations propertyAnnotations) {
+		this.propertyAnnotations = propertyAnnotations;
+	}
 	
 	/**
 	 * Initialize with java method, get key and type from java method
@@ -97,7 +104,7 @@ public abstract class MethodStruct {
 	
 	/**
 	 * Get key related to method.
-	 * If method annotated with @Property annotation then return value of @Property annotation.
+	 * If method annotated with @PropertyForTest annotation then return value of @PropertyForTest annotation.
 	 * If key still null then return field name related to method.
 	 * If key still null then return method name
 	 * 
@@ -105,12 +112,9 @@ public abstract class MethodStruct {
 	 * @return key as string
 	 */
 	protected String getKey(Method method) {
-		String mname = "";
-		Property property = method
-		        .getAnnotation(Property.class);
-		if(property != null)
-		    mname = property.value().trim();
-		if(mname.length() > 0)    return mname;
+		String mname = propertyAnnotations.getPropertyName(method);
+		if(!mname.isEmpty())
+			return mname;
 		mname = method.getName();
 		if(mname.startsWith("get")
 				|| mname.startsWith("set")
@@ -125,40 +129,38 @@ public abstract class MethodStruct {
 	
 	/**
      * Get key related to field.
-     * If method annotated with @Property annotation then return value of @Property annotation.
+     * If method annotated with @PropertyForTest annotation then return value of @PropertyForTest annotation.
      * If key still null then return field name
      * 
      * @param field java field object
      * @return key as string
      */
 	protected String getKey(Field field) {
-	    String mname = "";
-	    Property property = field
-	            .getAnnotation(Property.class);
-        if(property != null)
-            mname = property.value().trim();
-        if(mname.length() > 0)
+	    String mname = propertyAnnotations.getPropertyName(field);
+        if(!mname.isEmpty())
             return mname;
         return field.getName();
 	}
 	
-	/**
-	 * Get annotation annotated to field or method
-	 * 
-	 * @param <T> the annotation type
-	 * @param annotationClass the annotation class
-	 * @return the annotation
-	 */
-	protected <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-		if(field != null) {
-			if(field.isAnnotationPresent(annotationClass))
-				return field.getAnnotation(annotationClass);
+	protected String getPropertyName() {
+		String propertyName = "";
+		if(field != null)
+			propertyName = propertyAnnotations.getPropertyName(field);
+		if(propertyName.isEmpty() && method != null)
+			propertyName = propertyAnnotations.getPropertyName(method);
+		return propertyName;
+	}
+	
+	protected String getPropertyPrefix() {
+		String prefix = "";
+		String propertyName = getPropertyName();
+		if(propertyName.isEmpty()) {
+			if(field != null)
+				prefix = propertyAnnotations.getPropertyPrefix(field);
+			if(prefix.isEmpty() && method != null)
+				prefix = propertyAnnotations.getPropertyPrefix(method);
 		}
-		if(method != null) {
-			if(method.isAnnotationPresent(annotationClass))
-				return method.getAnnotation(annotationClass);
-		}
-		return null;
+		return prefix;
 	}
 	
 }

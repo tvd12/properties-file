@@ -4,6 +4,7 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.struct.ClassWrapper;
 
@@ -23,7 +24,7 @@ public class ClassStructTest {
 	public static class ClassWrapperA extends ClassWrapper {
 
 		public ClassWrapperA(Class<?> clazz) {
-			super(clazz, MappingLevel.ALL);
+			super(clazz, MappingLevel.ALL, new PropertyAnnotations());
 		}
 		
 		@Override

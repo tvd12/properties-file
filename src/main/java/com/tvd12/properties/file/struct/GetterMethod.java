@@ -3,6 +3,8 @@ package com.tvd12.properties.file.struct;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
+
 /**
  * 
  * Support for holding structure of java getter method.
@@ -12,7 +14,11 @@ import java.lang.reflect.Method;
  */
 public class GetterMethod extends MethodStruct {
     
-    /**
+    public GetterMethod(PropertyAnnotations propertyAnnotations) {
+		super(propertyAnnotations);
+	}
+
+	/**
      * Get java getter method
      */
 	@Override

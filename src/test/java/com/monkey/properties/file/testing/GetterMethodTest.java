@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import org.testng.annotations.Test;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.struct.GetterMethod;
 import com.tvd12.test.reflect.MethodBuilder;
 
@@ -20,7 +21,7 @@ public class GetterMethodTest {
                 .clazz(ClassA.class)
                 .method("getName")
                 .build();
-        GetterMethod getterMethod = new GetterMethod();
+        GetterMethod getterMethod = new GetterMethod(new PropertyAnnotations());
         getterMethod.initWithMethod(method);
         assertEquals(getterMethod.getType(), String.class);
         assertEquals(getterMethod.getField(), null);
@@ -30,7 +31,7 @@ public class GetterMethodTest {
     @Test
     public void getMethodByFieldInvalidCaseTest() throws NoSuchFieldException, SecurityException {
         Field field = ClassB.class.getDeclaredField("name");
-        GetterMethod getterMethod = new GetterMethod();
+        GetterMethod getterMethod = new GetterMethod(new PropertyAnnotations());
         getterMethod.initWithField(ClassB.class, field);
     }
     
@@ -40,7 +41,7 @@ public class GetterMethodTest {
                 .clazz(ClassA.class)
                 .method("getName")
                 .build();
-        GetterMethod getterMethod = new GetterMethod();
+        GetterMethod getterMethod = new GetterMethod(new PropertyAnnotations());
         getterMethod.initWithMethod(method);
         assertNull(getterMethod.invoke(new ClassA()));
     }
@@ -52,7 +53,7 @@ public class GetterMethodTest {
                 .method("setName")
                 .argument(String.class)
                 .build();
-        GetterMethod getterMethod = new GetterMethod();
+        GetterMethod getterMethod = new GetterMethod(new PropertyAnnotations());
         getterMethod.initWithMethod(method);
         assertNull(getterMethod.invoke(new ClassA()));
     }

@@ -3,6 +3,8 @@ package com.tvd12.properties.file.struct;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
+
 /**
  * 
  * Support for holding structure of java setter method.
@@ -12,7 +14,11 @@ import java.lang.reflect.Method;
  */
 public class SetterMethod extends MethodStruct {
     
-    /**
+    public SetterMethod(PropertyAnnotations propertyAnnotations) {
+		super(propertyAnnotations);
+	}
+
+	/**
      * Get java setter method
      */
 	@Override

@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotation;
 import com.tvd12.properties.file.io.Dates;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
@@ -112,10 +113,19 @@ public class PropertiesMapperTest {
         properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
         properties.put("datasource.username", "hello");
 		properties.put("datasource.password", "world");
+		properties.put("datasource.driver", "dahlia");
         
 		ClassD object = new PropertiesMapper()
                 .data(PropertiesUtil.toMap(properties))
                 .mappingLevel(MappingLevel.ANNOTATION)
+                .addPropertyAnnotation(new PropertyAnnotation(
+                		PropertyForTest.class, 
+                		a -> ((PropertyForTest)a).value(), 
+                		a -> ((PropertyForTest)a).prefix()))
+                .addPropertyAnnotation(new PropertyAnnotation(
+                		PropertyForTest.class, 
+                		a -> ((PropertyForTest)a).value(), 
+                		a -> ((PropertyForTest)a).prefix()))
                 .map(ClassD.class);
         assertEquals(object.name, "hello");
         assertEquals(object.age, 24);
@@ -125,6 +135,7 @@ public class PropertiesMapperTest {
         
         assertEquals(object.dataSourceConfig.username, "hello");
         assertEquals(object.dataSourceConfig.password, "world");
+        assertEquals(object.dataSourceConfig.driverClass, "dahlia");
         Properties dataSourceProperties = PropertiesUtil.getPropertiesByPrefix(properties, "datasource");
         assertEquals(object.dataSourceProperties, dataSourceProperties);
         System.out.println("dataSourceProperties: " + dataSourceProperties);
@@ -242,5 +253,7 @@ public class PropertiesMapperTest {
 	public static class DataSourceConfig {
 		protected String username;
 		protected String password;
+		@PropertyForTest("driver")
+		protected String driverClass;
 	}
 }

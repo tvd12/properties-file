@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 
 import org.testng.annotations.Test;
 
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.struct.SetterMethod;
 import com.tvd12.test.reflect.MethodBuilder;
 
@@ -18,7 +19,7 @@ public class SetterMethodTest {
                 .method("setName")
                 .argument(String.class)
                 .build();
-        SetterMethod setterMethod = new SetterMethod();
+        SetterMethod setterMethod = new SetterMethod(new PropertyAnnotations());
         setterMethod.initWithMethod(method);
         setterMethod.invoke(new ClassA(), "123");
     }
@@ -31,7 +32,7 @@ public class SetterMethodTest {
                 .argument(String.class)
                 .argument(String.class)
                 .build();
-        SetterMethod setterMethod = new SetterMethod();
+        SetterMethod setterMethod = new SetterMethod(new PropertyAnnotations());
         setterMethod.initWithMethod(method);
         setterMethod.invoke(new ClassA(), "123");
     }

@@ -8,6 +8,7 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.struct.PropertiesBean;
 
 import lombok.Data;
@@ -19,7 +20,7 @@ public class PropertiesBeanTest {
 		new PropertiesBean(ClassA.class);
 
 		ClassA classA = new ClassA();
-		PropertiesBean mapping2 = new PropertiesBean(classA);
+		PropertiesBean mapping2 = new PropertiesBean(classA, new PropertyAnnotations());
 		
 		mapping2.put("charValue", "c");
 		mapping2.put("byteValue", "1");
@@ -40,7 +41,7 @@ public class PropertiesBeanTest {
 		dataSourceProperties.put("datasource.username", "hello");
 		dataSourceProperties.put("datasource.password", "world");
 		
-		PropertiesBean mapping3 = new PropertiesBean(classA);
+		PropertiesBean mapping3 = new PropertiesBean(classA, new PropertyAnnotations());
 		mapping3.put("dataSourceConfig", null, dataSourceProperties);
 		assert classA.dataSourceConfig.username.equals("hello");
 		assert classA.dataSourceConfig.password.equals("world");

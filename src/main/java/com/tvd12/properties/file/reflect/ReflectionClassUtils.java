@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public final class ReflectionClassUtils {
@@ -33,6 +34,16 @@ public final class ReflectionClassUtils {
 			}
 			current = current.getSuperclass();
 		}
+		return answer;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Set<Field> getFieldsWithAnnotations(
+			Class<?> clazz, 
+			List<Class> annotationClasses) {
+		Set<Field> answer = new HashSet<>();
+		for(Class annotationClass : annotationClasses)
+			answer.addAll(getFieldsWithAnnotation(clazz, annotationClass));
 		return answer;
 	}
 	
@@ -70,6 +81,16 @@ public final class ReflectionClassUtils {
 			}
 			current = current.getSuperclass();
 		}
+		return answer;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static Set<Method> getMethodsWithAnnotations(
+			Class<?> clazz, 
+			List<Class> annotationClasses) {
+		Set<Method> answer = new HashSet<>();
+		for(Class annotationClass : annotationClasses)
+			answer.addAll(getMethodsWithAnnotation(clazz, annotationClass));
 		return answer;
 	}
 	
