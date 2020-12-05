@@ -1,14 +1,10 @@
 package com.tvd12.properties.file.writer;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 import com.tvd12.properties.file.constant.Constants;
 import com.tvd12.properties.file.exception.PropertiesFileException;
+
+import java.io.*;
+import java.util.Properties;
 
 /**
  * 
@@ -70,13 +66,9 @@ public class BaseFileWriter implements FileWriter {
      * @throws IOException exception
      */
     protected void writeBytes0(File file, byte[] bytes) throws IOException {
-		FileOutputStream fos = newFileOutputStream(file);
-		try {
-			fos.write(bytes);
-		}
-		finally {
-			fos.close();
-		}
+        try (FileOutputStream fos = newFileOutputStream(file)) {
+            fos.write(bytes);
+        }
     }
     
     /**

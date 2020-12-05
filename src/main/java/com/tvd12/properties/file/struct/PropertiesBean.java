@@ -2,16 +2,11 @@ package com.tvd12.properties.file.struct;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import com.tvd12.properties.file.annotation.Property;
-import com.tvd12.properties.file.bean.Transformer;
-import com.tvd12.properties.file.constant.Constants;
+import com.tvd12.properties.file.io.DefaultValueConverter;
+import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
@@ -29,27 +24,33 @@ import com.tvd12.properties.file.util.PropertyAnnotations;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class PropertiesBean {
 
-	private Object bean;
-    private ClassWrapper wrapper;
-    private ClassLoader classLoader;
+	private final Object bean;
+    private final ClassWrapper wrapper;
+    private final ClassLoader classLoader;
+    private final ValueConverter valueConverter;
     
-	private static final Map<Class, Transformer> TRANSFORMERS =
-            Collections.unmodifiableMap(createTypeTransformers());
-	
     public PropertiesBean(Class<?> clazz) {
         this(ReflectionClassUtils.newInstance(clazz));
     }
     
     public PropertiesBean(Object bean) {
-        this(bean, MappingLevel.ALL, null);
+        this(
+    		bean, 
+    		MappingLevel.ALL,
+    		DefaultValueConverter.getInstance(),
+    		null
+        );
     }
     
     public PropertiesBean(
     		Object bean, 
-    		MappingLevel mappingLevel, ClassLoader classLoader) {
+    		MappingLevel mappingLevel,
+    		ValueConverter valueConverter,
+    		ClassLoader classLoader) {
     	this.bean = bean;
     	this.classLoader = classLoader;
     	this.wrapper = new ClassWrapper(bean.getClass(), mappingLevel);
+    	this.valueConverter = valueConverter != null ? valueConverter : DefaultValueConverter.getInstance();
     }
     
     public <T> T getObject() {
@@ -84,6 +85,7 @@ public class PropertiesBean {
         }
         catch (Exception e) {
     		printError("put value: " + value + " with key: " + key + " error", e);
+    		e.printStackTrace();
 			return;
 		}
     }
@@ -120,108 +122,17 @@ public class PropertiesBean {
         		.data(properties)
         		.classLoader(classLoader)
         		.propertyPrefix(prefix)
+        		.valueConverter(valueConverter)
         		.map(argumentType);
     }
     
 	protected Object transform(Class newType, Object value) {
-		Transformer transformer = getTypeTransformer(newType);
-		if (transformer == null)
-			return value;
-		Object answer = transformer.transform(value);
-		return answer;
+		return valueConverter.convert(value, newType);
 	}
     
     
-    protected Transformer getTypeTransformer(Class aType) {
-        Transformer transformer = TRANSFORMERS.get(aType);
-        if(transformer == null)
-            return null;
-        return transformer;
-    }
-    
     protected void printError(String message, Throwable throwable) {
     	Logger.print(message, throwable);
-    }
-    
-    private static Map<Class, Transformer> createTypeTransformers() {
-        Map<Class, Transformer> transformers = new HashMap<>();
-        transformers.put(Boolean.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Boolean.valueOf(input.toString());
-			}
-		});
-		transformers.put(Character.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return new Character(input.toString().charAt(0));
-			}
-		});
-		transformers.put(Byte.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Byte.valueOf(input.toString());
-			}
-		});
-		transformers.put(Double.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Double.valueOf(input.toString());
-			}
-		});
-		transformers.put(Float.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Float.valueOf(input.toString());
-			}
-		});
-		transformers.put(Integer.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Integer.valueOf(input.toString());
-			}
-		});
-		transformers.put(Long.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Long.valueOf(input.toString());
-			}
-		});
-		transformers.put(Short.TYPE, new Transformer() {
-			public Object transform(Object input) {
-				return Short.valueOf(input.toString());
-			}
-		});
-		transformers.put(String.class, new Transformer() {
-			public Object transform(Object input) {
-				return input.toString();
-			}
-		});
-		transformers.put(Date.class, new Transformer() {
-            @Override
-            public Object transform(Object value) {
-        		String str = value.toString();
-        		for(String pattern : Constants.DATE_FORMATS) {
-        			SimpleDateFormat format = new SimpleDateFormat(pattern);
-        			try {
-        				return format.parse(str);
-        			}
-        			catch(Exception e) {
-        				//ignore
-        			}
-        		}
-        		throw new IllegalArgumentException("has no pattern to format date string: " + str);
-            }
-        });
-        
-        transformers.put(Class.class, new Transformer() {
-            @Override
-            public Object transform(Object value) {
-                try {
-                    String string = value.toString();
-                    if(string.startsWith("class ")) 
-                        string = string.substring("class ".length()).trim();
-                    return Class.forName(string);
-                } catch (ClassNotFoundException e) {
-                    throw new IllegalArgumentException(e);
-                }
-            }
-        });
-        
-		return transformers;
     }
     
 }

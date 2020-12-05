@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="e562c453-feb9-4344-874f-0f921140e0f5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/bean/Transformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/io/Transformer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/mapping/PropertiesMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/mapping/PropertiesMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/reader/BaseFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/reader/BaseFileReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/reflect/ReflectionClassUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/reflect/ReflectionClassUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassStruct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassStruct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassUnwrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassUnwrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/ClassWrapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/MethodStruct.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/MethodStruct.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/PropertiesBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/struct/PropertiesBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/util/Logger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/util/Logger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/util/PropertiesUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/util/PropertiesUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/writer/BaseFileWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/tvd12/properties/file/writer/BaseFileWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/GetterMethodTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/GetterMethodTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesMapper2Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesMapper2Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesMapperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesUtilTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/PropertiesUtilTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/SetterMethodTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/monkey/properties/file/testing/SetterMethodTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1lDjdCzsZ3KM5EJAUXntwhkBgM4" />
+  <component name="ProjectViewState">
+    <option name="flattenPackages" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e562c453-feb9-4344-874f-0f921140e0f5" name="Default Changelist" comment="" />
+      <created>1607138641023</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1607138641023</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1728" y="133" key="SettingsEditor" timestamp="1607153652788">
+      <screen x="1280" y="23" width="1920" height="1057" />
+    </state>
+    <state x="1728" y="133" key="SettingsEditor/0.23.1280.777/1280.23.1920.1057@1280.23.1920.1057" timestamp="1607153652788" />
+  </component>
+</project>

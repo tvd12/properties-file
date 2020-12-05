@@ -138,7 +138,7 @@ public abstract class ClassStruct {
      * @return set of java fields
      */
     protected Set<Field> getAcceptedFields() {
-		Set<Field> fields = null;
+		Set<Field> fields;
 	    if(mappingLevel == MappingLevel.ALL)
 	        fields = ReflectionClassUtils.getValidFields(clazz);
 	    else
@@ -154,7 +154,7 @@ public abstract class ClassStruct {
      * @return set of java methods
      */
     protected Set<Method> getAcceptedMethods() {
-		Set<Method> methods = null;
+		Set<Method> methods;
 		if(mappingLevel == MappingLevel.ALL)
     		methods = ReflectionClassUtils.getPublicMethods(clazz);
 	    else
@@ -182,12 +182,7 @@ public abstract class ClassStruct {
 	 * @return a filter object to filter invalid method
 	 */
 	protected MethodFilter methodFilter() {
-	    return new MethodFilter() {
-            @Override
-            public boolean filter(Method method) {
-            	return validateMethod(method) && !containsMethod(method);
-            }
-        };
+	    return method -> validateMethod(method) && !containsMethod(method);
 	}
 
 }

@@ -18,8 +18,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<lombok.version>1.18.8</lombok.version>
 		<test.util.version>1.0.3</test.util.version>
 		<maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss</maven.build.timestamp.format>
@@ -225,7 +225,6 @@
 						<configuration>
 							<serverId>oss.sonatype.org</serverId>
 							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-							<description>${project.version}</description>
 						</configuration>
 						<executions>
 							<execution>

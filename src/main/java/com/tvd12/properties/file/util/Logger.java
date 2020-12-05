@@ -2,11 +2,7 @@ package com.tvd12.properties.file.util;
 
 public final class Logger {
 
-	private static Printer printer = new Printer() {
-		public void print(String message, Throwable e) {
-			System.out.println(message + "\n" + e);
-		}
-	};
+	private static Printer printer = (message, e) -> System.out.println(message + "\n" + e);
 	
 	private Logger() {}
 	

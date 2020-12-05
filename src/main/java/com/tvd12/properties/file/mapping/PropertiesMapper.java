@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileReader;
 import com.tvd12.properties.file.reflect.ReflectionClassUtils;
@@ -43,6 +44,9 @@ public class PropertiesMapper {
     
     // mapping level
     private MappingLevel mappingLevel = MappingLevel.ALL;
+    
+    // the value converter
+    private ValueConverter valueConverter;
     
     /**
      * set mapped class
@@ -158,6 +162,17 @@ public class PropertiesMapper {
     }
     
     /**
+     * set value converter
+     * 
+     * @param valueConverter the value converter
+     * @return this pointer
+     */
+    public PropertiesMapper valueConverter(ValueConverter valueConverter) {
+        this.valueConverter = valueConverter;
+        return this;
+    }
+    
+    /**
      * map properties to object
      * 
      * @param <T> the type of object
@@ -182,7 +197,13 @@ public class PropertiesMapper {
     	this.clazz(clazz);
     	if(clazz != null && Map.class.isAssignableFrom(clazz))
     		return (T)getProperties();
-        return map(new PropertiesBean(newBeanInstance(), mappingLevel, classLoader));
+        return map(
+        		new PropertiesBean(
+	        		newBeanInstance(), 
+	        		mappingLevel, 
+	        		valueConverter, 
+	        		classLoader
+	        	));
     }
     
     /**

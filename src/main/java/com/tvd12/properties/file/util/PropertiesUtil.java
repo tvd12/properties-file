@@ -60,7 +60,7 @@ public class PropertiesUtil {
         for(Object key : properties.keySet()) {
         	String keyString = key.toString();
             if(keyString.startsWith(prefix)) {
-            	String newKey = keyString;
+            	String newKey = "";
             	if(keyString.length() > prefix.length() + 1)
             		newKey = keyString.substring(prefix.length() + 1);
             	answer.put(newKey, properties.get(key));

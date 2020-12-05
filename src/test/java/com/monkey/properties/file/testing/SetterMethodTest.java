@@ -19,7 +19,7 @@ public class SetterMethodTest {
                 .argument(String.class)
                 .build();
         SetterMethod setterMethod = new SetterMethod();
-        setterMethod.initWithMethod(ClassA.class, method);
+        setterMethod.initWithMethod(method);
         setterMethod.invoke(new ClassA(), "123");
     }
     
@@ -32,7 +32,7 @@ public class SetterMethodTest {
                 .argument(String.class)
                 .build();
         SetterMethod setterMethod = new SetterMethod();
-        setterMethod.initWithMethod(ClassA.class, method);
+        setterMethod.initWithMethod(method);
         setterMethod.invoke(new ClassA(), "123");
     }
     

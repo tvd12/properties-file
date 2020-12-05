@@ -1,4 +1,4 @@
-package com.tvd12.properties.file.bean;
+package com.tvd12.properties.file.io;
 
 public interface Transformer {
 

@@ -21,7 +21,7 @@ public class GetterMethodTest {
                 .method("getName")
                 .build();
         GetterMethod getterMethod = new GetterMethod();
-        getterMethod.initWithMethod(ClassA.class, method);
+        getterMethod.initWithMethod(method);
         assertEquals(getterMethod.getType(), String.class);
         assertEquals(getterMethod.getField(), null);
         assertEquals(getterMethod.getMethodName(), "getName");
@@ -41,7 +41,7 @@ public class GetterMethodTest {
                 .method("getName")
                 .build();
         GetterMethod getterMethod = new GetterMethod();
-        getterMethod.initWithMethod(ClassA.class, method);
+        getterMethod.initWithMethod(method);
         assertNull(getterMethod.invoke(new ClassA()));
     }
     
@@ -53,7 +53,7 @@ public class GetterMethodTest {
                 .argument(String.class)
                 .build();
         GetterMethod getterMethod = new GetterMethod();
-        getterMethod.initWithMethod(ClassA.class, method);
+        getterMethod.initWithMethod(method);
         assertNull(getterMethod.invoke(new ClassA()));
     }
     

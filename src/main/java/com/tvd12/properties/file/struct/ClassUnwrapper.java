@@ -1,9 +1,9 @@
 package com.tvd12.properties.file.struct;
 
+import com.tvd12.properties.file.mapping.MappingLevel;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
-import com.tvd12.properties.file.mapping.MappingLevel;
 
 /**
  * Holds all GetterMethod objects
@@ -39,7 +39,7 @@ public class ClassUnwrapper extends ClassStruct {
     @Override
     protected MethodStruct initWithMethod(Method method) {
         MethodStruct cover = new GetterMethod();
-        cover.initWithMethod(clazz, method);
+        cover.initWithMethod(method);
         return cover;
     }
     

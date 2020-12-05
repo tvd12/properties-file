@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,10 +112,8 @@ public final class ReflectionClassUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatInterfaces(Class clazz) {
-		Set<Class> classes = new HashSet<>();
 		Class[] interfaces = clazz.getInterfaces();
-		for(Class itf : interfaces)
-			classes.add(itf);
+		Set<Class> classes = new HashSet<>(Arrays.asList(interfaces));
 		for(Class itf : interfaces)
 			classes.addAll(flatInterfaces(itf));
 		return classes;
@@ -127,10 +126,9 @@ public final class ReflectionClassUtils {
 	
 	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatSuperAndInterfaceClasses(Class clazz, boolean includeObject) {
-		Set<Class> classes = new HashSet<>();
 		Set<Class> interfaces = flatInterfaces(clazz);
 		Set<Class> superClasses = flatSuperClasses(clazz, includeObject);
-		classes.addAll(interfaces);
+		Set<Class> classes = new HashSet<>(interfaces);
 		for(Class superClass : superClasses) {
 			Set<Class> superAndInterfaceClasses = flatSuperAndInterfaceClasses(superClass, includeObject);
 			classes.add(superClass);

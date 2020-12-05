@@ -20,7 +20,11 @@ public class PropertiesUtilTest extends BaseTest {
     public void getPropertiesByPrefixTest() {
     	Properties properties = new Properties();
     	properties.put("datasource", "database");
-    	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), properties);
+    	properties.put("datasource.username", "hello");
+    	Properties expected = new Properties();
+    	expected.put("", "database");
+    	expected.put("username", "hello");
+    	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), expected);
     }
     
 }

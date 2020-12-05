@@ -34,10 +34,9 @@ public abstract class MethodStruct {
 	/**
 	 * Initialize with java method, get key and type from java method
 	 * 
-	 * @param clazz the class to parse
 	 * @param meth the method of class
 	 */
-	public void initWithMethod(Class<?> clazz, Method meth) {
+	public void initWithMethod(Method meth) {
 		this.method = meth;
 		this.key = getKey(method);
 		this.type = getTypeFromMethod(method);

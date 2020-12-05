@@ -1,5 +1,8 @@
 package com.tvd12.properties.file.reader;
 
+import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.util.InputStreamUtil;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -8,9 +11,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
-import com.tvd12.properties.file.exception.PropertiesFileException;
-import com.tvd12.properties.file.util.InputStreamUtil;
 
 /**
  * Support for reading properties file and store the data to properties object
@@ -125,12 +125,8 @@ public class BaseFileReader implements FileReader {
 	    Properties properties = new Properties();
 	    try {
 	    	byte[] contentBytes = decode(inputStream);
-	    	ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
-	    	try {
-	    		properties.load(stream);
-	    	}
-	    	finally {
-	    		stream.close();
+			try (ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes)) {
+				properties.load(stream);
 			}
 	    } catch (IOException e) {
             throw new PropertiesFileException("Can not read properties file", e);

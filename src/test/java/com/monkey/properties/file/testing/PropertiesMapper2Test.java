@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.annotation.Property;
+import com.tvd12.properties.file.io.Dates;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.struct.PropertiesBean;
 
@@ -22,8 +23,8 @@ public class PropertiesMapper2Test {
         Properties properties = new Properties();
         properties.setProperty("name", "hello");
         properties.put("age", 24);
-        properties.put("clazz", ClassA.class);
-        properties.put("date", new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()));
+        properties.put("clazz", ClassA.class.getName());
+        properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
         properties.put("x", "123");
         properties.put("valid", "true");
         

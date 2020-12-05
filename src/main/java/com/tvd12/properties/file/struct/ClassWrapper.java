@@ -44,7 +44,7 @@ public class ClassWrapper extends ClassStruct {
     @Override
     protected MethodStruct initWithMethod(Method method) {
         MethodStruct cover = new SetterMethod();
-        cover.initWithMethod(clazz, method);
+        cover.initWithMethod(method);
         return cover;
     }
     
