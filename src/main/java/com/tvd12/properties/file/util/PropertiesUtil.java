@@ -54,9 +54,13 @@ public class PropertiesUtil {
      * @param prefix the key prefix
      * @return a properties object
      */
-    @SuppressWarnings({ "rawtypes" })
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Properties getPropertiesByPrefix(Map properties, String prefix) {
-        Properties answer = new Properties();
+    	Properties answer = new Properties();
+    	if(prefix.isEmpty()) {
+    		answer.putAll(properties);
+    		return answer;
+    	}
         for(Object key : properties.keySet()) {
         	String keyString = key.toString();
             if(keyString.startsWith(prefix)) {

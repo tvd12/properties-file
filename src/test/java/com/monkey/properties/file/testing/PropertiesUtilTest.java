@@ -27,4 +27,12 @@ public class PropertiesUtilTest extends BaseTest {
     	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), expected);
     }
     
+    @Test
+    public void getPropertiesByEmptyPrefixTest() {
+    	Properties properties = new Properties();
+    	properties.put("datasource", "database");
+    	properties.put("datasource.username", "hello");
+    	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, ""), properties);
+    }
+    
 }
