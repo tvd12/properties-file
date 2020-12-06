@@ -1,6 +1,5 @@
 package com.monkey.properties.file.testing;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertNotNull;
@@ -69,7 +68,7 @@ public class PropertiesFileReaderTest extends BaseTest {
     @Test(expectedExceptions = {PropertiesFileException.class})
 	public void loadInputStreamTest() throws PropertiesFileException, IOException {
 	    InputStream stream = mock(InputStream.class);
-	    when(stream.read(any(byte[].class))).thenThrow(IOException.class);
+	    when(stream.read()).thenThrow(IOException.class);
 	    new BaseFileReader().loadInputStream(stream);
 	}
 	

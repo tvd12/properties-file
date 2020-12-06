@@ -7,14 +7,16 @@ import java.util.Properties;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
-import com.tvd12.properties.file.yaml.YamlFileReader;
-import com.tvd12.properties.file.yaml.YamlInvalidSyntaxException;
+import com.tvd12.properties.file.exception.YamlInvalidSyntaxException;
+import com.tvd12.properties.file.reader.BaseFileReader;
+import com.tvd12.properties.file.reader.YamlFileReader;
+import com.tvd12.properties.file.util.InputStreamUtil;
 
 public class YamlFileReaderTest {
 
 	@Test
 	public void readSpaces() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("application.yaml");
 		System.out.println(properties);
 		assert properties.get("cors.allow_orgin").equals("*");
@@ -25,11 +27,13 @@ public class YamlFileReaderTest {
 		assert properties.get("server.admin.password").equals("123456");
 		assert properties.get("hello").equals("world");
 		assert properties.get("foo").equals("bar");
+		properties = reader.read("hello_yaml");
+		assert properties.get("hello").equals("world");
 	}
 	
 	@Test
 	public void readTabs() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("application2_yaml.txt");
 		System.out.println(properties);
 		assert properties.get("cors.allow_orgin").equals("*");
@@ -45,42 +49,42 @@ public class YamlFileReaderTest {
 	@Test(expectedExceptions = YamlInvalidSyntaxException.class)
 	public void testNoContainsSeparateChar() {
 		YamlFileReader reader = new YamlFileReader();
-		reader.read("invalid_yaml1.txt");
+		reader.readInputStream(InputStreamUtil.getInputStream(
+				getClass().getClassLoader(), "invalid_yaml1.txt"));
 	}
 	
 	@Test(expectedExceptions = YamlInvalidSyntaxException.class)
 	public void testEmptyKey() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		reader.read("invalid_yaml2.txt");
 	}
 	
 	@Test(expectedExceptions = PropertiesFileException.class)
 	public void testIOException() {
 		YamlFileReader reader = new YamlFileReader() {
-			protected Properties read(
-					BufferedReader reader, String filePath) throws IOException {
+			protected Properties read(BufferedReader reader) throws IOException {
 				throw new IOException("just test");
 			}
 		};
-		reader.read("application2_yaml.txt");
+		reader.readInputStream(InputStreamUtil.getInputStream(getClass().getClassLoader(), "application2_yaml.txt"));
 	}
 	
 	@Test
 	public void testInvalidSpaces() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("invalid_yaml3.txt");
 		System.out.println("testInvalidSpaces: " + properties);
 	}
 	
 	@Test(expectedExceptions = YamlInvalidSyntaxException.class)
 	public void testDashKey() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		reader.read("invalid_yaml4.txt");
 	}
 	
 	@Test(expectedExceptions = YamlInvalidSyntaxException.class)
 	public void testInvalidKey() {
-		YamlFileReader reader = new YamlFileReader();
+		BaseFileReader reader = new BaseFileReader();
 		reader.read("invalid_yaml5.txt");
 	}
 }

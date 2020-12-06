@@ -19,8 +19,7 @@ public class BaseFileWriter implements FileWriter {
      * @see com.tvd12.properties.file.writer.FileWriter#write(java.util.Properties)
      */
     @Override
-    public ByteArrayOutputStream write(Properties properties) 
-            throws PropertiesFileException {
+    public ByteArrayOutputStream write(Properties properties) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
             properties.store(out, Constants.COMMENT);
@@ -35,8 +34,7 @@ public class BaseFileWriter implements FileWriter {
      * @see com.tvd12.properties.file.writer.FileWriter#write(java.util.Properties, java.lang.String)
      */
     @Override
-    public void write(Properties properties, String filePath) 
-            throws PropertiesFileException {
+    public void write(Properties properties, String filePath) {
         write(properties, new File(filePath));
     }
     
@@ -44,8 +42,7 @@ public class BaseFileWriter implements FileWriter {
      * @see com.tvd12.properties.file.writer.FileWriter#write(java.util.Properties, java.io.File)
      */
     @Override
-    public void write(Properties properties, File file) 
-            throws PropertiesFileException {
+    public void write(Properties properties, File file) {
         try {
     		if(!file.exists())
     			file.createNewFile();

@@ -3,12 +3,9 @@ package com.tvd12.properties.file.constant;
 public final class Constants {
 
     public static final String COMMENT = "written by com.tvd12:properties-file";
-    public static final String DATE_FORMATS[] = {
-            "yyyy-MM-dd'T'HH:mm:ss.SSSZ", 
-            "YYYY-MM-DD HH:MM:SS", 
-            "EEE MMM dd kk:mm:ss z yyyy"
-            };
+    public static final String FILE_EXTENSION_YAML = "yaml";
+    public static final String FILE_EXTENSION_PROPERTIES = "properties";
     
-    private Constants() {
-    }
+    
+    private Constants() {}
 }

@@ -2,145 +2,184 @@ package com.tvd12.properties.file.reader;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import com.tvd12.properties.file.exception.PropertiesFileException;
+import com.tvd12.properties.file.util.FileUtil;
+import com.tvd12.properties.file.util.InputStreamUtil;
 
 public interface FileReader {
 
     /**
      * Read properties file in a path
      * 
-     * @param propertiesFile properties file path
+     * @param filePath properties file path
      * @param context which class to get resource as stream
      * @return properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    Properties read(Class<?> context, String propertiesFile) throws PropertiesFileException;
+    default Properties read(Class<?> context, String filePath) {
+    	return read(context.getClassLoader(), filePath);
+    }
     
     /**
      * Read properties file in a path
      *
-     * @param propertiesFile properties file path
+     * @param filePath properties file path
      * @param classLoader the class loader
      * @return properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    Properties read(ClassLoader classLoader, String propertiesFile) throws PropertiesFileException;
+    default Properties read(ClassLoader classLoader, String filePath) {
+        return loadInputStream(
+        		InputStreamUtil.getInputStream(classLoader, filePath), 
+        		FileUtil.getFileExtension(filePath)
+        );
+    }
     
     /**
      * Read properties files in multiple paths
      * 
-     * @param propertiesFiles list of properties files
+     * @param filePaths list of properties files
      * @param context which class to get resource as stream
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(Class<?> context, String... propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(Class<?> context, String... filePaths) {
+    	return read(context.getClassLoader(), filePaths);
+    }
     
     /**
      * Read properties files in multiple paths
      * 
-     * @param propertiesFiles list of properties files
+     * @param filePaths list of properties files
      * @param classLoader the class loader 
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(ClassLoader classLoader, String... propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(ClassLoader classLoader, String... filePaths) {
+    	List<Properties> result = new ArrayList<>();
+    	for(String file : filePaths)
+            result.add(read(classLoader, file));
+        return result;
+    }
     
     /**
      * Read properties files in multiple paths
      * 
-     * @param propertiesFiles list of properties files
+     * @param filePaths list of properties files
      * @param context which class to get resource as stream
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(Class<?> context, Collection<String> propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(Class<?> context, Collection<String> filePaths) {
+    	return read(context.getClassLoader(), filePaths);
+    }
     
     /**
      * Read properties files in multiple paths
      * 
-     * @param propertiesFiles list of properties files
+     * @param filePaths list of properties files
      * @param classLoader the class loader
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(ClassLoader classLoader, Collection<String> propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(ClassLoader classLoader, Collection<String> filePaths) {
+    	return read(classLoader, filePaths.toArray(new String[filePaths.size()]));
+    }
     
     /**
      * Read properties file in a path
      * 
-     * @param propertiesFile properties file path
+     * @param filePath properties file path
      * @return properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    Properties read(String propertiesFile) throws PropertiesFileException;
+    default Properties read(String filePath) {
+    	return read(InputStreamUtil.getDefaultClassLoader(), filePath);
+    }
     
     /**
      * Read properties files in multiple paths
      * 
-     * @param propertiesFiles list of properties files
+     * @param filePaths list of properties files
      * @return array of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(String... propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(String... filePaths) {
+    	return read(InputStreamUtil.getDefaultClassLoader(), filePaths);
+    }
 
     /**
      * Load an input stream and read properties
      * 
      * @param inputStream the input stream
      * @return properties the properties
-     * @throws PropertiesFileException when can't load input stream or can't read properties
      */
-    Properties loadInputStream(InputStream inputStream) throws PropertiesFileException;
+    default Properties loadInputStream(InputStream inputStream) {
+    	return loadInputStream(inputStream, null);
+    }
+    
+    /**
+     * Load an input stream and read properties
+     * 
+     * @param inputStream the input stream
+     * @param contentType the content type
+     * @return properties the properties
+     */
+    Properties loadInputStream(InputStream inputStream, String contentType);
     
     /**
      * Read properties files
      * 
      * @param inputStreams array of properties files
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> loadInputStreams(InputStream... inputStreams) throws PropertiesFileException;
+    default List<Properties> loadInputStreams(InputStream... inputStreams) {
+    	List<Properties> result = new ArrayList<>();
+        for(InputStream inputStream : inputStreams)
+            result.add(loadInputStream(inputStream));
+        return result;
+    }
     
     /**
      * Read properties files
      * 
      * @param inputStreams array of properties files
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> loadInputStreams(Collection<InputStream> inputStreams) throws PropertiesFileException;
+    default List<Properties> loadInputStreams(Collection<InputStream> inputStreams) {
+    	return loadInputStreams(inputStreams.toArray(new InputStream[inputStreams.size()]));
+    }
     
     /**
      * Read properties file
      * 
-     * @param propertiesFile properties file
+     * @param file properties file
      * @return properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    Properties read(File propertiesFile) throws PropertiesFileException;
+    default Properties read(File file) {
+    	return loadInputStream(
+            	InputStreamUtil.getInputStreamByAbsolutePath(file),
+            	FileUtil.getFileExtension(file.getPath())
+        );
+    }
     
     /**
      * Read properties files
      * 
-     * @param propertiesFiles array of properties files
+     * @param files array of properties files
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(File... propertiesFiles) throws PropertiesFileException;
+    default List<Properties> read(File... files) {
+    	List<Properties> result = new ArrayList<>();
+        for(File file : files)
+            result.add(read(file));
+        return result;
+    }
     
     /**
      * Read properties files
      * 
-     * @param propertiesFiles array of properties files
+     * @param files array of properties files
      * @return list of properties object
-     * @throws PropertiesFileException when properties file not exists or can't read properties
      */
-    List<Properties> read(Collection<File> propertiesFiles) throws PropertiesFileException;
-    
+    default List<Properties> read(Collection<File> files) {
+    	return read(files.toArray(new File[files.size()]));
+    }
 
 }

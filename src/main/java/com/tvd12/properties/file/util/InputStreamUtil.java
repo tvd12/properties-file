@@ -3,8 +3,10 @@ package com.tvd12.properties.file.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import com.tvd12.properties.file.constant.Constants;
 import com.tvd12.properties.file.exception.PropertiesFileException;
 
 public final class InputStreamUtil {
@@ -82,4 +84,69 @@ public final class InputStreamUtil {
 	public static ClassLoader getDefaultClassLoader() {
 		return Thread.currentThread().getContextClassLoader();
 	}
+	
+	/**
+	* Gets the contents of an <code>InputStream</code> as a <code>byte[]</code>.
+	* <p>
+	* This method buffers the input internally, so there is no need to use a
+	* <code>BufferedInputStream</code>.
+	* </p>
+	*
+	* @param input the <code>InputStream</code> to read from
+	* @return the requested byte array
+	* @throws NullPointerException if the input is null
+	* @throws IOException          if an I/O error occurs
+	*/
+	public static byte[] toByteArray(InputStream input) throws IOException {
+		int readBytes = 0;
+		byte[] buffer = new byte[128];
+		while(true) {
+			int nbyte = input.read();
+			if(nbyte == -1)
+				break;
+			buffer[readBytes ++] = (byte)nbyte;
+			if(readBytes >= buffer.length) {
+				byte[] newBuffer = new byte[buffer.length + 128];
+				System.arraycopy(buffer, 0, newBuffer, 0, readBytes);
+				buffer = newBuffer;
+			}
+		}
+		byte[] answer = new byte[readBytes];
+		System.arraycopy(buffer, 0, answer, 0, readBytes);
+		return answer;
+	}
+	
+	/**
+	 * Guest content type from an InputStream 
+	 * 
+	 * @param inputStream the InputStream
+	 * @return the content type
+	 */
+	public static String guessContentType(InputStream inputStream) {
+        if(!inputStream.markSupported())
+            return Constants.FILE_EXTENSION_PROPERTIES;
+        int maxRead = 255;
+        inputStream.mark(maxRead);
+        int i = 0;
+        String contenType = Constants.FILE_EXTENSION_PROPERTIES;
+        try {
+            while((i ++) < maxRead) {
+                int b = inputStream.read();
+                if(b == -1)
+                    break;
+                if(b == '=') {
+                    break;
+                }
+                else if(b == ':') {
+                    contenType = Constants.FILE_EXTENSION_YAML;
+                    break;
+                }
+            }
+            inputStream.reset();
+        }
+        catch (IOException e) {
+            // do nothing
+        }
+        return contenType;
+    }
 }

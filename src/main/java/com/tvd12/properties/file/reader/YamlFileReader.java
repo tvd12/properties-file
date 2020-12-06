@@ -1,9 +1,8 @@
-package com.tvd12.properties.file.yaml;
+package com.tvd12.properties.file.reader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashSet;
@@ -12,12 +11,12 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
 
-import com.tvd12.properties.file.exception.PropertiesFileException;
-import com.tvd12.properties.file.util.InputStreamUtil;
+import com.tvd12.properties.file.exception.YamlFileException;
+import com.tvd12.properties.file.exception.YamlInvalidSyntaxException;
 
 import lombok.AllArgsConstructor;
 
-public class YamlFileReader {
+public class YamlFileReader implements InputStreamReader {
 
 	private static final char TAB_CHAR = '\t';
 	private static final char SPACE_CHAR = ' ';
@@ -38,30 +37,25 @@ public class YamlFileReader {
 		SPACE_CHARACTERS = Collections.unmodifiableSet(spaceCharacters);
 	}
 	
-	public Properties read(String filePath) {
-		return read(InputStreamUtil.getDefaultClassLoader(), filePath);
-	}
-	
-	public Properties read(ClassLoader classLoader, String filePath) {
-		InputStream inputStream = 
-				InputStreamUtil.getInputStream(classLoader, filePath);
+	@Override
+	public Properties readInputStream(InputStream inputStream) {
 		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+				new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8));
 		try {
 			try {
-				return read(reader, filePath);
+				return read(reader);
 			}
 			finally {
 				reader.close();
+				inputStream.close();
 			}
 		}
 		catch (IOException e) {
-			throw new PropertiesFileException("read yaml file: " + filePath + " error", e);
+			throw new YamlFileException("read yaml from input stream: " + inputStream + " error", e);
 		}
-		
 	}
 	
-	protected Properties read(BufferedReader reader, String filePath) throws IOException {
+	protected Properties read(BufferedReader reader) throws IOException {
 		int lineIndex = 0;
 		String line = null;
 		String lastParentKey = null;
@@ -78,7 +72,7 @@ public class YamlFileReader {
 			if(!lineTrim.contains(SEPARATE_CHAR)) {
 				if(lastPropertyKey == null) {
 					throw new YamlInvalidSyntaxException(
-							"invalid syntax, line " + lineIndex + ": '" + line + "', file: " + filePath);
+							"invalid syntax, line " + lineIndex + ": '" + line + "'");
 				}
 				else {
 					String lastValue = answer.getProperty(lastPropertyKey);
@@ -91,13 +85,13 @@ public class YamlFileReader {
 			String keyTrim = keyValue[0].trim();
 			if(keyTrim.isEmpty()) {
 				throw new YamlInvalidSyntaxException(
-						"invalid syntax, missing key, line " + lineIndex + ": " + line + ", file: " + filePath);
+						"invalid syntax, missing key, line " + lineIndex + ": " + line);
 			}
 			String clearKey = getClearKey(keyTrim);
 			if(clearKey == null) {
 				if(lastPropertyKey == null) {
 					throw new YamlInvalidSyntaxException(
-							"invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line + ", file: " + filePath);
+							"invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line);
 				}
 				String lastValue = answer.getProperty(lastPropertyKey);
 				lastValue = (lastValue != null ? lastValue : EMPTY_STRING) + " " + lineTrim;
