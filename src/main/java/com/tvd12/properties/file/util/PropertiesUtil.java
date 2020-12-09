@@ -73,4 +73,22 @@ public class PropertiesUtil {
         return answer;
     }
     
+    /**
+     * Decorate properties, add new keys (replace _ and - by .) 
+     * 
+     * @param properties the properties
+     */
+    public static void decorateProperties(Properties properties) {
+    	Map<String, Object> newKeyValues = new HashMap<>();
+    	for(Object key : properties.keySet()) {
+    		String newKey = key.toString()
+    				.toLowerCase()
+    				.replace('-', '.')
+    				.replace('_', '.');
+    		if(!properties.containsKey(newKey))
+    			newKeyValues.put(newKey, properties.get(key));
+    	}
+    	properties.putAll(newKeyValues);
+    }
+    
 }

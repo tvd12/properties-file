@@ -151,7 +151,7 @@ public abstract class MethodStruct {
 		return propertyName;
 	}
 	
-	protected String getPropertyPrefix() {
+	protected String getPropertyPrefix(boolean guess) {
 		String prefix = "";
 		String propertyName = getPropertyName();
 		if(propertyName.isEmpty()) {
@@ -159,8 +159,22 @@ public abstract class MethodStruct {
 				prefix = propertyAnnotations.getPropertyPrefix(field);
 			if(prefix.isEmpty() && method != null)
 				prefix = propertyAnnotations.getPropertyPrefix(method);
+			if(prefix.isEmpty() && guess)
+				prefix = guestPropertyPrefix();
 		}
 		return prefix;
+	}
+	
+	protected String guestPropertyPrefix() {
+		String key = getKey();
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0 ; i < key.length() ; ++i) {
+			char ch = key.charAt(i);
+			if(Character.isUpperCase(ch) && i > 0)
+				builder.append(".");
+			builder.append(Character.toLowerCase(ch));
+		}
+		return builder.toString();
 	}
 	
 }

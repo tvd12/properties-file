@@ -280,7 +280,8 @@ public class PropertiesMapper {
         } catch (PropertiesFileException e) {
             throw new IllegalStateException(e);
         }
+        PropertiesUtil.decorateProperties(properties);
         return properties;
     }
-
+    
 }

@@ -77,7 +77,7 @@ public class SimpleValueConverter implements ValueConverter {
 
 	protected void addPrimitiveTransformers(Map<Class, Transformer> answer) {
 		answer.put(boolean.class, value -> {
-			return Boolean.valueOf((String)value);
+			return Boolean.valueOf(value.toString());
 		});
 		answer.put(byte.class, value -> {
 			return Byte.valueOf(value.toString());

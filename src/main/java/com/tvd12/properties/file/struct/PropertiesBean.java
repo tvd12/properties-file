@@ -118,7 +118,8 @@ public class PropertiesBean {
     
     protected Object transform(
     		MethodStruct methodStruct, Object value, Properties properties) {
-    	String prefix = methodStruct.getPropertyPrefix();
+    	boolean guessPrefix = properties != null && value == null;
+    	String prefix = methodStruct.getPropertyPrefix(guessPrefix);
         Class argumentType = getWriteArgumentType(methodStruct);
         if(properties == null || prefix.isEmpty()) {
         	if(value == null)
@@ -128,13 +129,21 @@ public class PropertiesBean {
                 v = ((String) value).trim();
     		return transform(argumentType, v);
         }
-        return new PropertiesMapper()
-        		.data(properties)
-        		.classLoader(classLoader)
-        		.propertyPrefix(prefix)
-        		.valueConverter(valueConverter)
-        		.propertyAnnotations(propertyAnnotations)
-        		.map(argumentType);
+        try {
+	        return new PropertiesMapper()
+	        		.data(properties)
+	        		.classLoader(classLoader)
+	        		.propertyPrefix(prefix)
+	        		.valueConverter(valueConverter)
+	        		.propertyAnnotations(propertyAnnotations)
+	        		.map(argumentType);
+        }
+        catch (Exception e) {
+        	if(guessPrefix)
+        		return null;
+        	else
+        		throw e;
+		}
     }
     
 	protected Object transform(Class newType, Object value) {

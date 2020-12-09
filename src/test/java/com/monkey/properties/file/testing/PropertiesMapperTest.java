@@ -87,6 +87,9 @@ public class PropertiesMapperTest {
         properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
         properties.put("datasource.username", "hello");
 		properties.put("datasource.password", "world");
+		properties.put("cors_config-detail.enable", true);
+		properties.put("cors_config-detail.host", "*");
+		properties.put("corsConfigDetailEnable", true);
         
         ClassC object = new PropertiesMapper()
                 .data(PropertiesUtil.toMap(properties))
@@ -102,6 +105,9 @@ public class PropertiesMapperTest {
         Properties dataSourceProperties = PropertiesUtil.getPropertiesByPrefix(properties, "datasource");
         assertEquals(object.dataSourceProperties, dataSourceProperties);
         System.out.println("dataSourceProperties: " + dataSourceProperties);
+        
+		assert object.corsConfigDetail.enable;
+		assert object.corsConfigDetail.host.equals("*");
     }
     
     @Test
@@ -206,6 +212,11 @@ public class PropertiesMapperTest {
         
         @Property(prefix = "datasource")
         protected Properties dataSourceProperties;
+        
+        protected Cors corsConfigDetail;
+        
+        @Property(prefix = "cors.config.detail.enable")
+        protected boolean corsConfigDetailEnable;
     }
     
     public static class ClassD extends ClassDBase implements IClassD {
@@ -255,5 +266,10 @@ public class PropertiesMapperTest {
 		protected String password;
 		@PropertyForTest("driver")
 		protected String driverClass;
+	}
+	
+	public static class Cors {
+		protected boolean enable;
+		protected String host;
 	}
 }
