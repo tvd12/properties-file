@@ -18,6 +18,7 @@ import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.util.PropertiesUtil;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 public class PropertiesMapperTest {
@@ -98,6 +99,7 @@ public class PropertiesMapperTest {
         assertEquals(object.age, 24);
         assertEquals(object.money, 10);
         assertEquals(object.clazz, ClassC.class);
+        assertEquals(object.datasourceUsername, "hello");
         assertNotNull(object.date);
         
         assertEquals(object.dataSourceConfig.username, "hello");
@@ -114,6 +116,7 @@ public class PropertiesMapperTest {
     public void testMapPropertiesToBeanWithAnntations() {
     	Properties properties = new Properties();
         properties.setProperty("name", "hello");
+        properties.put("value", "world");
         properties.put("age", 24);
         properties.put("clazz", ClassC.class.getName());
         properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
@@ -134,9 +137,11 @@ public class PropertiesMapperTest {
                 		a -> ((PropertyForTest)a).prefix()))
                 .map(ClassD.class);
         assertEquals(object.name, "hello");
+        assertEquals(object.value, "value");
         assertEquals(object.age, 24);
         assertEquals(object.money, 10);
         assertEquals(object.clazz, ClassC.class);
+        assertEquals(object.datasourceDriver, "dahlia");
         assertNotNull(object.date);
         
         assertEquals(object.dataSourceConfig.username, "hello");
@@ -183,6 +188,21 @@ public class PropertiesMapperTest {
                 .map();
     }
     
+    @Test
+    public void mapByConstructorTest() {
+    	Properties properties = new Properties();
+    	properties.put("host", "0.0.0.0");
+    	properties.put("port", 3005);
+    	properties.put("admin.name", "Admin");
+    	ServerConfig output = new PropertiesMapper()
+    		.data(properties)
+    		.map(ServerConfig.class);
+    	assert output.getHost().equals("0.0.0.0");
+    	assert output.getPort() == 3005;
+    	assert output.getAdminName().equals("Admin");
+    	assert output.getAdminPassword() == null;
+    }
+    
     @Data
     public static class ClassA {
         private String name;
@@ -217,6 +237,8 @@ public class PropertiesMapperTest {
         
         @Property(prefix = "cors.config.detail.enable")
         protected boolean corsConfigDetailEnable;
+        
+        protected String datasourceUsername;
     }
     
     public static class ClassD extends ClassDBase implements IClassD {
@@ -234,6 +256,9 @@ public class PropertiesMapperTest {
         
     	@Setter
         protected Properties dataSourceProperties;
+    	
+    	@Property
+    	protected String datasourceDriver;
     }
     
     public static class ClassDBase {
@@ -241,6 +266,8 @@ public class PropertiesMapperTest {
         public String name;
     	@Property
         public int age;
+    	@Property
+    	public final String value = "value";
     }
     
     public static interface IClassD extends IIClassD {
@@ -271,5 +298,36 @@ public class PropertiesMapperTest {
 	public static class Cors {
 		protected boolean enable;
 		protected String host;
+	}
+	
+	@Getter
+	public static class ServerConfig {
+		public static String DEFAULT1 = "1";
+		private String host;
+		private int port;
+		private String adminName;
+		private String adminPassword;
+		public static String DEFAULT2 = "2";
+		
+		public ServerConfig(
+			String host,
+			int port,
+			String adminName,
+			String adminPassword,
+			boolean booleanValue,
+			byte byteValue,
+			char charValue,
+			double doubleValue,
+			float floatValue,
+			int intValue,
+			long longValue,
+			short shortValue,
+			Boolean wrapperBooleanValue
+		) {
+			this.host = host;
+			this.port = port;
+			this.adminName = adminName;
+			this.adminPassword = adminPassword;
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
+import com.tvd12.properties.file.util.PropertiesUtil;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -167,14 +168,7 @@ public abstract class MethodStruct {
 	
 	protected String guestPropertyPrefix() {
 		String key = getKey();
-		StringBuilder builder = new StringBuilder();
-		for(int i = 0 ; i < key.length() ; ++i) {
-			char ch = key.charAt(i);
-			if(Character.isUpperCase(ch) && i > 0)
-				builder.append(".");
-			builder.append(Character.toLowerCase(ch));
-		}
-		return builder.toString();
+		return PropertiesUtil.getPropertyNameInDotCase(key);
 	}
 	
 }

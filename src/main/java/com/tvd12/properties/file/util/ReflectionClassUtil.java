@@ -1,6 +1,7 @@
-package com.tvd12.properties.file.reflect;
+package com.tvd12.properties.file.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -9,15 +10,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class ReflectionClassUtils {
+@SuppressWarnings({ "rawtypes", "unchecked" })
+public final class ReflectionClassUtil {
 
-	private ReflectionClassUtils() {}
+	private ReflectionClassUtil() {}
 	
 	public static Object newInstance(Class<?> clazz) {
 	    try {
             return clazz.newInstance();
         } catch (Exception e) {
-           throw new IllegalStateException("Can not create instance of class " + clazz, e);
+           throw new IllegalStateException("Can not create instance of classs: " + clazz.getName(), e);
+        }
+	}
+	
+	public static Object newInstance(Constructor<?> constructor, Object... args) {
+	    try {
+            return constructor.newInstance(args);
+        } catch (Exception e) {
+           throw new IllegalStateException("Can not create instance of constructor: " + constructor, e);
         }
 	}
 	
@@ -37,7 +47,6 @@ public final class ReflectionClassUtils {
 		return answer;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Set<Field> getFieldsWithAnnotations(
 			Class<?> clazz, 
 			List<Class> annotationClasses) {
@@ -47,7 +56,6 @@ public final class ReflectionClassUtils {
 		return answer;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Field> getFieldsWithAnnotation(
 			Class<?> clazz, 
 			Class<? extends Annotation> annotationClass) {
@@ -84,7 +92,6 @@ public final class ReflectionClassUtils {
 		return answer;
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Set<Method> getMethodsWithAnnotations(
 			Class<?> clazz, 
 			List<Class> annotationClasses) {
@@ -94,7 +101,6 @@ public final class ReflectionClassUtils {
 		return answer;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Method> getMethodsWithAnnotation(
 			Class<?> clazz, 
 			Class<? extends Annotation> annotationClass) {
@@ -113,12 +119,10 @@ public final class ReflectionClassUtils {
 		return answer;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatSuperClasses(Class clazz) {
 		return flatSuperClasses(clazz, false);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatSuperClasses(Class clazz, boolean includeObject) {
 		Set<Class> classes = new HashSet<>();
 		Class superClass = clazz.getSuperclass();
@@ -131,7 +135,6 @@ public final class ReflectionClassUtils {
 		return classes;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatInterfaces(Class clazz) {
 		Class[] interfaces = clazz.getInterfaces();
 		Set<Class> classes = new HashSet<>(Arrays.asList(interfaces));
@@ -140,12 +143,10 @@ public final class ReflectionClassUtils {
 		return classes;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatSuperAndInterfaceClasses(Class clazz) {
 		return flatSuperAndInterfaceClasses(clazz, false);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public static Set<Class> flatSuperAndInterfaceClasses(Class clazz, boolean includeObject) {
 		Set<Class> interfaces = flatInterfaces(clazz);
 		Set<Class> superClasses = flatSuperClasses(clazz, includeObject);
@@ -156,6 +157,24 @@ public final class ReflectionClassUtils {
 			classes.addAll(superAndInterfaceClasses);
 		}
 		return classes;
+	}
+	
+	public static Constructor getNoArgsDeclaredConstructor(Class clazz) {
+		for(Constructor constructor : clazz.getDeclaredConstructors()) {
+			if(constructor.getParameterCount() == 0)
+				return constructor;
+		}
+		return null;
+	}
+	
+	public static Constructor getMaxArgsDeclaredConstructor(Class clazz) {
+		Constructor[] constructors = clazz.getDeclaredConstructors();
+		Constructor max = constructors[0];
+		for(int i = 1 ; i < constructors.length ; ++i) {
+			if(constructors[i].getParameterCount() > max.getParameterCount())
+				max = constructors[i];
+		}
+		return max;
 	}
 	
 }

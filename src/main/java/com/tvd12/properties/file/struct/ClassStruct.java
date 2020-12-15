@@ -1,14 +1,18 @@
 package com.tvd12.properties.file.struct;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.mapping.MappingLevel;
-import com.tvd12.properties.file.reflect.ReflectionClassUtils;
+import com.tvd12.properties.file.util.ReflectionClassUtil;
 
 /**
  * 
@@ -30,6 +34,8 @@ public abstract class ClassStruct {
 	//map of method structure and key
 	protected final Map<String, MethodStruct> methods;
 	
+	protected final List<MethodStruct> declaredFieldStructs;
+	
 	protected final PropertyAnnotations propertyAnnotations;
 	
 	/**
@@ -46,9 +52,11 @@ public abstract class ClassStruct {
     	this.mappingLevel = mappingLevel;
     	this.propertyAnnotations = propertyAnnotations;
     	this.methods = new HashMap<>();
+    	this.declaredFieldStructs = new ArrayList<>();
     	this.methodFilter = methodFilter();
 		this.initWithFields();
         this.initWithMethods();
+        this.initWithDeclaredFields();
     }
 	
 	
@@ -71,6 +79,14 @@ public abstract class ClassStruct {
             if(!methodFilter.filter(method))
                 continue;
             addMethod(initWithMethod(method));
+        }
+    }
+    
+    private void initWithDeclaredFields() {
+        Field[] fields = clazz.getDeclaredFields();
+        for(Field field : fields) {
+        	if(!Modifier.isStatic(field.getModifiers()))
+        		declaredFieldStructs.add(initWithField(field));
         }
     }
 
@@ -133,7 +149,7 @@ public abstract class ClassStruct {
      * @param method MethodStruct object to add
      */
     protected void addMethod(MethodStruct method) {
-        methods.put(method.getKey(), method);
+    	methods.put(method.getKey(), method);
     }
     
     /**
@@ -146,9 +162,9 @@ public abstract class ClassStruct {
     protected Set<Field> getAcceptedFields() {
 		Set<Field> fields;
 	    if(mappingLevel == MappingLevel.ALL)
-	        fields = ReflectionClassUtils.getValidFields(clazz);
+	        fields = ReflectionClassUtil.getValidFields(clazz);
 	    else
-    		fields = ReflectionClassUtils.getFieldsWithAnnotations(
+    		fields = ReflectionClassUtil.getFieldsWithAnnotations(
     				clazz, 
     				propertyAnnotations.getAnnotationClasses());
 	    return fields;
@@ -164,9 +180,9 @@ public abstract class ClassStruct {
     protected Set<Method> getAcceptedMethods() {
 		Set<Method> methods;
 		if(mappingLevel == MappingLevel.ALL)
-    		methods = ReflectionClassUtils.getPublicMethods(clazz);
+    		methods = ReflectionClassUtil.getPublicMethods(clazz);
 	    else
-    		methods = ReflectionClassUtils.getMethodsWithAnnotations(
+    		methods = ReflectionClassUtil.getMethodsWithAnnotations(
     				clazz, 
     				propertyAnnotations.getAnnotationClasses());
 	    return methods;
@@ -193,6 +209,19 @@ public abstract class ClassStruct {
 	 */
 	protected MethodFilter methodFilter() {
 	    return method -> validateMethod(method) && !containsMethod(method);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public Constructor getNoArgsDeclaredConstructor() {
+		return ReflectionClassUtil.getNoArgsDeclaredConstructor(clazz);
+	}
+	
+	public Constructor<?> getMaxArgsDeclaredConstructor() {
+		return ReflectionClassUtil.getMaxArgsDeclaredConstructor(clazz);
+	}
+	
+	public Object newObjectInstance() {
+		return ReflectionClassUtil.newInstance(clazz);
 	}
 
 }

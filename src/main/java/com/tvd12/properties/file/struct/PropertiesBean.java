@@ -1,7 +1,10 @@
 package com.tvd12.properties.file.struct;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.util.List;
 import java.util.Properties;
 
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
@@ -9,8 +12,9 @@ import com.tvd12.properties.file.io.DefaultValueConverter;
 import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.mapping.MappingLevel;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
-import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 import com.tvd12.properties.file.util.Logger;
+import com.tvd12.properties.file.util.PropertiesUtil;
+import com.tvd12.properties.file.util.ReflectionClassUtil;
 
 /**
  * 
@@ -37,7 +41,7 @@ public class PropertiesBean {
     		Class<?> clazz, 
     		PropertyAnnotations propertyAnnotations) {
         this(
-			ReflectionClassUtils.newInstance(clazz),
+			ReflectionClassUtil.newInstance(clazz),
 			propertyAnnotations
         );
     }
@@ -67,6 +71,20 @@ public class PropertiesBean {
     	this.valueConverter = valueConverter != null ? valueConverter : DefaultValueConverter.getInstance();
     }
     
+    public PropertiesBean(
+    		Class<?> clazz,
+    		Properties properties,
+    		MappingLevel mappingLevel,
+    		ValueConverter valueConverter,
+    		PropertyAnnotations propertyAnnotations,
+    		ClassLoader classLoader) {
+    	this.wrapper = new ClassWrapper(clazz, mappingLevel, propertyAnnotations);
+    	this.valueConverter = valueConverter != null ? valueConverter : DefaultValueConverter.getInstance();
+    	this.classLoader = classLoader;
+    	this.propertyAnnotations = propertyAnnotations;
+    	this.bean = createBean(properties);
+    }
+    
     public <T> T getObject() {
         return (T)bean;
     }
@@ -92,6 +110,8 @@ public class PropertiesBean {
     		}
     		else {
     			Field field = methodStruct.getField();
+    			if(Modifier.isFinal(field.getModifiers()))
+    				return;
     			if(!Modifier.isPublic(field.getModifiers()))
     				field.setAccessible(true);
     			field.set(bean, argument);
@@ -105,7 +125,7 @@ public class PropertiesBean {
     
     public void putAll(Properties properties) {
         for(Object key : wrapper.keySet()) {
-    		Object value = properties.get(key);
+    		Object value = PropertiesUtil.getValue(properties, key);
     		put(key, value, properties);
         }
     }
@@ -127,16 +147,21 @@ public class PropertiesBean {
         	Object v = value;
         	if(v instanceof String)
                 v = ((String) value).trim();
-    		return transform(argumentType, v);
+    		return transform(v, argumentType);
         }
         try {
-	        return new PropertiesMapper()
+        	if(PropertiesUtil.containsPrefix(properties, prefix)) {
+        		return new PropertiesMapper()
 	        		.data(properties)
 	        		.classLoader(classLoader)
 	        		.propertyPrefix(prefix)
 	        		.valueConverter(valueConverter)
 	        		.propertyAnnotations(propertyAnnotations)
 	        		.map(argumentType);
+        	}
+        	else {
+        		return null;
+        	}
         }
         catch (Exception e) {
         	if(guessPrefix)
@@ -146,10 +171,40 @@ public class PropertiesBean {
 		}
     }
     
-	protected Object transform(Class newType, Object value) {
+	protected Object transform(Object value, Class newType) {
 		return valueConverter.convert(value, newType);
 	}
-    
+	
+	protected Object getAndTransform(Properties properties, String key, Class newType) {
+		Object value = PropertiesUtil.getValue(properties, key);
+		if(value != null)
+			value = transform(value, newType);
+		return value;
+	}
+	
+	protected Object createBean(Properties properties) {
+		Constructor constructor = wrapper.getNoArgsDeclaredConstructor();
+		if(constructor != null)
+			return wrapper.newObjectInstance();
+		return createBeanByMaxArgsConstructor(properties);
+	}
+	
+	protected Object createBeanByMaxArgsConstructor(Properties properties) {
+		Constructor constructor = wrapper.getMaxArgsDeclaredConstructor();
+		Parameter[] parameters = constructor.getParameters();
+		List<MethodStruct> declaredFieldStructs = wrapper.declaredFieldStructs;
+		Object[] args = new Object[constructor.getParameterCount()];
+		for(int i = 0 ; i < args.length ; ++i) {
+			Class<?> parameterType = parameters[i].getType();
+			if(i >= declaredFieldStructs.size()) {
+				args[i] = PropertiesUtil.defaultValueOf(parameterType);
+				continue;
+			}
+			String key = declaredFieldStructs.get(i).getKey();
+			args[i] = getAndTransform(properties, key, parameterType);
+		}
+		return ReflectionClassUtil.newInstance(constructor, args);
+	}
     
     protected void printError(String message, Throwable throwable) {
     	Logger.print(message, throwable);

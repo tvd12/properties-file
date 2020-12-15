@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 import com.tvd12.properties.file.annotation.Property;
 import com.tvd12.properties.file.io.Dates;
 import com.tvd12.properties.file.mapping.PropertiesMapper;
-import com.tvd12.properties.file.struct.PropertiesBean;
 
 import lombok.Data;
 
@@ -45,9 +44,8 @@ public class PropertiesMapper2Test {
         PropertiesMapper propertiesMapper = new PropertiesMapper()
                 .data(properties)
                 .clazz(ClassA.class);
-        PropertiesBean pb = new PropertiesBean(ClassA.class);
-        propertiesMapper.map(pb);
-        ClassA objectx =  propertiesMapper.map(pb);
+        propertiesMapper.map(ClassA.class);
+        ClassA objectx =  propertiesMapper.map(ClassA.class);
         assertEquals(objectx.getName(), "hello");
         assertEquals(objectx.getAge(), 24);
         assertEquals(objectx.getMoney(), 10);
@@ -60,9 +58,8 @@ public class PropertiesMapper2Test {
         PropertiesMapper propertiesMapperx = new PropertiesMapper()
                 .data(properties)
                 .bean(new ClassA());
-        PropertiesBean pbx = new PropertiesBean(ClassA.class);
-        propertiesMapper.map(pb);
-        ClassA objectxx =  propertiesMapperx.map(pbx);
+        propertiesMapper.map(ClassA.class);
+        ClassA objectxx =  propertiesMapperx.map(ClassA.class);
         assertEquals(objectxx.getName(), "hello");
         assertEquals(objectxx.getAge(), 24);
         assertEquals(objectxx.getMoney(), 10);

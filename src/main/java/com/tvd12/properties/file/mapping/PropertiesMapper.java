@@ -11,7 +11,6 @@ import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.io.ValueConverter;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.FileReader;
-import com.tvd12.properties.file.reflect.ReflectionClassUtils;
 import com.tvd12.properties.file.struct.PropertiesBean;
 import com.tvd12.properties.file.util.PropertiesUtil;
 
@@ -223,18 +222,34 @@ public class PropertiesMapper {
     @SuppressWarnings("unchecked")
 	public <T> T map(Class<T> clazz) {
     	this.clazz(clazz);
+    	if(reader == null)
+    		reader = new BaseFileReader();
+    	this.readProperties();
     	if(clazz != null && Map.class.isAssignableFrom(clazz))
-    		return (T)getProperties();
+    		return (T)properties;
     	if(propertyAnnotations == null)
     		propertyAnnotations = new PropertyAnnotations();
-        return map(
-        		new PropertiesBean(
-	        		newBeanInstance(), 
-	        		mappingLevel, 
-	        		valueConverter, 
-	        		propertyAnnotations,
-	        		classLoader
-	        	));
+    	if(bean != null) {
+	        return map(
+	        		new PropertiesBean(
+		        		bean, 
+		        		mappingLevel, 
+		        		valueConverter, 
+		        		propertyAnnotations,
+		        		classLoader
+		        	));
+    	}
+    	else {
+    		return map(
+	        		new PropertiesBean(
+		        		clazz,
+		        		properties,
+		        		mappingLevel, 
+		        		valueConverter, 
+		        		propertyAnnotations,
+		        		classLoader
+		        	));
+    	}
     }
     
     /**
@@ -244,44 +259,29 @@ public class PropertiesMapper {
      * @param mapping a custom of properties bean mapping
      * @return object after mapped
      */
-    public <T> T map(PropertiesBean mapping) {
-    	if(reader == null)
-    		reader = new BaseFileReader();
-		mapping.putAll(getProperties());
+    private  <T> T map(PropertiesBean mapping) {
+		mapping.putAll(properties);
         T answer = mapping.getObject();
         return answer;
     		
     }
     
     /**
-     * create object to hold data 
-     * 
-     * @return
-     */
-    private Object newBeanInstance() {
-    	if(bean == null)
-            bean = ReflectionClassUtils.newInstance(clazz);
-    	else
-    		clazz = bean.getClass();
-        return bean;
-    }
-    
-    /**
      * read properties file if properties object null
      * 
-     * @return properties object
      */
-    private Properties getProperties() {
+    private void readProperties() {
         try {
             if(properties == null)
-                properties = reader.read(classLoader, propertiesFile);
+            	properties = new Properties();
+            if(propertiesFile != null)
+            	properties.putAll(reader.read(classLoader, propertiesFile));
             if(propertyPrefix != null)
             	properties = PropertiesUtil.getPropertiesByPrefix(properties, propertyPrefix);
         } catch (PropertiesFileException e) {
             throw new IllegalStateException(e);
         }
         PropertiesUtil.decorateProperties(properties);
-        return properties;
     }
     
 }

@@ -73,6 +73,18 @@ public class PropertiesUtil {
         return answer;
     }
     
+    @SuppressWarnings("rawtypes")
+	public static boolean containsPrefix(Map properties, String prefix) {
+    	for(Object key : properties.keySet()) {
+        	String keyString = key.toString();
+            if(keyString.startsWith(prefix) && 
+            		keyString.length() > prefix.length()) {
+            	return true;
+            }
+    	}
+    	return false;
+    }
+    
     /**
      * Decorate properties, add new keys (replace _ and - by .) 
      * 
@@ -89,6 +101,46 @@ public class PropertiesUtil {
     			newKeyValues.put(newKey, properties.get(key));
     	}
     	properties.putAll(newKeyValues);
+    }
+    
+    public static String getPropertyNameInDotCase(String key) {
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0 ; i < key.length() ; ++i) {
+			char ch = key.charAt(i);
+			if(Character.isUpperCase(ch) && i > 0)
+				builder.append(".");
+			builder.append(Character.toLowerCase(ch));
+		}
+		return builder.toString();
+	}
+    
+    public static Object getValue(Properties properties, Object key) {
+		Object value = properties.get(key);
+		if(value == null) {
+			String keyInDotCase = getPropertyNameInDotCase(key.toString());
+			value = properties.get(keyInDotCase);
+		}
+		return value;
+	}
+    
+    public static Object defaultValueOf(Class<?> type) {
+    	if(type == boolean.class)
+    		return false;
+    	if(type == byte.class)
+    		return (byte)0;
+    	if(type == char.class)
+    		return (char)0;
+    	if(type == double.class)
+    		return 0.0D;
+    	if(type == float.class)
+    		return 0.0F;
+    	if(type == int.class)
+    		return 0;
+    	if(type == long.class)
+    		return 0L;
+    	if(type == short.class)
+    		return (short)0;
+    	return null;
     }
     
 }
