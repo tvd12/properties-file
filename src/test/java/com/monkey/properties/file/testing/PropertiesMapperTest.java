@@ -194,6 +194,7 @@ public class PropertiesMapperTest {
     	properties.put("host", "0.0.0.0");
     	properties.put("port", 3005);
     	properties.put("admin.name", "Admin");
+    	properties.put("guest.name", "Guest");
     	ServerConfig output = new PropertiesMapper()
     		.data(properties)
     		.map(ServerConfig.class);
@@ -329,5 +330,8 @@ public class PropertiesMapperTest {
 			this.adminName = adminName;
 			this.adminPassword = adminPassword;
 		}
+		
+		private String admin;
+		private int guest;
 	}
 }

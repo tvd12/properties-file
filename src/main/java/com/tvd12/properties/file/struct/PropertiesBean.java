@@ -164,10 +164,7 @@ public class PropertiesBean {
         	}
         }
         catch (Exception e) {
-        	if(guessPrefix)
-        		return null;
-        	else
-        		throw e;
+        	return null;
 		}
     }
     
@@ -179,7 +176,7 @@ public class PropertiesBean {
 		Object value = PropertiesUtil.getValue(properties, key);
 		if(value != null)
 			value = transform(value, newType);
-		return value;
+		return PropertiesUtil.defaultValueOf(newType);
 	}
 	
 	protected Object createBean(Properties properties) {
@@ -200,7 +197,8 @@ public class PropertiesBean {
 				args[i] = PropertiesUtil.defaultValueOf(parameterType);
 				continue;
 			}
-			String key = declaredFieldStructs.get(i).getKey();
+			MethodStruct fieldStruct = declaredFieldStructs.get(i);
+			String key = fieldStruct.getKey();
 			args[i] = getAndTransform(properties, key, parameterType);
 		}
 		return ReflectionClassUtil.newInstance(constructor, args);
