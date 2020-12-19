@@ -25,7 +25,6 @@ public class GetterMethodTest {
         getterMethod.initWithMethod(method);
         assertEquals(getterMethod.getType(), String.class);
         assertEquals(getterMethod.getField(), null);
-        assertEquals(getterMethod.getMethodName(), "getName");
     }
     
     @Test

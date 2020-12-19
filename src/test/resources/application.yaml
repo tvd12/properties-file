@@ -11,3 +11,13 @@ cors:
    allow_orgin: '*'
 hello: world
 foo: bar
+# datasources config
+data_sources:
+   main:
+      url: jdbc://main_url
+      username: main_admin
+      password: main_password
+   test:
+      url: jdbc://test_url
+      username: test_admin
+      password: test_password

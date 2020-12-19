@@ -2,15 +2,20 @@ package com.monkey.properties.file.testing;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
 import com.tvd12.properties.file.exception.YamlInvalidSyntaxException;
+import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.YamlFileReader;
 import com.tvd12.properties.file.util.InputStreamUtil;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public class YamlFileReaderTest {
 
@@ -86,5 +91,29 @@ public class YamlFileReaderTest {
 	public void testInvalidKey() {
 		BaseFileReader reader = new BaseFileReader();
 		reader.read("invalid_yaml5.txt");
+	}
+	
+	@Test
+	public void mapingMapTest() {
+		ApplicationConfig config = new PropertiesMapper()
+				.file("application.yaml")
+				.map(ApplicationConfig.class);
+		Map<String, DataSourceConfig> dataSources = config.getDataSources();
+		DataSourceConfig mainDataSource = dataSources.get("main");
+		assert mainDataSource != null;
+	}
+	
+	@Getter
+	@AllArgsConstructor
+	public static class ApplicationConfig {
+		private Map<String, DataSourceConfig> dataSources;
+	}
+	
+	@Getter
+	@AllArgsConstructor
+	public static class DataSourceConfig {
+		private String url;
+		private String username;
+		private String password;
 	}
 }

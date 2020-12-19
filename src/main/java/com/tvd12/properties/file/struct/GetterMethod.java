@@ -2,6 +2,7 @@ package com.tvd12.properties.file.struct;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
 
@@ -49,6 +50,11 @@ public class GetterMethod extends MethodStruct {
 			        + getMethodName()
 			        + " on class " + obj.getClass(), e);
 		}
+	}
+	
+	@Override
+	protected Type getGenericTypeOfMethod() {
+		return method.getGenericReturnType();
 	}
 	
 }

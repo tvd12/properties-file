@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Properties;
 
@@ -130,14 +131,15 @@ public class PropertiesBean {
         }
     }
     
-    protected Class getWriteArgumentType(MethodStruct methodStruct) {
+    private Class getWriteArgumentType(MethodStruct methodStruct) {
     	if(methodStruct.getField() != null)
     		return methodStruct.getField().getType();
 		return methodStruct.getMethod().getParameterTypes()[0];
     }
     
-    protected Object transform(
-    		MethodStruct methodStruct, Object value, Properties properties) {
+    private Object transform(
+    		MethodStruct methodStruct, 
+    		Object value, Properties properties) {
     	boolean guessPrefix = properties != null && value == null;
     	String prefix = methodStruct.getPropertyPrefix(guessPrefix);
         Class argumentType = getWriteArgumentType(methodStruct);
@@ -149,44 +151,26 @@ public class PropertiesBean {
                 v = ((String) value).trim();
     		return transform(v, argumentType);
         }
-        try {
-        	if(PropertiesUtil.containsPrefix(properties, prefix)) {
-        		return new PropertiesMapper()
-	        		.data(properties)
-	        		.classLoader(classLoader)
-	        		.propertyPrefix(prefix)
-	        		.valueConverter(valueConverter)
-	        		.propertyAnnotations(propertyAnnotations)
-	        		.map(argumentType);
-        	}
-        	else {
-        		return null;
-        	}
-        }
-        catch (Exception e) {
-        	return null;
-		}
+        return transformValue(
+        		properties, 
+        		prefix, 
+        		argumentType, 
+        		methodStruct.getGenericType()
+        );
     }
     
-	protected Object transform(Object value, Class newType) {
+	private Object transform(Object value, Class newType) {
 		return valueConverter.convert(value, newType);
 	}
 	
-	protected Object getAndTransform(Properties properties, String key, Class newType) {
-		Object value = PropertiesUtil.getValue(properties, key);
-		if(value != null)
-			value = transform(value, newType);
-		return PropertiesUtil.defaultValueOf(newType);
-	}
-	
-	protected Object createBean(Properties properties) {
+	private Object createBean(Properties properties) {
 		Constructor constructor = wrapper.getNoArgsDeclaredConstructor();
 		if(constructor != null)
 			return wrapper.newObjectInstance();
 		return createBeanByMaxArgsConstructor(properties);
 	}
 	
-	protected Object createBeanByMaxArgsConstructor(Properties properties) {
+	private Object createBeanByMaxArgsConstructor(Properties properties) {
 		Constructor constructor = wrapper.getMaxArgsDeclaredConstructor();
 		Parameter[] parameters = constructor.getParameters();
 		List<MethodStruct> declaredFieldStructs = wrapper.declaredFieldStructs;
@@ -198,10 +182,51 @@ public class PropertiesBean {
 				continue;
 			}
 			MethodStruct fieldStruct = declaredFieldStructs.get(i);
+			Class<?> fieldType = fieldStruct.getType();
 			String key = fieldStruct.getKey();
 			args[i] = getAndTransform(properties, key, parameterType);
+			if(args[i] == null) {
+				args[i] = transformValue(
+						properties, 
+						fieldStruct.guestPropertyPrefix(), 
+						fieldType, 
+						fieldStruct.getGenericType()
+				);
+			}
 		}
 		return ReflectionClassUtil.newInstance(constructor, args);
+	}
+	
+	private Object transformValue(
+    		Properties properties,
+    		String prefix,
+    		Class<?> valueType,
+    		Type genericType
+    ) {
+    	try {
+        	if(PropertiesUtil.containsPrefix(properties, prefix)) {
+        		return new PropertiesMapper()
+	        		.data(properties)
+	        		.classLoader(classLoader)
+	        		.propertyPrefix(prefix)
+	        		.valueConverter(valueConverter)
+	        		.propertyAnnotations(propertyAnnotations)
+	        		.map(valueType, genericType);
+        	}
+        	else {
+        		return null;
+        	}
+        }
+        catch (Exception e) {
+        	return null;
+		}
+    }
+	
+	private Object getAndTransform(Properties properties, String key, Class newType) {
+		Object value = PropertiesUtil.getValue(properties, key);
+		if(value != null)
+			return transform(value, newType);
+		return PropertiesUtil.defaultValueOf(newType);
 	}
     
     protected void printError(String message, Throwable throwable) {

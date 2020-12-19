@@ -1,6 +1,7 @@
 package com.tvd12.properties.file.util;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -73,6 +74,84 @@ public class PropertiesUtil {
         return answer;
     }
     
+    /**
+     * 
+     * Split a properties to a map of properties by first keys
+     * Example, properties(
+     * 	main_datasource.url=main
+     * 	main_datasource.username=main username
+     * 	main_datasource.password=main password
+     * 	test_datasource.url=test
+     * 	test_datasource.username=test username
+     * 	test_datasource.password=test password
+     * )
+     * Will be splitted to:
+     * main_datasource: (
+     * 	url=main
+     * 	username=main username
+     * 	password=main password
+     * )
+     * test_datasource: (
+     * 	url=test
+     * 	username=test username
+     * 	password=test password
+     * )
+     *  
+     * @param properties 
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+	public static Map<String, Properties> getPropertiesMap(Map properties) {
+    	Set<String> firstKeys = getFirstPropertyKeys(properties);
+    	Map<String, Properties> answer = new HashMap<>();
+    	for(String firstKey : firstKeys) {
+    		answer.put(firstKey, getPropertiesByPrefix(properties, firstKey));
+    	}
+    	return answer;
+    }
+    
+    
+    /**
+     * 
+     * Get first property keys of a properties
+     * Example properties(
+     * 	main_datasource.url=main
+     * 	main_datasource.username=main username
+     * 	main_datasource.password=main password
+     * 	test_datasource.url=test
+     * 	test_datasource.username=test username
+     * 	test_datasource.password=test password
+     * )
+     * has first property keys main_datasource and test_datasource 
+     * 
+     * @param properties
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+	public static Set<String> getFirstPropertyKeys(Map properties) {
+    	Set<String> answer = new HashSet<>();
+    	for(Object key : properties.keySet()) {
+    		String keyString = key.toString();
+    		int firstDotIndex = keyString.indexOf('.');
+    		String firstKey = keyString;
+    		if(firstDotIndex > 0)
+    			firstKey = keyString.substring(0, firstDotIndex);
+    		answer.add(firstKey);
+    	}
+    	return answer;
+    }
+    
+    /**
+     * 
+     * Check whether a properties contains a prefix key or not
+     * Example, properties (admin.name.first=Foo)
+     * Will contain prefix: admin and amdin.name
+     * But doesn't contain admin.name.first 
+     * 
+     * @param properties the properties
+     * @param prefix the prefix to check
+     * @return contains or not
+     */
     @SuppressWarnings("rawtypes")
 	public static boolean containsPrefix(Map properties, String prefix) {
     	for(Object key : properties.keySet()) {
@@ -103,10 +182,18 @@ public class PropertiesUtil {
     	properties.putAll(newKeyValues);
     }
     
-    public static String getPropertyNameInDotCase(String key) {
+    /**
+     * 
+     * Convert property in camel case to to case
+     * Example: helloWorld will convert to hello.world
+     * 
+     * @param propertyName the property name in camel case
+     * @return the property name in dot case
+     */
+    public static String getPropertyNameInDotCase(String propertyName) {
 		StringBuilder builder = new StringBuilder();
-		for(int i = 0 ; i < key.length() ; ++i) {
-			char ch = key.charAt(i);
+		for(int i = 0 ; i < propertyName.length() ; ++i) {
+			char ch = propertyName.charAt(i);
 			if(Character.isUpperCase(ch) && i > 0)
 				builder.append(".");
 			builder.append(Character.toLowerCase(ch));
@@ -123,6 +210,12 @@ public class PropertiesUtil {
 		return value;
 	}
     
+    /**
+     * Get default value of type
+     * 
+     * @param type the type
+     * @return the default value of the type
+     */
     public static Object defaultValueOf(Class<?> type) {
     	if(type == boolean.class)
     		return false;

@@ -4,6 +4,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.util.PropertiesUtil;
@@ -71,7 +72,7 @@ public abstract class MethodStruct {
 	 * @param field java field
 	 * @return a java method object
 	 */
-	protected Method getMethodByField(Class<?> clazz, Field field) {
+	private Method getMethodByField(Class<?> clazz, Field field) {
         try {
             String name = (field.getName());
             name = (name.startsWith("is")) 
@@ -99,7 +100,7 @@ public abstract class MethodStruct {
 	 */
 	protected abstract Class<?> getTypeFromMethod(Method method);
 	
-	public String getMethodName() {
+	protected String getMethodName() {
 	    return method.getName();
 	}
 	
@@ -112,7 +113,7 @@ public abstract class MethodStruct {
 	 * @param method java method object
 	 * @return key as string
 	 */
-	protected String getKey(Method method) {
+	private String getKey(Method method) {
 		String mname = propertyAnnotations.getPropertyName(method);
 		if(!mname.isEmpty())
 			return mname;
@@ -136,14 +137,14 @@ public abstract class MethodStruct {
      * @param field java field object
      * @return key as string
      */
-	protected String getKey(Field field) {
+	private String getKey(Field field) {
 	    String mname = propertyAnnotations.getPropertyName(field);
         if(!mname.isEmpty())
             return mname;
         return field.getName();
 	}
 	
-	protected String getPropertyName() {
+	private String getPropertyName() {
 		String propertyName = "";
 		if(field != null)
 			propertyName = propertyAnnotations.getPropertyName(field);
@@ -152,7 +153,7 @@ public abstract class MethodStruct {
 		return propertyName;
 	}
 	
-	protected String getPropertyPrefix(boolean guess) {
+	public String getPropertyPrefix(boolean guess) {
 		String prefix = "";
 		String propertyName = getPropertyName();
 		if(propertyName.isEmpty()) {
@@ -166,9 +167,19 @@ public abstract class MethodStruct {
 		return prefix;
 	}
 	
-	protected String guestPropertyPrefix() {
+	public String guestPropertyPrefix() {
 		String key = getKey();
 		return PropertiesUtil.getPropertyNameInDotCase(key);
+	}
+	
+	public Type getGenericType() {
+		if(field != null)
+			return field.getGenericType();
+		return getGenericTypeOfMethod();
+	}
+	
+	protected Type getGenericTypeOfMethod() {
+		return method.getGenericParameterTypes()[0];
 	}
 	
 }
