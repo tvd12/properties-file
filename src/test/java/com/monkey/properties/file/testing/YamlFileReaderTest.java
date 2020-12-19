@@ -24,7 +24,7 @@ public class YamlFileReaderTest {
 		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("application.yaml");
 		System.out.println(properties);
-		assert properties.get("cors.allow_orgin").equals("*");
+		assert properties.get("cors.allow_origin").equals("*");
 		assert properties.get("cors.enable").equals("true");
 		assert properties.get("server.port").equals("3005");
 		assert properties.get("server.host").equals("0.0.0.0");
@@ -41,7 +41,7 @@ public class YamlFileReaderTest {
 		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("application2_yaml.txt");
 		System.out.println(properties);
-		assert properties.get("cors.allow_orgin").equals("*");
+		assert properties.get("cors.allow_origin").equals("*");
 		assert properties.get("cors.enable").equals("true");
 		assert properties.get("server.port").equals("3005");
 		assert properties.get("server.host").equals("0.0.0.0");

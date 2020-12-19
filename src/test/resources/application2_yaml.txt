@@ -6,7 +6,7 @@ server:
       password2: 123456
 cors:
    enable: true
-   allow_orgin: '*'
+   allow_origin: '*'
 hello: world
 foo: bar
 string1: ''

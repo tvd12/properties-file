@@ -8,7 +8,7 @@ server:
 # cors config
 cors:
    enable: true # true or false
-   allow_orgin: '*'
+   allow_origin: '*'
 hello: world
 foo: bar
 # datasources config
