@@ -310,12 +310,13 @@ public class PropertiesMapper {
      */
     private void readProperties() {
         try {
-        	if(reader == null)
-        		reader = new BaseFileReader();
             if(properties == null)
             	properties = new Properties();
-            if(propertiesFile != null)
+            if(propertiesFile != null) {
+            	if(reader == null)
+            		reader = new BaseFileReader();
             	properties.putAll(reader.read(classLoader, propertiesFile));
+            }
             if(propertyPrefix != null)
             	properties = PropertiesUtil.getPropertiesByPrefix(properties, propertyPrefix);
         } catch (PropertiesFileException e) {

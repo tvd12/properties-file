@@ -118,12 +118,8 @@ public abstract class MethodStruct {
 		if(!mname.isEmpty())
 			return mname;
 		mname = method.getName();
-		if(mname.startsWith("get")
-				|| mname.startsWith("set")
-				|| mname.startsWith("has"))
+		if(mname.startsWith("set"))
 			mname = mname.substring(3);
-		if(mname.startsWith("is"))
-			mname = mname.substring(2);
 		if(mname.length() < 2)
 			return mname;
 		return mname.substring(0, 1).toLowerCase() + mname.substring(1);
@@ -175,10 +171,6 @@ public abstract class MethodStruct {
 	public Type getGenericType() {
 		if(field != null)
 			return field.getGenericType();
-		return getGenericTypeOfMethod();
-	}
-	
-	protected Type getGenericTypeOfMethod() {
 		return method.getGenericParameterTypes()[0];
 	}
 	

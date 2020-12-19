@@ -24,8 +24,6 @@ public final class ReflectionGenericUtil {
 		for(Type type : types) {
 			if(type instanceof Class)
 				answer.add((Class)type);
-			else if(type instanceof ParameterizedType)
-				answer.add((Class)((ParameterizedType)type).getRawType());
 			else
 				answer.add(null);
 		}

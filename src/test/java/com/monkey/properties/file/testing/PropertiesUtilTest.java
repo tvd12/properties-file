@@ -2,7 +2,10 @@ package com.monkey.properties.file.testing;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import org.testng.annotations.Test;
 
@@ -33,6 +36,21 @@ public class PropertiesUtilTest extends BaseTest {
     	properties.put("datasource", "database");
     	properties.put("datasource.username", "hello");
     	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, ""), properties);
+    }
+    
+    @Test
+    public void getFirstPropertyKeysWithFirstDotIndex0() {
+    	// given
+    	Properties properties = new Properties();
+    	properties.put(".", "database");
+    	properties.put("hello", "world");
+    	
+    	// when
+    	Set<String> actual = PropertiesUtil.getFirstPropertyKeys(properties);
+    	
+    	// then
+    	Set<String> expected = new HashSet<>(Arrays.asList(".", "hello"));
+    	assertEquals(actual, expected);
     }
     
 }

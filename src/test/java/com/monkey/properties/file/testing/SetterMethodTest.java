@@ -1,5 +1,7 @@
 package com.monkey.properties.file.testing;
 
+import static org.testng.Assert.assertEquals;
+
 import java.lang.reflect.Method;
 
 import org.testng.annotations.Test;
@@ -37,12 +39,29 @@ public class SetterMethodTest {
         setterMethod.invoke(new ClassA(), "123");
     }
     
+    @Test
+    public void getKeyStartWithNotSet() throws Exception {
+    	// given
+    	SetterMethod method = new SetterMethod(new PropertyAnnotations());
+    	method.initWithMethod(ClassA.class.getDeclaredMethod("value", String.class));
+    	
+    	// when
+    	String key = method.getKey();
+    	
+    	// then
+    	assertEquals(key, "value");
+    }
+    
     @Data
     public static class ClassA {
         private String name;
         
-        public void setValues(String value, String name) {
-            
+        public void setValues(String value, String name) {}
+        
+        public void value(String value) {}
+        
+        public boolean isValid() {
+        	return true;
         }
     }
     

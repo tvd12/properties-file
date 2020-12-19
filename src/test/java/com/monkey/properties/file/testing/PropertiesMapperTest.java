@@ -5,6 +5,7 @@ import static org.testng.Assert.assertNotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.Properties;
 
 import org.testng.annotations.Test;
@@ -202,6 +203,42 @@ public class PropertiesMapperTest {
     	assert output.getPort() == 3005;
     	assert output.getAdminName().equals("Admin");
     	assert output.getAdminPassword() == null;
+    }
+    
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void mapFailsDueToNoClassNoBean() {
+    	new PropertiesMapper()
+    		.map(null);
+    }
+    
+    @Test
+    public void mapToMapValueWithNoGenericType() {
+    	// given
+    	Properties properties = new Properties();
+    	properties.put("host", "0.0.0.0");
+    	
+    	// when
+    	Object actual = new PropertiesMapper()
+    			.data(properties)
+    			.map(Map.class, null);
+    	
+    	// then
+    	assertEquals(actual, properties);
+    }
+    
+    @Test
+    public void mapToMapValueWithInvalidGenericType() {
+    	// given
+    	Properties properties = new Properties();
+    	properties.put("host", "0.0.0.0");
+    	
+    	// when
+    	Object actual = new PropertiesMapper()
+    			.data(properties)
+    			.map(Map.class, String.class);
+    	
+    	// then
+    	assertEquals(actual, properties);
     }
     
     @Data
