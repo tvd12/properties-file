@@ -1,0 +1,9 @@
+.idea/
+.classpath
+.project
+.settings/
+/target/
+/test-output/
+BaseFileWriterTestFile1.txt
+BaseFileWriterTestFile3.txt
+hello.output_test

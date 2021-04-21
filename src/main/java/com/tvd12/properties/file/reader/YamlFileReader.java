@@ -75,8 +75,16 @@ public class YamlFileReader implements InputStreamReader {
 							"invalid syntax, line " + lineIndex + ": '" + line + "'");
 				}
 				else {
-					String lastValue = answer.getProperty(lastPropertyKey);
-					lastValue = (lastValue != null ? lastValue : EMPTY_STRING) + " " + lineTrim;
+					String lastValue = answer.getProperty(lastPropertyKey, EMPTY_STRING);
+					if(lineTrim.startsWith(DASH_CHAR)) {
+						if(lineTrim.length() > 1) {
+							String value = lineTrim.substring(1).trim();
+							lastValue = lastValue.isEmpty() ? value : (lastValue + "," + value);
+						}
+					}
+					else {
+						lastValue = lastValue.isEmpty() ? lineTrim : (lastValue + " " + lineTrim);
+					}
 					answer.put(lastPropertyKey, lastValue.trim());
 					continue;
 				}
@@ -93,8 +101,8 @@ public class YamlFileReader implements InputStreamReader {
 					throw new YamlInvalidSyntaxException(
 							"invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line);
 				}
-				String lastValue = answer.getProperty(lastPropertyKey);
-				lastValue = (lastValue != null ? lastValue : EMPTY_STRING) + " " + lineTrim;
+				String lastValue = answer.getProperty(lastPropertyKey, EMPTY_STRING);
+				lastValue = lastValue.isEmpty() ? lineTrim : (lastValue + " " + lineTrim);
 				answer.put(lastPropertyKey, lastValue.trim());
 				continue;
 			}

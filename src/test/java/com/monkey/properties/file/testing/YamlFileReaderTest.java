@@ -24,6 +24,7 @@ public class YamlFileReaderTest {
 		BaseFileReader reader = new BaseFileReader();
 		Properties properties = reader.read("application.yaml");
 		System.out.println(properties);
+		assert properties.get("include.profiles").equals("local,alpha");
 		assert properties.get("cors.allow_origin").equals("*");
 		assert properties.get("cors.enable").equals("true");
 		assert properties.get("server.port").equals("3005");
