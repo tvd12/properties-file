@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 
@@ -236,4 +237,32 @@ public class PropertiesUtil {
     	return null;
     }
     
+    /**
+     * Filter properties by key prefix
+     * 
+     * @param properties the properties to filter
+     * @param keyPrefix the key prefix
+     * @return the filtered properties
+     */
+    public static Properties filterPropertiesByKeyPrefix(
+    		Properties properties, String keyPrefix) {
+    	return filterProperties(properties, it -> it.startsWith(keyPrefix));
+    }
+    
+    /**
+     * Filter properties by predicate
+     * 
+     * @param properties the properties to filter
+     * @param filter the filter
+     * @return the filtered properties
+     */
+    public static Properties filterProperties(
+    		Properties properties, Predicate<String> filter) {
+    	Properties answer = new Properties();
+    	for(Object key : properties.keySet()) {
+    		if(filter.test(key.toString()))
+    			answer.put(key, properties.get(key));
+    	}
+    	return answer;
+    }
 }

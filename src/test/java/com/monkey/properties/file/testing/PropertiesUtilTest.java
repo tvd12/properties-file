@@ -53,4 +53,17 @@ public class PropertiesUtilTest extends BaseTest {
     	assertEquals(actual, expected);
     }
     
+    @Test
+    public void filterPropertiesByPrefixTest() {
+    	Properties properties = new Properties();
+    	properties.put("datasource", "database");
+    	properties.put("datasource.username", "hello");
+    	properties.put("cache.username", "hello");
+    	properties.put("cache.pass", "pass");
+    	Properties expected = new Properties();
+    	expected.put("datasource", "database");
+    	expected.put("datasource.username", "hello");
+    	assertEquals(PropertiesUtil.filterPropertiesByKeyPrefix(properties, "datasource"), expected);
+    }
+    
 }
