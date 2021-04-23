@@ -29,7 +29,7 @@ public final class InputStreamUtil {
         if(inputStream == null)
             inputStream = getInputStreamByAbsolutePath(filePath);
         if(inputStream == null)
-            throw new PropertiesFileException("Can not read file in path " + filePath);
+            throw new PropertiesFileException("Can not read file in path " + filePath + ", maybe it's not found");
         return inputStream;
 	}
 	

@@ -1,0 +1,4 @@
+# server config
+include:
+   profiles:
+      - alpha3

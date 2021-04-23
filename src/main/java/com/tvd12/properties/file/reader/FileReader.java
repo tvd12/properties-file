@@ -153,10 +153,15 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(File file) {
-    	return loadInputStream(
-            	InputStreamUtil.getInputStreamByAbsolutePath(file),
+    	InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file);
+    	Properties properties = new Properties();
+    	if(inputStream != null) {
+    		properties.putAll(loadInputStream(
+    			inputStream,
             	FileUtil.getFileExtension(file.getPath())
-        );
+    		));
+    	}
+    	return properties;
     }
     
     /**
