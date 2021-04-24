@@ -36,6 +36,13 @@ public class MultiFileReaderTest {
 	}
 	
 	@Test
+	public void readNoProfiles() {
+		FileReader reader = new MultiFileReader();
+		Properties properties = reader.read("application1.properties");
+		Asserts.assertNull(properties.get("include.profiles"));
+	}
+	
+	@Test
 	public void readSystemFiles() {
 		FileReader reader = new MultiFileReader(Arrays.asList("alpha", ""));
 		Properties properties = reader.read(new File("test/config/application.yaml"));
