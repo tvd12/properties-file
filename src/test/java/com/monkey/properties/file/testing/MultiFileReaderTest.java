@@ -30,7 +30,7 @@ public class MultiFileReaderTest {
 	
 	@Test
 	public void readEmptyProfiles() {
-		FileReader reader = new MultiFileReader(Arrays.asList("alpha", ""));
+		FileReader reader = new MultiFileReader("alpha,");
 		Properties properties = reader.read("application1.properties");
 		Asserts.assertNull(properties.get("include.profiles"));
 	}

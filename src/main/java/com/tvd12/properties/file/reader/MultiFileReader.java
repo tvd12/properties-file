@@ -17,6 +17,10 @@ public class MultiFileReader extends BaseFileReader {
 
 	private final List<String> includeProfiles = new ArrayList<>();
 	
+	public MultiFileReader(String includeProfiles) {
+		this(getIncludeProfiles(includeProfiles));
+	}
+	
 	public MultiFileReader(List<String> includeProfiles) {
 		this.includeProfiles.addAll(includeProfiles);
 	}
@@ -95,7 +99,7 @@ public class MultiFileReader extends BaseFileReader {
 		return properties;
 	}
 	
-	private List<String> getIncludeProfiles(String profilesString) {
+	private static List<String> getIncludeProfiles(String profilesString) {
 		List<String> answer = new ArrayList<>();
 		if(profilesString == null)
 			return answer;
