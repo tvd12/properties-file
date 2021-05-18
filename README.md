@@ -63,7 +63,7 @@ Because sometimes we want to make loose coupling source code, we want to use fac
 	<dependency>
 		<groupId>com.tvd12</groupId>
 		<artifactId>properties-file</artifactId>
-		<version>1.0.9</version>
+		<version>1.1.0</version>
 	</dependency>
 ```
 # API Reference
