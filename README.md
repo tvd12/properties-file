@@ -47,7 +47,7 @@ ApplicationConfig applicationConfigYaml = new PropertiesMapper()
     .map(ApplicationConfig.class);
 ```
 
-***6. Use annotation to map***
+**6. Use annotation to map**
 
 ```java
 public class Config {
