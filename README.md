@@ -69,11 +69,11 @@ Proprties and YAML are using in a lot of framework and application, so we want t
 # Installation
 
 ```xml
-	<dependency>
-		<groupId>com.tvd12</groupId>
-		<artifactId>properties-file</artifactId>
-		<version>1.1.0</version>
-	</dependency>
+<dependency>
+	<groupId>com.tvd12</groupId>
+	<artifactId>properties-file</artifactId>
+	<version>1.1.0</version>
+</dependency>
 ```
 # API Reference
 
@@ -85,7 +85,7 @@ mvn test
 
 # Contributors
 
-None
+[DungTV](mailto:itprono3@gmail.com)
 
 # License
 
