@@ -9,53 +9,62 @@ This project support for interact with properties file
 
 # Code Example
 
-**1. Map properties file to object**
-
-Let's say you have a properties file "room-config.properties":
-
-capacity = 1000
-id = 1001
-maxRoomVariablesAllowed = 30
-maxSpectators = 50
-
-and you want to map it to RoomConfig object, you can do:
+**1. Read properties file**
 
 ```java
-	RoomConfig room = new PropertiesMapper()
-		.file("room-config.properties")
-		.map(ExampleRoom.class);
+Properties properties = new BaseFileReader()
+	.read("application.properties");
 ```
 
-**2. Convert an object to a map**
+**2. Read YAML file**
 
-Sometimes you want to convert an object to a map, you can do:
 
 ```java
-	PropertiesBean map = new PropertiesBean(ClassA.class);
-```
-or
-```java
-	PropertiesBean map = new PropertiesBean(new ClassA());
+Properties yamlProperties = new BaseFileReader()
+	.read("application.yaml");
 ```
 
-**3. Use annotation to map properties file to object or convert an object to a map**
-
-Sometimes you have properties files with list of key and value, but key name is not same with field name, to map them, you can do:
+**3. Read properties file with profiles**
 
 ```java
-@PropertyWrapper
-public class RoomConfig {
-    @Setter @Getter
-    protected int variablesCount;
-    @Setter @Getter
-    @Property("public")
-    protected boolean isPublic;
-    // your code
+Properties propertiesAlpha = new MultiFileReader("alpha")
+	.read("application.properties");
+```
+
+**4. Read YAML file with profiles**
+
+```java
+Properties propertiesAlpha = new MultiFileReader("alpha")
+	.read("application.yaml");
+```
+
+**5. Map properties or YAML file to POJO**
+
+```java
+ApplicationConfig applicationConfigYaml = new PropertiesMapper()
+    .reader(new MultiFileReader("alpha"))
+    .file("application.yaml")
+    .map(ApplicationConfig.class);
+```
+
+***6. Use annotation to map***
+
+```java
+public class Config {
+	@Property("n")
+	private String name;
+    	
+    	@Property("a")
+    	private int age;
+    	
+    	@Property("m")
+	private long money = 10;
+}
 ```
 
 # Motivation
 
-Because sometimes we want to make loose coupling source code, we want to use factory design pattern, we want to map a properties file to object, convert an object to map, so I make this project for that mean
+Proprties and YAML are using in a lot of framework and application, so we want to create a library support to read `.propertes` and `YAML` file and map them to `POJO` if you want
 
 # Installation
 
