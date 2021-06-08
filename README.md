@@ -72,7 +72,7 @@ Proprties and YAML are using in a lot of framework and application, so we want t
 <dependency>
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 </dependency>
 ```
 # API Reference
