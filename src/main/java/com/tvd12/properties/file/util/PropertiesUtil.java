@@ -1,7 +1,9 @@
 package com.tvd12.properties.file.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -264,5 +266,60 @@ public class PropertiesUtil {
     			answer.put(key, properties.get(key));
     	}
     	return answer;
+    }
+    
+    /**
+     * Replace variable name with specific value, example:
+     * 
+     * <pre>
+     * {
+     * 	"hello": "world",
+     *  "hi": "${hello}"
+     * }
+     * </pre>
+     * 
+     * will become:
+     * 
+     * <pre>
+     * {
+     *  "hello": "world",
+     *  "hi": "world"
+     * }
+     * </pre>
+     * 
+     * @param properties the properties
+     */
+    public static void setVariableValues(Map<Object, Object> properties) {
+    	List<Object> keys = new ArrayList<>(properties.keySet());
+    	for(Object key : keys) {
+    		Object value = properties.get(key);
+    		if(value != null && value instanceof String) {
+    			String variableName = (String)value;
+    			String keyString = getKeyFromVariableName(variableName.trim());
+    			if(keyString != null) {
+    				Object variableValue = properties.get(keyString);
+    				if(variableValue != null) {
+    					properties.put(key, variableValue);
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    /**
+     * Get key from variable name, example:
+     * 
+     * variable <code>${foo.bar}</code> will have key is <code>foo.bar</code>
+     * 
+     * @param variableName the variable name
+     * @return the key's wrapped in the variable name
+     */
+    public static String getKeyFromVariableName(String variableName) {
+    	if(variableName.startsWith("${") 
+    			&& variableName.endsWith("}")
+    			&& variableName.length() > 3) {
+    		return variableName.substring(2, variableName.length() - 1).trim();
+    	}
+    	return null;
     }
 }

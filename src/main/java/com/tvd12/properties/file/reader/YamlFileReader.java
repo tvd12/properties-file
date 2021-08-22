@@ -24,7 +24,7 @@ public class YamlFileReader implements InputStreamReader {
 	private static final String SEPARATE_CHAR = ":";
 	private static final String PROPERTY_CHAIN_CHAR = ".";
 	private static final String START_COMMENT_CHAR = "#";
-	private static final String KEY_PATTERN = "[a-zA-Z0-9_-]+";
+	private static final String KEY_PATTERN = "[a-zA-Z0-9._-]+";
 	private static final String DASH_CHAR = "-";
 	private static final String DOUBLE_QUOTE_CHAR = "\"";
 	private static final String SINGLE_QUOTE_CHAR = "\'";
@@ -57,6 +57,7 @@ public class YamlFileReader implements InputStreamReader {
 	
 	protected Properties read(BufferedReader reader) throws IOException {
 		int lineIndex = 0;
+		int lastSpaceCount = 0;
 		String line = null;
 		String lastParentKey = null;
 		String lastPropertyKey = null;
@@ -97,9 +98,10 @@ public class YamlFileReader implements InputStreamReader {
 			}
 			String clearKey = getClearKey(keyTrim);
 			if(clearKey == null) {
-				if(lastPropertyKey == null) {
+				int spaceCount = countStartedSpace(line);
+				if(lastPropertyKey == null || spaceCount <= lastSpaceCount) {
 					throw new YamlInvalidSyntaxException(
-							"invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line);
+							"invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line + ", key pattern is: " + KEY_PATTERN);
 				}
 				String lastValue = answer.getProperty(lastPropertyKey, EMPTY_STRING);
 				lastValue = lastValue.isEmpty() ? lineTrim : (lastValue + " " + lineTrim);
@@ -128,6 +130,7 @@ public class YamlFileReader implements InputStreamReader {
 				answer.put(fullKey, getClearValue(keyValue[1]));
 				lastPropertyKey = fullKey;
 			}
+			lastSpaceCount = spaceCount;
 		}
 		return answer;
 	}
@@ -214,5 +217,4 @@ public class YamlFileReader implements InputStreamReader {
 	private static class YamlNode {
 		private String propertyName;
 	}
-	
 }
