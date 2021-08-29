@@ -188,7 +188,7 @@ public class PropertiesUtil {
     /**
      * 
      * Convert property in camel case to to case
-     * Example: helloWorld will convert to hello.world
+     * Example: <code>helloWorld</code> will convert to <code>hello.world</code>
      * 
      * @param propertyName the property name in camel case
      * @return the property name in dot case
@@ -204,6 +204,19 @@ public class PropertiesUtil {
 		return builder.toString();
 	}
     
+    /**
+     * Get value from properties by key.
+     * If the value of key is not found, key will be converted to 'dot' case and get again
+     * 
+     * Example: 
+     * <code>properties = {"hello.world" : "Hello World"}, key = "helloWorld"</code>
+     * Because value of key <code>helloWorld</code> is not found, so key will be converted
+     * to <code>hello.world</code>
+     * 
+     * @param properties the properties
+     * @param key the key
+     * @return the value mapped to key
+     */
     public static Object getValue(Properties properties, Object key) {
 		Object value = properties.get(key);
 		if(value == null) {
