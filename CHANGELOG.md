@@ -1,10 +1,10 @@
-Version 1.0.1
+# Version 1.0.1
 
 - InstanceFactory
 - ClassFetcher
 - PropertiesFileReader
 
-Version 1.0.2
+# Version 1.0.2
 
 - Change style ClassFetcher to builder
 - Remove static functions in InstanceFactory
@@ -16,7 +16,11 @@ Version 1.0.2
 - Add Property and PropertyWrapper annotation
 - Add PropertiesMapper to map properties to object
 
-Version 1.0.9
+# Version 1.0.9
 
 - Remove base64 file reader/writer
 - Close Input/Ouput stream
+
+# Version 1.1.2
+
+- Add PropertiesUtil.setVariableValues
