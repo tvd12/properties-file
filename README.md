@@ -62,6 +62,20 @@ public class Config {
 }
 ```
 
+**7. Use variable in properties file**
+
+```properties
+app.hello=world
+app.hi=${app.hello}
+```
+
+**8. Use variable in yaml file**
+
+```yaml
+app.hello: world
+app.hi: ${app.hello}
+```
+
 # Motivation
 
 Proprties and YAML are using in a lot of framework and application, so we want to create a library support to read `.propertes` and `YAML` file and map them to `POJO` if you want
@@ -72,7 +86,7 @@ Proprties and YAML are using in a lot of framework and application, so we want t
 <dependency>
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.1.1</version>
+	<version>1.1.2</version>
 </dependency>
 ```
 # API Reference
@@ -83,13 +97,12 @@ http://www.javadoc.io/doc/com.tvd12/properties-file
 
 mvn test
 
-# Contributors
+# Contact us
 
-[DungTV](mailto:itprono3@gmail.com)
+- Touch us on [Facebook](https://www.facebook.com/youngmonkeys.org)
+- Ask us on [stackask.com](https://stackask.com)
+- Email to me [Dzung](mailto:itprono3@gmail.com)
 
 # License
 
 - Apache License, Version 2.0
-	
-
-

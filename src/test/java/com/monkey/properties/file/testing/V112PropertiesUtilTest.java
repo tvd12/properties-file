@@ -87,10 +87,26 @@ public class V112PropertiesUtilTest {
 	}
 	
 	@Test
-	public void readVariableFile() {
+	public void readVariableYamlFile() {
 		// given
 		Map<Object, Object> properties = new BaseFileReader()
 				.read("v112_application.yaml");
+		
+		// when
+		PropertiesUtil.setVariableValues(properties);
+		
+		// then
+		Map<Object, Object> expectation = new HashMap<>();
+		expectation.put("app.hello", "world");
+		expectation.put("app.hi", "world");
+		Asserts.assertEquals(expectation, properties, false);
+	}
+	
+	@Test
+	public void readVariablePropertiesFile() {
+		// given
+		Map<Object, Object> properties = new BaseFileReader()
+				.read("v112_application.properties");
 		
 		// when
 		PropertiesUtil.setVariableValues(properties);
