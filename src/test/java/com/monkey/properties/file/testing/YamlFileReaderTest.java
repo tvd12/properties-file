@@ -13,6 +13,7 @@ import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.reader.BaseFileReader;
 import com.tvd12.properties.file.reader.YamlFileReader;
 import com.tvd12.properties.file.util.InputStreamUtil;
+import com.tvd12.test.assertion.Asserts;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -102,6 +103,30 @@ public class YamlFileReaderTest {
 		Map<String, DataSourceConfig> dataSources = config.getDataSources();
 		DataSourceConfig mainDataSource = dataSources.get("main");
 		assert mainDataSource != null;
+	}
+	
+	@Test
+	public void readInvalidYamlFileLastPropertyKeyIsNull() {
+		// given
+		BaseFileReader sut = new BaseFileReader();
+		
+		// when
+		Throwable e = Asserts.assertThrows(() -> sut.read("v112_application_invalid.yaml"));
+		
+		// then
+		Asserts.assertEquals(YamlInvalidSyntaxException.class, e.getClass());
+	}
+	
+	@Test
+	public void readInvalidYamlFileLastSpaceCountEqualsLastSpaceCount() {
+		// given
+		BaseFileReader sut = new BaseFileReader();
+		
+		// when
+		Throwable e = Asserts.assertThrows(() -> sut.read("v112_application_invalid2.yaml"));
+		
+		// then
+		Asserts.assertEquals(YamlInvalidSyntaxException.class, e.getClass());
 	}
 	
 	@Getter
