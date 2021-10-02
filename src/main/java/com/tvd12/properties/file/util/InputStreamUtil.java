@@ -5,6 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import com.tvd12.properties.file.constant.Constants;
 import com.tvd12.properties.file.exception.PropertiesFileException;
@@ -25,7 +29,7 @@ public final class InputStreamUtil {
 			ClassLoader classLoader, String filePath) {
 		InputStream inputStream = getResourceAsStream(classLoader, filePath); 
         if(inputStream == null)
-        		inputStream = getResourceAsStream(classLoader, "/" + filePath);
+        	inputStream = getResourceAsStream(classLoader, "/" + filePath);
         if(inputStream == null)
             inputStream = getInputStreamByAbsolutePath(filePath);
         if(inputStream == null)
@@ -48,8 +52,80 @@ public final class InputStreamUtil {
 		InputStream ip = acceptClassLoader.getResourceAsStream(filePath);
 		if(ip == null)
 			ip = ClassLoader.getSystemResourceAsStream(filePath);
+		if(ip == null)
+		    ip = getResourceAsStreamInOthers(acceptClassLoader, filePath);
 		return ip;
 	}
+	
+	/**
+	 * Get the resource input stream from other jar files
+	 * 
+	 * @param classLoader the class loader
+	 * @param resource the resource to get the stream
+	 * @return the input stream or null
+	 */
+	private static InputStream getResourceAsStreamInOthers(ClassLoader classLoader,
+	        String resource) {
+	    List<URL> resourcesURLs = new ArrayList<>();
+        try {
+            addResourceURLs(resourcesURLs, () -> classLoader.getResources(resource));
+            addResourceURLs(resourcesURLs, () -> ClassLoader.getSystemResources(resource));
+            addResourceURL(resourcesURLs, classLoader.getResource(resource));
+            addResourceURL(resourcesURLs, ClassLoader.getSystemResource(resource));
+        }
+        catch (Exception e) {
+            // do nothing
+        }
+        try {
+            return resourcesURLs.isEmpty() ? null : resourcesURLs.get(0).openStream();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+	
+	/**
+	 * 
+	 * Add resource URLs
+	 * 
+	 * @param resourcesURLs the resource URLs output
+	 * @param supplier the resource URLs suppliers
+	 */
+	private static void addResourceURLs(List<URL> resourcesURLs, URLsSupplier supplier) {
+        try {
+            Enumeration<URL> urls = supplier.get();
+            addResourceURLs(resourcesURLs, urls);
+        }
+        catch (Exception e) {
+            // do nothing
+        }
+    }
+	
+	/**
+     * 
+     * Add resource URLs
+     * 
+     * @param resourcesURLs the resource URLs output
+     * @param urls the resource URLs to add
+     */
+    private static void addResourceURLs(List<URL> resourceURLs, Enumeration<URL> urls) {
+        if(urls != null) {
+            while(urls.hasMoreElements()) {
+                resourceURLs.add(urls.nextElement());
+            }
+        }
+    }
+    
+    /**
+     * 
+     * Add resource URLs
+     * 
+     * @param resourcesURLs the resource URLs output
+     * @param url the resource URL to add
+     */
+    private static void addResourceURL(List<URL> resourcesURLs, URL url) {
+        if(url != null)
+            resourcesURLs.add(url);
+    }
 	
 	/**
 	 * Get a input stream from a file if it exists and be readable 
@@ -149,4 +225,8 @@ public final class InputStreamUtil {
         }
         return contenType;
     }
+	
+	private static interface URLsSupplier {
+	    public Enumeration<URL> get() throws IOException;
+	}
 }

@@ -43,10 +43,9 @@ public class BaseFileWriter implements FileWriter {
      */
     @Override
     public void write(Properties properties, File file) {
-        try {
+        try(ByteArrayOutputStream out = write(properties)) {
     		if(!file.exists())
     			file.createNewFile();
-    		ByteArrayOutputStream out = write(properties);
     		byte[] bytes = encode(out);
     		writeBytes0(file, bytes);
         }
@@ -85,14 +84,9 @@ public class BaseFileWriter implements FileWriter {
      * @param out a ByteArrayOutputStream object
      * @return encoded byte array
      */
-    protected byte[] encode(ByteArrayOutputStream out) throws IOException {
-    	try {
-    		byte[] bytes = out.toByteArray();
-        	return bytes;
-    	}
-    	finally {
-			out.close();
-		}
+    protected byte[] encode(ByteArrayOutputStream out) {
+        byte[] bytes = out.toByteArray();
+        return bytes;
     }
     
 }

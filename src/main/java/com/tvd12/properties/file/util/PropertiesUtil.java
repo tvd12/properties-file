@@ -100,8 +100,8 @@ public class PropertiesUtil {
      * 	password=test password
      * )
      *  
-     * @param properties 
-     * @return
+     * @param properties the input properties
+     * @return the filtered properties
      */
     @SuppressWarnings("rawtypes")
 	public static Map<String, Properties> getPropertiesMap(Map properties) {
@@ -125,10 +125,10 @@ public class PropertiesUtil {
      * 	test_datasource.username=test username
      * 	test_datasource.password=test password
      * )
-     * has first property keys main_datasource and test_datasource 
+     * has first property keys are main_datasource and test_datasource 
      * 
-     * @param properties
-     * @return
+     * @param properties the input properties
+     * @return the first key set
      */
     @SuppressWarnings("rawtypes")
 	public static Set<String> getFirstPropertyKeys(Map properties) {
