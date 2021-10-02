@@ -89,6 +89,18 @@ public class SimpleValueConverterTest {
 		assert transformer.convert("1", Integer.class) == 1;
 		assert transformer.convert("1", Long.class) == 1L;
 		assert transformer.convert("1", Short.class) == (short)1;
+		assert transformer.convert("HELLO", ExEnum.class) == ExEnum.HELLO;
+		
+		try {
+		    transformer.convert("no thing", ExEnum.class);
+		}
+		catch (Exception e) {
+		    assert e instanceof IllegalArgumentException;
+        }
 	}
 	
+	public static enum ExEnum {
+	    HELLO,
+	    WORLD
+	}
 }
