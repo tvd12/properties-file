@@ -1,6 +1,7 @@
 package com.tvd12.properties.file.reader;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,10 +32,14 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(ClassLoader classLoader, String filePath) {
-        return loadInputStream(
-        		InputStreamUtil.getInputStream(classLoader, filePath), 
-        		FileUtil.getFileExtension(filePath)
-        );
+        try (InputStream inputStream = InputStreamUtil.getInputStream(classLoader, filePath)) {
+            return loadInputStreamOrThrows(
+            		inputStream, 
+            		FileUtil.getFileExtension(filePath)
+            );
+        } catch (IOException e) {
+            return new Properties();
+        }
     }
     
     /**
@@ -124,6 +129,18 @@ public interface FileReader {
     Properties loadInputStream(InputStream inputStream, String contentType);
     
     /**
+     * Load an input stream and read properties
+     * 
+     * @param inputStream the input stream
+     * @param contentType the content type
+     * @return properties the properties
+     */
+    default Properties loadInputStreamOrThrows(
+            InputStream inputStream, String contentType) throws IOException {
+        return loadInputStream(inputStream, contentType);
+    }
+    
+    /**
      * Read properties files
      * 
      * @param inputStreams array of properties files
@@ -153,15 +170,18 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(File file) {
-    	InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file);
-    	Properties properties = new Properties();
-    	if(inputStream != null) {
-    		properties.putAll(loadInputStream(
-    			inputStream,
-            	FileUtil.getFileExtension(file.getPath())
-    		));
+    	try(InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file)) {
+            if(inputStream != null) {
+                return loadInputStreamOrThrows(
+                    inputStream,
+                    FileUtil.getFileExtension(file.getPath())
+                );
+            }
     	}
-    	return properties;
+    	catch (IOException e) {
+    	    // do nothing
+        }
+    	return new Properties();
     }
     
     /**

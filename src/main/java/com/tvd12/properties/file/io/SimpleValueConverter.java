@@ -56,8 +56,11 @@ public class SimpleValueConverter implements ValueConverter {
 	public <T> T convert(Object value, Class<T> outType) {
 		if(value == null)
 			return null;
-		if(transformers.containsKey(outType))
-			return (T) transformers.get(outType).transform(value);
+		Transformer transformer = transformers.get(outType);
+		if(transformer != null)
+			return (T) transformer.transform(value);
+		if(outType.isEnum())
+		    return (T) Enum.valueOf((Class<Enum>)outType, value.toString());
 		return (T)value;
 	}
 	

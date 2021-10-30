@@ -24,6 +24,7 @@ public class ClassWrapper extends ClassStruct {
      * 
      * @param clazz java class
      * @param mappingLevel the mapping level
+     * @param propertyAnnotations the properties annotation filter
      */
 	public ClassWrapper(
 			Class<?> clazz, 

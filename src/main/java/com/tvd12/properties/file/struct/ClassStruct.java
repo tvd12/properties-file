@@ -43,6 +43,7 @@ public abstract class ClassStruct {
 	 * 
 	 * @param clazz java class
 	 * @param mappingLevel the mapping level
+	 * @param propertyAnnotations the properties annotation filter
 	 */
     public ClassStruct(
     		Class<?> clazz, 
