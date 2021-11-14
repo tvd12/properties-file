@@ -3,7 +3,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.tvd12/properties-file)
 [![Javadocs](https://www.javadoc.io/badge/com.tvd12/properties-file.svg)](https://www.javadoc.io/doc/com.tvd12/properties-file)
 
-# Synopsis
+# Synopsis <img src="https://github.com/tvd12/properties-file/blob/master/logo.png" width="64" />
 
 This project support for interact with properties file
 
@@ -86,7 +86,7 @@ Proprties and YAML are using in a lot of framework and application, so we want t
 <dependency>
 	<groupId>com.tvd12</groupId>
 	<artifactId>properties-file</artifactId>
-	<version>1.1.2</version>
+	<version>1.1.3</version>
 </dependency>
 ```
 # API Reference
