@@ -80,7 +80,10 @@ public class PropertiesUtil {
     /**
      * 
      * Split a properties to a map of properties by first keys
-     * Example, properties(
+     * 
+     * Example:
+     * <pre>
+     * properties(
      * 	main_datasource.url=main
      * 	main_datasource.username=main username
      * 	main_datasource.password=main password
@@ -88,18 +91,21 @@ public class PropertiesUtil {
      * 	test_datasource.username=test username
      * 	test_datasource.password=test password
      * )
+     * </pre>
      * Will be splitted to:
+     * <pre>
      * main_datasource: (
      * 	url=main
      * 	username=main username
      * 	password=main password
      * )
+     * 
      * test_datasource: (
      * 	url=test
      * 	username=test username
      * 	password=test password
      * )
-     *  
+     * </pre> 
      * @param properties the input properties
      * @return the filtered properties
      */
@@ -117,7 +123,10 @@ public class PropertiesUtil {
     /**
      * 
      * Get first property keys of a properties
-     * Example properties(
+     * 
+     * Example:
+     * <pre>
+     * properties(
      * 	main_datasource.url=main
      * 	main_datasource.username=main username
      * 	main_datasource.password=main password
@@ -125,7 +134,8 @@ public class PropertiesUtil {
      * 	test_datasource.username=test username
      * 	test_datasource.password=test password
      * )
-     * has first property keys are main_datasource and test_datasource 
+     * </pre>
+     * has first property keys are <code>main_datasource</code> and <code>test_datasource</code> 
      * 
      * @param properties the input properties
      * @return the first key set
@@ -147,7 +157,7 @@ public class PropertiesUtil {
     /**
      * 
      * Check whether a properties contains a prefix key or not
-     * Example, properties (admin.name.first=Foo)
+     * Example, properties <code>(admin.name.first=Foo)</code>
      * Will contain prefix: admin and amdin.name
      * But doesn't contain admin.name.first 
      * 
@@ -311,6 +321,9 @@ public class PropertiesUtil {
     			String keyString = getKeyFromVariableName(variableName.trim());
     			if(keyString != null) {
     				Object variableValue = properties.get(keyString);
+    				if (variableValue == null) {
+    				    variableValue = getSystemVariableValue(keyString);
+    				}
     				if(variableValue != null) {
     					properties.put(key, variableValue);
     				}
@@ -334,5 +347,16 @@ public class PropertiesUtil {
     		return variableName.substring(2, variableName.length() - 1).trim();
     	}
     	return null;
+    }
+    
+    /**
+     * 
+     * Get system variable value
+     * 
+     * @param variableName the variable name
+     * @return the variable value
+     */
+    public static String getSystemVariableValue(String variableName) {
+        return System.getenv(variableName);
     }
 }
