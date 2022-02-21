@@ -297,7 +297,7 @@ public class PropertiesUtil {
      * <pre>
      * {
      * 	"hello": "world",
-     *  "hi": "${hello}"
+     *  "hi": "the ${hello}"
      * }
      * </pre>
      * 
@@ -306,7 +306,7 @@ public class PropertiesUtil {
      * <pre>
      * {
      *  "hello": "world",
-     *  "hi": "world"
+     *  "hi": "the world"
      * }
      * </pre>
      * 
@@ -317,17 +317,21 @@ public class PropertiesUtil {
     	for(Object key : keys) {
     		Object value = properties.get(key);
     		if(value != null && value instanceof String) {
-    			String variableName = (String)value;
-    			String keyString = getKeyFromVariableName(variableName.trim());
-    			if(keyString != null) {
-    				Object variableValue = properties.get(keyString);
-    				if (variableValue == null) {
-    				    variableValue = getSystemVariableValue(keyString);
-    				}
-    				if(variableValue != null) {
-    					properties.put(key, variableValue);
-    				}
+    		    String valueString = ((String)value);
+    			Set<String> keyStrings = getKeysFromVariableName(valueString.trim());
+    			for (String keyString : keyStrings) {
+    			    Object variableValue = properties.get(keyString);
+                    if (variableValue == null) {
+                        variableValue = getSystemVariableValue(keyString);
+                    }
+                    if(variableValue != null) {
+                        valueString = valueString.replace(
+                            "${" + keyString + "}",
+                            variableValue.toString()
+                        );
+                    }
     			}
+    			properties.put(key, valueString);
     		}
     	}
     }
@@ -338,7 +342,7 @@ public class PropertiesUtil {
      * variable <code>${foo.bar}</code> will have key is <code>foo.bar</code>
      * 
      * @param variableName the variable name
-     * @return the key's wrapped in the variable name
+     * @return the wrapped key in the variable name
      */
     public static String getKeyFromVariableName(String variableName) {
     	if(variableName.startsWith("${") 
@@ -347,6 +351,43 @@ public class PropertiesUtil {
     		return variableName.substring(2, variableName.length() - 1).trim();
     	}
     	return null;
+    }
+    
+    /**
+     * Get keys from variable name, example:
+     * 
+     * variable <code>${hello.world} ${foo.bar}</code> 
+     * will have keys are <code>hello.word</code> and <code>foo.bar</code>
+     * 
+     * @param variableName the variable name
+     * @return the wrapped keys in the variable name
+     */
+    public static Set<String> getKeysFromVariableName(String variableName) {
+        Set<String> keys = new HashSet<>();
+        StringBuilder keyBuilder = null;
+        for (int i = 0; i < variableName.length(); ++i) {
+            char ch0 = variableName.charAt(i);
+            if (keyBuilder != null) {
+                if (ch0 == '}') {
+                    if (keyBuilder.length() > 0) {
+                        keys.add(keyBuilder.toString());
+                    }
+                    keyBuilder = null;
+                } else {
+                    keyBuilder.append(ch0);
+                }
+            }
+            else {
+                if (i < variableName.length() - 1) {
+                    char ch1 = variableName.charAt(i + 1);
+                    if (ch0 == '$' && ch1 == '{') {
+                        keyBuilder = new StringBuilder();
+                        ++i;
+                    }
+                }
+            }
+        }
+        return keys;
     }
     
     /**
