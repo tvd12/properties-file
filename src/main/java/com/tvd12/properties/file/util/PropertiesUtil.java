@@ -142,16 +142,44 @@ public class PropertiesUtil {
      */
     @SuppressWarnings("rawtypes")
 	public static Set<String> getFirstPropertyKeys(Map properties) {
-    	Set<String> answer = new HashSet<>();
-    	for(Object key : properties.keySet()) {
-    		String keyString = key.toString();
-    		int firstDotIndex = keyString.indexOf('.');
-    		String firstKey = keyString;
-    		if(firstDotIndex > 0)
-    			firstKey = keyString.substring(0, firstDotIndex);
-    		answer.add(firstKey);
-    	}
-    	return answer;
+    	return new HashSet<>(getFirstPropertyKeyList(properties));
+    }
+    
+    /**
+     * 
+     * Get first property keys of a properties
+     * 
+     * Example:
+     * <pre>
+     * properties(
+     *  main_datasource.url=main
+     *  main_datasource.username=main username
+     *  main_datasource.password=main password
+     *  test_datasource.url=test
+     *  test_datasource.username=test username
+     *  test_datasource.password=test password
+     * )
+     * </pre>
+     * has first property keys are <code>main_datasource</code> and <code>test_datasource</code> 
+     * 
+     * @param properties the input properties
+     * @return the first key set
+     */
+    @SuppressWarnings("rawtypes")
+    public static List<String> getFirstPropertyKeyList(Map properties) {
+        List<String> answer = new ArrayList<>();
+        for(Object key : properties.keySet()) {
+            String keyString = key.toString();
+            int firstDotIndex = keyString.indexOf('.');
+            String firstKey = keyString;
+            if(firstDotIndex > 0) {
+                firstKey = keyString.substring(0, firstDotIndex);
+            }
+            if(!answer.contains(firstKey)) {
+                answer.add(firstKey);
+            }
+        }
+        return answer;
     }
     
     /**

@@ -1,9 +1,11 @@
 package com.monkey.properties.file.testing;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -44,15 +46,36 @@ public class PropertiesUtilTest extends BaseTest {
     public void getFirstPropertyKeysWithFirstDotIndex0() {
     	// given
     	Properties properties = new Properties();
+    	properties.put("", "foo");
     	properties.put(".", "database");
     	properties.put("hello", "world");
+    	properties.put("hello.1", "world");
+    	properties.put("hello1.2", "world");
     	
     	// when
     	Set<String> actual = PropertiesUtil.getFirstPropertyKeys(properties);
     	
     	// then
-    	Set<String> expected = new HashSet<>(Arrays.asList(".", "hello"));
+    	Set<String> expected = new HashSet<>(Arrays.asList("", ".", "hello", "hello1"));
     	assertEquals(actual, expected);
+    }
+    
+    @Test
+    public void getFirstPropertyKeyListWithFirstDotIndex0() {
+        // given
+        Properties properties = new Properties();
+        properties.put("", "foo");
+        properties.put(".", "database");
+        properties.put("hello", "world");
+        properties.put("hello.1", "world");
+        properties.put("hello1.2", "world");
+        
+        // when
+        List<String> actual = PropertiesUtil.getFirstPropertyKeyList(properties);
+        
+        // then
+        assertEquals(actual.size(), 4);
+        assertTrue(actual.containsAll(Arrays.asList("", ".", "hello", "hello1")));
     }
     
     @Test
