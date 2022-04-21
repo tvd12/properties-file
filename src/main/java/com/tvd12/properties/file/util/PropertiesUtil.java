@@ -343,6 +343,10 @@ public class PropertiesUtil {
      * @param properties the properties
      */
     public static void setVariableValues(Map<Object, Object> properties) {
+        doSetVariableValues(properties);
+    }
+
+    private static void doSetVariableValues(Map<Object, Object> properties) {
         List<Object> keys = new ArrayList<>(properties.keySet());
         for (Object key : keys) {
             Object value = properties.get(key);
@@ -353,6 +357,9 @@ public class PropertiesUtil {
                     Object variableValue = properties.get(keyString);
                     if (variableValue == null) {
                         variableValue = getSystemVariableValue(keyString);
+                    }
+                    if (variableValue == null) {
+                        variableValue = System.getenv(keyString);
                     }
                     if (variableValue != null) {
                         valueString = valueString.replace(
