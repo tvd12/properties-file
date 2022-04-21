@@ -6,28 +6,26 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Indicates file or method is mapping to a property in properties file 
- * or properties object, or map. Can be used in conjunction with PropertyWrapper classes    
- * 
- * @author tavandung12
+ * Indicates file or method is mapping to a property in properties file
+ * or properties object, or map. Can be used in conjunction with PropertyWrapper classes
  *
+ * @author tavandung12
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 public @interface Property {
 
     /**
-     * Map to name of property
-     * 
+     * Map to name of property.
+     *
      * @return string value
      */
-    public String value() default "";
-    
+    String value() default "";
+
     /**
-     * Map to group of property
-     * 
+     * Map to group of property.
+     *
      * @return string the prefix of group
      */
-    public String prefix() default "";
-    
+    String prefix() default "";
 }

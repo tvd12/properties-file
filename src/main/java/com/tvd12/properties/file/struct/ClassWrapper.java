@@ -9,32 +9,34 @@ import com.tvd12.properties.file.mapping.MappingLevel;
 import lombok.Getter;
 
 /**
- * 
- * Holds all SetterMethod objects
- * 
- * @author tavandung12
+ * Holds all SetterMethod objects.
  *
+ * @author tavandung12
  */
 
 @Getter
 public class ClassWrapper extends ClassStruct {
-    
+
     /**
-     * Construct with java class
-     * 
-     * @param clazz java class
-     * @param mappingLevel the mapping level
-     * @param propertyAnnotations the properties annotation filter
+     * Construct with java class.
+     *
+     * @param clazz               java class
+     * @param mappingLevel        the mapping level
+     * @param propertyAnnotations the properties' annotation filter
      */
     public ClassWrapper(
-            Class<?> clazz, 
-            MappingLevel mappingLevel,
-            PropertyAnnotations propertyAnnotations) {
+        Class<?> clazz,
+        MappingLevel mappingLevel,
+        PropertyAnnotations propertyAnnotations
+    ) {
         super(clazz, mappingLevel, propertyAnnotations);
     }
-    
+
     /**
-     * Initialize SetterMethod object with java field 
+     * Initialize SetterMethod object with java field.
+     *
+     * @param field the field to init
+     * @return the method's structure
      */
     @Override
     protected MethodStruct initWithField(Field field) {
@@ -44,7 +46,10 @@ public class ClassWrapper extends ClassStruct {
     }
 
     /**
-     * Initialize SetterMethod object with java method
+     * Initialize SetterMethod object with java method.
+     *
+     * @param method the method to init.
+     * @return the method's structure
      */
     @Override
     protected MethodStruct initWithMethod(Method method) {
@@ -52,13 +57,16 @@ public class ClassWrapper extends ClassStruct {
         cover.initWithMethod(method);
         return cover;
     }
-    
+
     /**
-     * Validate method, only accept setter method
+     * Validate method, only accept setter method.
+     *
+     * @param method the method to validate
+     * @return true if the method is valid
      */
     @Override
     protected boolean validateMethod(Method method) {
         return method.getParameterTypes().length == 1
-                && method.getReturnType() == Void.TYPE;
+            && method.getReturnType() == Void.TYPE;
     }
 }

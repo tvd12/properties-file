@@ -21,13 +21,13 @@ public @interface PropertyForTest {
      * 
      * @return string value
      */
-    public String value() default "";
+    String value() default "";
     
     /**
      * Map to group of property
      * 
      * @return string the prefix of group
      */
-    public String prefix() default "";
+    String prefix() default "";
     
 }

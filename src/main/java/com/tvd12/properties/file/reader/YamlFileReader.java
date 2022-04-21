@@ -27,63 +27,62 @@ public class YamlFileReader implements InputStreamReader {
     private static final String KEY_PATTERN = "[a-zA-Z0-9._-]+";
     private static final String DASH_CHAR = "-";
     private static final String DOUBLE_QUOTE_CHAR = "\"";
-    private static final String SINGLE_QUOTE_CHAR = "\'";
+    private static final String SINGLE_QUOTE_CHAR = "'";
     private static final String EMPTY_STRING = "";
-    
+
     static {
         Set<Character> spaceCharacters = new HashSet<>();
-        spaceCharacters.add(new Character(TAB_CHAR));
-        spaceCharacters.add(new Character(SPACE_CHAR));
+        spaceCharacters.add(TAB_CHAR);
+        spaceCharacters.add(SPACE_CHAR);
         SPACE_CHARACTERS = Collections.unmodifiableSet(spaceCharacters);
     }
-    
+
     @Override
     public Properties readInputStream(InputStream inputStream) {
         BufferedReader reader = new BufferedReader(
-                new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            new java.io.InputStreamReader(inputStream, StandardCharsets.UTF_8));
         try {
             try {
                 return read(reader);
-            }
-            finally {
+            } finally {
                 reader.close();
                 inputStream.close();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new YamlFileException("read yaml from input stream: " + inputStream + " error", e);
         }
     }
-    
+
+    @SuppressWarnings("MethodLength")
     protected Properties read(BufferedReader reader) throws IOException {
         int lineIndex = 0;
         int lastSpaceCount = 0;
-        String line = null;
+        String line;
         String lastParentKey = null;
         String lastPropertyKey = null;
         Properties answer = new Properties();
         TreeMap<Integer, YamlNode> nodes = new TreeMap<>();
-        while((line = reader.readLine()) != null) {
-            ++ lineIndex;
+        while ((line = reader.readLine()) != null) {
+            ++lineIndex;
             String lineTrim = line.trim();
-            if(lineTrim.isEmpty())
+            if (lineTrim.isEmpty()) {
                 continue;
-            if(lineTrim.startsWith(START_COMMENT_CHAR))
+            }
+            if (lineTrim.startsWith(START_COMMENT_CHAR)) {
                 continue;
-            if(!lineTrim.contains(SEPARATE_CHAR)) {
-                if(lastPropertyKey == null) {
+            }
+            if (!lineTrim.contains(SEPARATE_CHAR)) {
+                if (lastPropertyKey == null) {
                     throw new YamlInvalidSyntaxException(
-                            "invalid syntax, line " + lineIndex + ": '" + line + "'");
-                }
-                else {
+                        "invalid syntax, line " + lineIndex + ": '" + line + "'");
+                } else {
                     String lastValue = answer.getProperty(lastPropertyKey, EMPTY_STRING);
-                    if(lineTrim.startsWith(DASH_CHAR)) {
-                        if(lineTrim.length() > 1) {
+                    if (lineTrim.startsWith(DASH_CHAR)) {
+                        if (lineTrim.length() > 1) {
                             String value = lineTrim.substring(1).trim();
                             lastValue = lastValue.isEmpty() ? value : (lastValue + "," + value);
                         }
-                    }
-                    else {
+                    } else {
                         lastValue = lastValue.isEmpty() ? lineTrim : (lastValue + " " + lineTrim);
                     }
                     answer.put(lastPropertyKey, lastValue.trim());
@@ -92,16 +91,20 @@ public class YamlFileReader implements InputStreamReader {
             }
             String[] keyValue = splitKeyValue(lineTrim);
             String keyTrim = keyValue[0].trim();
-            if(keyTrim.isEmpty()) {
+            if (keyTrim.isEmpty()) {
                 throw new YamlInvalidSyntaxException(
-                        "invalid syntax, missing key, line " + lineIndex + ": " + line);
+                    "invalid syntax, missing key, line " + lineIndex + ": " + line
+                );
             }
             String clearKey = getClearKey(keyTrim);
-            if(clearKey == null) {
+            if (clearKey == null) {
                 int spaceCount = countStartedSpace(line);
-                if(lastPropertyKey == null || spaceCount <= lastSpaceCount) {
+                if (lastPropertyKey == null || spaceCount <= lastSpaceCount) {
                     throw new YamlInvalidSyntaxException(
-                            "invalid syntax, invalid key: '" + keyTrim + "', line " + lineIndex + ": " + line + ", key pattern is: " + KEY_PATTERN);
+                        "invalid syntax, invalid key: '" + keyTrim +
+                            "', line " + lineIndex + ": " + line +
+                            ", key pattern is: " + KEY_PATTERN
+                    );
                 }
                 String lastValue = answer.getProperty(lastPropertyKey, EMPTY_STRING);
                 lastValue = lastValue.isEmpty() ? lineTrim : (lastValue + " " + lineTrim);
@@ -111,22 +114,25 @@ public class YamlFileReader implements InputStreamReader {
             int spaceCount = countStartedSpace(line);
             Entry<Integer, YamlNode> parentEntry = nodes.lowerEntry(spaceCount);
             YamlNode parentNode = null;
-            if(parentEntry != null)
+            if (parentEntry != null) {
                 parentNode = parentEntry.getValue();
-            if(keyValue.length == 1) {
-                if(parentNode != null)
+            }
+            if (keyValue.length == 1) {
+                if (parentNode != null) {
                     lastParentKey = parentNode.propertyName + PROPERTY_CHAIN_CHAR + keyTrim;
-                else
+                } else {
                     lastParentKey = clearKey;
+                }
                 nodes.put(spaceCount, new YamlNode(lastParentKey));
                 lastPropertyKey = lastParentKey;
-            }
-            else {
-                if(parentNode == null)
+            } else {
+                if (parentNode == null) {
                     lastParentKey = null;
+                }
                 String fullKey = clearKey;
-                if(lastParentKey != null)
+                if (lastParentKey != null) {
                     fullKey = lastParentKey + PROPERTY_CHAIN_CHAR + clearKey;
+                }
                 answer.put(fullKey, getClearValue(keyValue[1]));
                 lastPropertyKey = fullKey;
             }
@@ -134,85 +140,93 @@ public class YamlFileReader implements InputStreamReader {
         }
         return answer;
     }
-    
+
     private String[] splitKeyValue(String line) {
         int indexOfSeparateChar = line.indexOf(SEPARATE_CHAR);
         String key = line.substring(0, indexOfSeparateChar);
-        if(indexOfSeparateChar >= line.length() - 1)
-            return new String[] {key};
+        if (indexOfSeparateChar >= line.length() - 1) {
+            return new String[]{key};
+        }
         String value = line.substring(indexOfSeparateChar + 1);
-        return new String[] {key, value};
+        return new String[]{key, value};
     }
-    
+
     private String getClearKey(String rawKey) {
         String clearKey = rawKey;
-        if(clearKey.startsWith(DASH_CHAR))
+        if (clearKey.startsWith(DASH_CHAR)) {
             clearKey = clearKey.substring(1).trim();
-        if(clearKey.isEmpty())
+        }
+        if (clearKey.isEmpty()) {
             return null;
-        if(!clearKey.matches(KEY_PATTERN))
+        }
+        if (!clearKey.matches(KEY_PATTERN)) {
             return null;
+        }
         return clearKey;
     }
-    
+
     private String getClearValue(String rawValue) {
         String clearValue = rawValue.trim();
         int commentIndex = clearValue.indexOf(START_COMMENT_CHAR);
-        if(commentIndex >= 0) {
+        if (commentIndex >= 0) {
             clearValue = clearValue.substring(0, commentIndex).trim();
         }
-        if(clearValue.startsWith(DOUBLE_QUOTE_CHAR) &&
-                clearValue.endsWith(DOUBLE_QUOTE_CHAR)) {
-            if(clearValue.length() > 2)
+        if (clearValue.startsWith(DOUBLE_QUOTE_CHAR)
+            && clearValue.endsWith(DOUBLE_QUOTE_CHAR)
+        ) {
+            if (clearValue.length() > 2) {
                 clearValue = clearValue.substring(1, clearValue.length() - 1);
-            else
+            } else {
                 return EMPTY_STRING;
-        }
-        else if(clearValue.startsWith(SINGLE_QUOTE_CHAR) &&
-                clearValue.endsWith(SINGLE_QUOTE_CHAR)) {
-            if(clearValue.length() > 2)
+            }
+        } else if (clearValue.startsWith(SINGLE_QUOTE_CHAR)
+            && clearValue.endsWith(SINGLE_QUOTE_CHAR)
+        ) {
+            if (clearValue.length() > 2) {
                 clearValue = clearValue.substring(1, clearValue.length() - 1);
-            else
+            } else {
                 return EMPTY_STRING;
-        }
-        else if(clearValue.startsWith(">-")) {
-            if(clearValue.length() > 2)
+            }
+        } else if (clearValue.startsWith(">-")) {
+            if (clearValue.length() > 2) {
                 clearValue = clearValue.substring(2).trim();
-            else
+            } else {
                 clearValue = EMPTY_STRING;
-        }
-        else if(clearValue.startsWith("|")) {
-            if(clearValue.length() > 1)
+            }
+        } else if (clearValue.startsWith("|")) {
+            if (clearValue.length() > 1) {
                 clearValue = clearValue.substring(1).trim();
-            else
+            } else {
                 clearValue = EMPTY_STRING;
-        }
-        else if(clearValue.startsWith(">")) {
-            if(clearValue.length() > 1)
+            }
+        } else if (clearValue.startsWith(">")) {
+            if (clearValue.length() > 1) {
                 clearValue = clearValue.substring(1).trim();
-            else
+            } else {
                 clearValue = EMPTY_STRING;
-        }
-        else {
+            }
+        } else {
             clearValue = clearValue.trim();
         }
         return clearValue;
     }
-    
+
     protected int countStartedSpace(String line) {
         int count = 0;
-        for(int i = 0 ; ; ++i) {
+        for (int i = 0; ; ++i) {
             char ch = line.charAt(i);
-            if(!SPACE_CHARACTERS.contains(ch))
+            if (!SPACE_CHARACTERS.contains(ch)) {
                 break;
-            if(ch == TAB_CHAR)
+            }
+            if (ch == TAB_CHAR) {
                 count += 4;
-            else
+            } else {
                 count += 1;
+            }
         }
         return count;
     }
-    
+
     @AllArgsConstructor
     private static class YamlNode {
         private String propertyName;

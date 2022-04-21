@@ -63,10 +63,10 @@ public class ReflectionClassUtilTest extends BaseTest {
                 , 1, 2, 3);
     }
     
-    public static interface InterfaceA {
+    public interface InterfaceA {
     }
     
-    public abstract class ClassA {
+    public abstract static class ClassA {
         
         public abstract void love();
         

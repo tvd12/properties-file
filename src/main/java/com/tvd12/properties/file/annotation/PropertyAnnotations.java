@@ -16,60 +16,48 @@ public class PropertyAnnotations {
     @Getter
     private final List<Class> annotationClasses;
     private final Map<Class<?>, PropertyAnnotation> annotations;
-    
+
     public PropertyAnnotations() {
         this.annotations = new HashMap<>();
         this.annotationClasses = new ArrayList<>();
-        this.addPropertyAnnotation(new PropertyAnnotation(
-                Property.class, 
-                a -> ((Property)a).value(),
-                a -> ((Property)a).prefix()
+        this.addPropertyAnnotation(
+            new PropertyAnnotation(
+                Property.class,
+                a -> ((Property) a).value(),
+                a -> ((Property) a).prefix()
             )
         );
     }
-    
 
     @SuppressWarnings("unchecked")
     public String getPropertyName(Method method) {
-        for(Class annotationClass : annotationClasses) {
+        for (Class annotationClass : annotationClasses) {
             Annotation annotation = method.getAnnotation(annotationClass);
-            if(annotation != null) {
+            if (annotation != null) {
                 PropertyAnnotation ann = annotations.get(annotationClass);
                 return ann.getPropertyName(annotation);
             }
         }
         return "";
     }
-    
-    @SuppressWarnings("unchecked")
-    public String getPropertyPrefix(Method method) {
-        for(Class annotationClass : annotationClasses) {
-            Annotation annotation = method.getAnnotation(annotationClass);
-            if(annotation != null) {
-                PropertyAnnotation ann = annotations.get(annotationClass);
-                return ann.getPropertyPrefix(annotation);
-            }
-        }
-        return "";
-    }
-    
+
     @SuppressWarnings("unchecked")
     public String getPropertyName(Field field) {
-        for(Class annotationClass : annotationClasses) {
+        for (Class annotationClass : annotationClasses) {
             Annotation annotation = field.getAnnotation(annotationClass);
-            if(annotation != null) {
+            if (annotation != null) {
                 PropertyAnnotation ann = annotations.get(annotationClass);
                 return ann.getPropertyName(annotation);
             }
         }
         return "";
     }
-    
+
     @SuppressWarnings("unchecked")
-    public String getPropertyPrefix(Field field) {
-        for(Class annotationClass : annotationClasses) {
-            Annotation annotation = field.getAnnotation(annotationClass);
-            if(annotation != null) {
+    public String getPropertyPrefix(Method method) {
+        for (Class annotationClass : annotationClasses) {
+            Annotation annotation = method.getAnnotation(annotationClass);
+            if (annotation != null) {
                 PropertyAnnotation ann = annotations.get(annotationClass);
                 return ann.getPropertyPrefix(annotation);
             }
@@ -77,12 +65,23 @@ public class PropertyAnnotations {
         return "";
     }
 
+    @SuppressWarnings("unchecked")
+    public String getPropertyPrefix(Field field) {
+        for (Class annotationClass : annotationClasses) {
+            Annotation annotation = field.getAnnotation(annotationClass);
+            if (annotation != null) {
+                PropertyAnnotation ann = annotations.get(annotationClass);
+                return ann.getPropertyPrefix(annotation);
+            }
+        }
+        return "";
+    }
 
     public void addPropertyAnnotation(PropertyAnnotation annotation) {
-        if(annotations.containsKey(annotation.getAnnotationClass()))
+        if (annotations.containsKey(annotation.getAnnotationClass())) {
             return;
+        }
         annotationClasses.add(annotation.getAnnotationClass());
         annotations.put(annotation.getAnnotationClass(), annotation);
     }
-    
 }

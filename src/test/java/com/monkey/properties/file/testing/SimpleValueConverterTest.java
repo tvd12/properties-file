@@ -99,7 +99,7 @@ public class SimpleValueConverterTest {
         }
     }
     
-    public static enum ExEnum {
+    public enum ExEnum {
         HELLO,
         WORLD
     }

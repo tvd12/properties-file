@@ -60,10 +60,10 @@ public class ExampleRoom {
     protected String password;
     
     @Setter @Getter
-    protected String groupdId;
+    protected String groupId;
     
-    public void setOwner(Object owner) {};
-    
+    public void setOwner(Object owner) {}
+
     public <T> T getOwner() {return null;}
     
     public void setActive(boolean value) {

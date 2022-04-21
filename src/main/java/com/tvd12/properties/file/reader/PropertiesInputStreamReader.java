@@ -18,8 +18,7 @@ public class PropertiesInputStreamReader implements InputStreamReader {
             ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
             try {
                 properties.load(stream);
-            }
-            finally {
+            } finally {
                 stream.close();
                 inputStream.close();
             }
@@ -28,5 +27,4 @@ public class PropertiesInputStreamReader implements InputStreamReader {
         }
         return properties;
     }
-    
 }
