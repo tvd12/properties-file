@@ -53,11 +53,11 @@ ApplicationConfig applicationConfigYaml = new PropertiesMapper()
 public class Config {
     @Property("n")
     private String name;
-        
-        @Property("a")
-        private int age;
-        
-        @Property("m")
+
+    @Property("a")
+    private int age;
+
+    @Property("m")
     private long money = 10;
 }
 ```

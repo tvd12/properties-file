@@ -6,47 +6,53 @@ import java.lang.reflect.Method;
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
 
 /**
- * 
  * Support for holding structure of java setter method.
- * 
- * @author tavandung12
  *
+ * @author tavandung12
  */
 public class SetterMethod extends MethodStruct {
-    
+
     public SetterMethod(PropertyAnnotations propertyAnnotations) {
         super(propertyAnnotations);
     }
 
     /**
-     * Get java setter method
+     * Get java setter method.
+     *
+     * @param method the method to get type
+     * @return the method type
      */
     @Override
     protected Class<?> getTypeFromMethod(Method method) {
         return method.getParameterTypes()[0];
     }
-    
+
     /**
-     * Get parameter type of java method
+     * Get parameter type of java method.
+     *
+     * @param descriptor the property's descriptor
+     * @return the method
      */
     @Override
     protected Method getMethod(PropertyDescriptor descriptor) {
         return descriptor.getWriteMethod();
     }
-    
+
     /**
-     * Invoke java method
-     * 
-     * @param obj the object the underlying method is invoked from
+     * Invoke java method.
+     *
+     * @param obj   the object the underlying method is invoked from
      * @param value value to set
      */
     public void invoke(Object obj, Object value) {
         try {
             method.invoke(obj, value);
         } catch (Exception e) {
-            throw new IllegalStateException("Can not call setter method " 
-                    + getMethodName()
-                    + " on class " + obj.getClass(), e);
+            throw new IllegalStateException("Can not call setter method "
+                + getMethodName()
+                + " on class " + obj.getClass(),
+                e
+            );
         }
     }
 }

@@ -9,13 +9,7 @@ public class LoggerTest {
     @Test
     public void test() {
         Logger.print("Hello World", new IllegalArgumentException("just test"));
-        Logger.setPrinter(new Logger.Printer() {
-            
-            @Override
-            public void print(String message, Throwable e) {
-                System.out.println("test:: " + message + " -> " + e);
-            }
-        });
+        Logger.setPrinter((message, e) -> System.out.println("test:: " + message + " -> " + e));
     }
     
 }

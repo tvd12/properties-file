@@ -308,22 +308,22 @@ public class PropertiesMapperTest {
         public final String value = "value";
     }
     
-    public static interface IClassD extends IIClassD {
+    public interface IClassD extends IIClassD {
         
         @Property(prefix = "datasource")
-        public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
+        void setDataSourceConfig(DataSourceConfig dataSourceConfig);
 
         @Property(prefix = "datasource")
-        public void setDataSourceProperties(Properties dataSourceProperties);
+        void setDataSourceProperties(Properties dataSourceProperties);
     }
     
-    public static interface IIClassD {
+    public interface IIClassD {
         
         @Property(prefix = "datasource")
-        public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
+        void setDataSourceConfig(DataSourceConfig dataSourceConfig);
 
         @Property(prefix = "datasource")
-        public void setDataSourceProperties(Properties dataSourceProperties);
+        void setDataSourceProperties(Properties dataSourceProperties);
     }
     
     public static class DataSourceConfig {
@@ -341,10 +341,10 @@ public class PropertiesMapperTest {
     @Getter
     public static class ServerConfig {
         public static String DEFAULT1 = "1";
-        private String host;
-        private int port;
-        private String adminName;
-        private String adminPassword;
+        private final String host;
+        private final int port;
+        private final String adminName;
+        private final String adminPassword;
         public static String DEFAULT2 = "2";
         
         public ServerConfig(

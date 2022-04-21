@@ -85,7 +85,7 @@ public class PropertiesMapper3Test {
         private String valueD;
     }
     
-    public static interface InterfaceE {
+    public interface InterfaceE {
         @Property
         void setWelcome(String who);
     }

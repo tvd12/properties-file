@@ -15,9 +15,9 @@ public class DatesTest extends BaseTest {
     @Test
     public void test1() {
         assertEquals(Dates.parseDate("2017-05-30", "yyyy-MM-dd"), 
-                LocalDate.of(2017, 05, 30));
+                LocalDate.of(2017, 5, 30));
         assertEquals(Dates.parseDateTime("2017-05-30T12:34:56:000"), 
-                LocalDateTime.of(2017, 05, 30, 12, 34, 56, 0));
+                LocalDateTime.of(2017, 5, 30, 12, 34, 56, 0));
     }
     
     @Test
