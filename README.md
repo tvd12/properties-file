@@ -58,7 +58,7 @@ public class Config {
     private int age;
 
     @Property("m")
-    private final long money = 10;
+    private long money = 10;
 }
 ```
 

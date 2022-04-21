@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Properties;
 
+import com.tvd12.test.reflect.ReflectMethodUtil;
 import org.testng.annotations.Test;
 
 import com.tvd12.properties.file.exception.PropertiesFileException;
@@ -127,6 +128,23 @@ public class YamlFileReaderTest {
         
         // then
         Asserts.assertEquals(YamlInvalidSyntaxException.class, e.getClass());
+    }
+
+    @Test
+    public void countStartedSpaceWithSpace() {
+        // given
+        String line = "\thello";
+        YamlFileReader sut = new YamlFileReader();
+
+        // when
+        int actual = (int) ReflectMethodUtil.invokeMethod(
+            "countStartedSpace",
+            sut,
+            line
+        );
+
+        // then
+        Asserts.assertEquals(actual, 4);
     }
     
     @Getter
