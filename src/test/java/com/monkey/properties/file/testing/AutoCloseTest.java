@@ -11,9 +11,9 @@ public class AutoCloseTest {
             System.out.println("I'm closed");
         }
     }
-    
+
     public static void main(String[] args) {
-        try(InternalClose close = new InternalClose()) {
+        try (InternalClose close = new InternalClose()) {
             System.out.println(close);
         } catch (IOException e) {
             e.printStackTrace();

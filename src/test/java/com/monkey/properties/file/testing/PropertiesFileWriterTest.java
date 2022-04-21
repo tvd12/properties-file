@@ -21,12 +21,11 @@ public class PropertiesFileWriterTest {
         properties.setProperty("hello", "word");
         new BaseFileWriter().write(properties, "hello.output_test");
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void writeToOuputStreamInvalidCase() throws PropertiesFileException, IOException {
         Properties properties = mock(Properties.class);
         doThrow(IOException.class).when(properties).store(any(OutputStream.class), any(String.class));
         new BaseFileWriter().write(properties);
     }
-    
 }

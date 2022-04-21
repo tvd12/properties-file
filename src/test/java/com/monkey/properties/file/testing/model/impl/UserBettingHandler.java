@@ -8,5 +8,4 @@ public class UserBettingHandler implements UserActionHandler {
     public void handle(long money) {
         System.out.println("User betted $" + money);
     }
-    
 }

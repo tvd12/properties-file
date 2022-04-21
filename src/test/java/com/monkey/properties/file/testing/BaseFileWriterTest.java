@@ -17,15 +17,16 @@ public class BaseFileWriterTest {
     public void test1() {
         String filePath1 = "BaseFileWriterTestFile1.txt";
         File file1 = new File(filePath1);
-        if(file1.exists())
+        if (file1.exists()) {
             file1.delete();
+        }
         Properties properties = new Properties();
         properties.setProperty("a", "1");
         properties.setProperty("b", "2");
         BaseFileWriter fileWriter = new BaseFileWriter();
         fileWriter.write(properties, file1);
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void test2() {
         String filePath1 = "BaseFileWriterTestFile2.txt";
@@ -37,21 +38,23 @@ public class BaseFileWriterTest {
                 throw new IOException();
             }
         };
-        if(file1.exists())
+        if (file1.exists()) {
             file1.delete();
+        }
         Properties properties = new Properties();
         properties.setProperty("a", "1");
         properties.setProperty("b", "2");
         BaseFileWriter fileWriter = new BaseFileWriter();
         fileWriter.write(properties, file1);
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void test3() {
         String filePath1 = "BaseFileWriterTestFile3.txt";
         final File file1 = new File(filePath1);
-        if(file1.exists())
+        if (file1.exists()) {
             file1.delete();
+        }
         Properties properties = new Properties();
         properties.setProperty("a", "1");
         properties.setProperty("b", "2");
@@ -68,13 +71,14 @@ public class BaseFileWriterTest {
         };
         fileWriter.write(properties, file1);
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void test4() {
         String filePath1 = "BaseFileWriterTestFile3.txt";
         final File file1 = new File(filePath1);
-        if(file1.exists())
+        if (file1.exists()) {
             file1.delete();
+        }
         Properties properties = new Properties();
         properties.setProperty("a", "1");
         properties.setProperty("b", "2");
@@ -91,5 +95,4 @@ public class BaseFileWriterTest {
         };
         fileWriter.write(properties, file1);
     }
-    
 }

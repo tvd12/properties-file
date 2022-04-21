@@ -22,7 +22,7 @@ public class PropertiesUtilTest extends BaseTest {
     public Class<?> getTestClass() {
         return PropertiesUtil.class;
     }
-    
+
     @Test
     public void getPropertiesByPrefixTest() {
         Properties properties = new Properties();
@@ -33,7 +33,7 @@ public class PropertiesUtilTest extends BaseTest {
         expected.put("username", "hello");
         assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), expected);
     }
-    
+
     @Test
     public void getPropertiesByEmptyPrefixTest() {
         Properties properties = new Properties();
@@ -41,7 +41,7 @@ public class PropertiesUtilTest extends BaseTest {
         properties.put("datasource.username", "hello");
         assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, ""), properties);
     }
-    
+
     @Test
     public void getFirstPropertyKeysWithFirstDotIndex0() {
         // given
@@ -51,15 +51,15 @@ public class PropertiesUtilTest extends BaseTest {
         properties.put("hello", "world");
         properties.put("hello.1", "world");
         properties.put("hello1.2", "world");
-        
+
         // when
         Set<String> actual = PropertiesUtil.getFirstPropertyKeys(properties);
-        
+
         // then
         Set<String> expected = new HashSet<>(Arrays.asList("", ".", "hello", "hello1"));
         assertEquals(actual, expected);
     }
-    
+
     @Test
     public void getFirstPropertyKeyListWithFirstDotIndex0() {
         // given
@@ -69,15 +69,15 @@ public class PropertiesUtilTest extends BaseTest {
         properties.put("hello", "world");
         properties.put("hello.1", "world");
         properties.put("hello1.2", "world");
-        
+
         // when
         List<String> actual = PropertiesUtil.getFirstPropertyKeyList(properties);
-        
+
         // then
         assertEquals(actual.size(), 4);
         assertTrue(actual.containsAll(Arrays.asList("", ".", "hello", "hello1")));
     }
-    
+
     @Test
     public void filterPropertiesByPrefixTest() {
         Properties properties = new Properties();
@@ -90,24 +90,24 @@ public class PropertiesUtilTest extends BaseTest {
         expected.put("datasource.username", "hello");
         assertEquals(PropertiesUtil.filterPropertiesByKeyPrefix(properties, "datasource"), expected);
     }
-    
+
     @Test
     public void setVariableTest() {
         // given
         Properties properties = new Properties();
         properties.put("datasource", "${hell.world}");
         properties.put("hell.world", "hello");
-        
+
         // when
         PropertiesUtil.setVariableValues(properties);
-        
+
         // then
         Properties expectation = new Properties();
         expectation.put("datasource", "hello");
         expectation.put("hell.world", "hello");
         Asserts.assertEquals(properties, expectation);
     }
-    
+
     @Test
     public void setVariableInValidTest() {
         // given
@@ -115,10 +115,10 @@ public class PropertiesUtilTest extends BaseTest {
         properties.put("datasource", "database: ${username}${password}${}} url ${not found}}");
         properties.put("username", "foo");
         properties.put("password", "bar");
-        
+
         // when
         PropertiesUtil.setVariableValues(properties);
-        
+
         // then
         Properties expectation = new Properties();
         expectation.put("datasource", "database: foobar${}} url ${not found}}");
@@ -126,7 +126,7 @@ public class PropertiesUtilTest extends BaseTest {
         expectation.put("password", "bar");
         Asserts.assertEquals(properties, expectation);
     }
-    
+
     @Test
     public void getKeysFromVariableNameTest() {
         Asserts.assertEmpty(PropertiesUtil.getKeysFromVariableName(""));

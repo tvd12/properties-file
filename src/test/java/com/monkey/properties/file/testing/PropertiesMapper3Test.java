@@ -29,7 +29,7 @@ public class PropertiesMapper3Test {
         assertEquals(obj.getValueA(), "a");
         assertEquals(obj.getValueB(), "b");
     }
-    
+
     @Test
     public void test2() {
         Properties properties = new Properties();
@@ -44,50 +44,49 @@ public class PropertiesMapper3Test {
         assertEquals(obj.getValueC(), "c");
         assertEquals(obj.getValueD(), "d");
     }
-    
+
     @Setter
     @Getter
     public static class ClassA {
         @Property
         private String valueA;
-        
+
         @Property
         public void setHello(String world) {
             System.out.println("hello world: " + world);
         }
     }
-    
+
     @Setter
     @Getter
-    public static class ClassB extends ClassA implements InterfaceE  {
+    public static class ClassB extends ClassA implements InterfaceE {
         @Property
         private String valueB;
-        
+
         @Override
         public void setWelcome(String who) {
             System.out.println("welcome: " + who);
         }
     }
-    
+
     @Setter
     @Getter
     public static class ClassC {
         private String valueC;
-        
+
         public void setHello(String world) {
             System.out.println("hello world: " + world);
         }
     }
-    
+
     @Setter
     @Getter
-    public static class ClassD extends ClassC{
+    public static class ClassD extends ClassC {
         private String valueD;
     }
-    
+
     public interface InterfaceE {
         @Property
         void setWelcome(String who);
     }
-    
 }

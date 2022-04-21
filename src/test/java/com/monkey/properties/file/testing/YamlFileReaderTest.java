@@ -38,7 +38,7 @@ public class YamlFileReaderTest {
         properties = reader.read("hello_yaml");
         assert properties.get("hello").equals("world");
     }
-    
+
     @Test
     public void readTabs() {
         BaseFileReader reader = new BaseFileReader();
@@ -53,20 +53,20 @@ public class YamlFileReaderTest {
         assert properties.get("hello").equals("world");
         assert properties.get("foo").equals("bar");
     }
-    
+
     @Test(expectedExceptions = YamlInvalidSyntaxException.class)
     public void testNoContainsSeparateChar() {
         YamlFileReader reader = new YamlFileReader();
         reader.readInputStream(InputStreamUtil.getInputStream(
-                getClass().getClassLoader(), "invalid_yaml1.txt"));
+            getClass().getClassLoader(), "invalid_yaml1.txt"));
     }
-    
+
     @Test(expectedExceptions = YamlInvalidSyntaxException.class)
     public void testEmptyKey() {
         BaseFileReader reader = new BaseFileReader();
         reader.read("invalid_yaml2.txt");
     }
-    
+
     @Test(expectedExceptions = PropertiesFileException.class)
     public void testIOException() {
         YamlFileReader reader = new YamlFileReader() {
@@ -76,56 +76,56 @@ public class YamlFileReaderTest {
         };
         reader.readInputStream(InputStreamUtil.getInputStream(getClass().getClassLoader(), "application2_yaml.txt"));
     }
-    
+
     @Test
     public void testInvalidSpaces() {
         BaseFileReader reader = new BaseFileReader();
         Properties properties = reader.read("invalid_yaml3.txt");
         System.out.println("testInvalidSpaces: " + properties);
     }
-    
+
     @Test(expectedExceptions = YamlInvalidSyntaxException.class)
     public void testDashKey() {
         BaseFileReader reader = new BaseFileReader();
         reader.read("invalid_yaml4.txt");
     }
-    
+
     @Test(expectedExceptions = YamlInvalidSyntaxException.class)
     public void testInvalidKey() {
         BaseFileReader reader = new BaseFileReader();
         reader.read("invalid_yaml5.txt");
     }
-    
+
     @Test
     public void mapingMapTest() {
         ApplicationConfig config = new PropertiesMapper()
-                .file("application.yaml")
-                .map(ApplicationConfig.class);
+            .file("application.yaml")
+            .map(ApplicationConfig.class);
         Map<String, DataSourceConfig> dataSources = config.getDataSources();
         DataSourceConfig mainDataSource = dataSources.get("main");
         assert mainDataSource != null;
     }
-    
+
     @Test
     public void readInvalidYamlFileLastPropertyKeyIsNull() {
         // given
         BaseFileReader sut = new BaseFileReader();
-        
+
         // when
         Throwable e = Asserts.assertThrows(() -> sut.read("v112_application_invalid.yaml"));
-        
+
         // then
         Asserts.assertEquals(YamlInvalidSyntaxException.class, e.getClass());
     }
-    
+
     @Test
     public void readInvalidYamlFileLastSpaceCountEqualsLastSpaceCount() {
         // given
         BaseFileReader sut = new BaseFileReader();
-        
+
         // when
         Throwable e = Asserts.assertThrows(() -> sut.read("v112_application_invalid2.yaml"));
-        
+
         // then
         Asserts.assertEquals(YamlInvalidSyntaxException.class, e.getClass());
     }
@@ -146,13 +146,13 @@ public class YamlFileReaderTest {
         // then
         Asserts.assertEquals(actual, 4);
     }
-    
+
     @Getter
     @AllArgsConstructor
     public static class ApplicationConfig {
         private Map<String, DataSourceConfig> dataSources;
     }
-    
+
     @Getter
     @AllArgsConstructor
     public static class DataSourceConfig {

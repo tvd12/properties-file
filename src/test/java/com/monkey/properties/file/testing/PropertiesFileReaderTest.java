@@ -27,7 +27,7 @@ public class PropertiesFileReaderTest extends BaseTest {
         assertNotNull(new BaseFileReader().read("classes.properties"));
         assertNotNull(new BaseFileReader().read(getClass(), "classes.properties"));
     }
-    
+
     @Test
     public void testWithValidData1() throws PropertiesFileException {
         assertNotNull(new BaseFileReader().read("classes.properties", "classes.properties"));
@@ -37,33 +37,33 @@ public class PropertiesFileReaderTest extends BaseTest {
         list.add("classes.properties");
         assertNotNull(new BaseFileReader().read(getClass(), list));
     }
-    
+
     @Test
     public void testWithValidData2() throws PropertiesFileException {
         File file = new File(getClass()
-                .getClassLoader()
-                .getResource("classes.properties")
-                .getFile());
+            .getClassLoader()
+            .getResource("classes.properties")
+            .getFile());
         assertNotNull(new BaseFileReader().read(Lists.newArrayList(file, file)));
         assertNotNull(new BaseFileReader().read(Lists.newArrayList(file, file)));
     }
-    
+
     @Test
     public void testWithValidData3() throws PropertiesFileException {
         assertNotNull(new BaseFileReader().loadInputStreams(
-                Lists.newArrayList(getClass().getClassLoader().getResourceAsStream("classes.properties"))));
+            Lists.newArrayList(getClass().getClassLoader().getResourceAsStream("classes.properties"))));
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void testWithInvalidData() throws PropertiesFileException {
         new BaseFileReader().read(getClass(), "classes1.properties");
     }
-    
+
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void readFromInputStreamTest() throws PropertiesFileException {
         new BaseFileReader().read(getClass(), "/xyz/classes.properties");
     }
-    
+
     @SuppressWarnings("unchecked")
     @Test(expectedExceptions = {PropertiesFileException.class})
     public void loadInputStreamTest() throws PropertiesFileException, IOException {
@@ -71,32 +71,33 @@ public class PropertiesFileReaderTest extends BaseTest {
         when(stream.read()).thenThrow(IOException.class);
         new BaseFileReader().loadInputStream(stream);
     }
-    
+
     @Test
     public void getInputStreamByAbsolutePathTest() {
         Method method = MethodBuilder.create()
-                .clazz(InputStreamUtil.class)
-                .method("getInputStreamByAbsolutePath")
-                .argument(File.class)
-                .build();
+            .clazz(InputStreamUtil.class)
+            .method("getInputStreamByAbsolutePath")
+            .argument(File.class)
+            .build();
         ReflectMethodUtil.invokeMethod(
-                method,
-                new BaseFileReader(),
-                new File(getClass().getResource("/invalid.properties").getFile()));
-        
+            method,
+            new BaseFileReader(),
+            new File(getClass().getResource("/invalid.properties").getFile()));
+
         ReflectMethodUtil.invokeMethod(
-                method, 
-                new BaseFileReader(),
-                new ExFile("abc"));
+            method,
+            new BaseFileReader(),
+            new ExFile("abc"));
     }
-    
+
     @Override
     public Class<?> getTestClass() {
         return BaseFileReader.class;
     }
-    
+
     public static class ExFile extends File {
         private static final long serialVersionUID = 1L;
+
         public ExFile(String pathname) {
             super(pathname);
         }
@@ -105,7 +106,5 @@ public class PropertiesFileReaderTest extends BaseTest {
         public boolean exists() {
             return true;
         }
-        
     }
-    
 }

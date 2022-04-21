@@ -11,10 +11,9 @@ public class StringConveterTest extends BaseTest {
     public void stringToCharFailed() {
         StringConverter.stringToChar("");
     }
-    
+
     @Override
     public Class<?> getTestClass() {
         return StringConverter.class;
     }
-    
 }

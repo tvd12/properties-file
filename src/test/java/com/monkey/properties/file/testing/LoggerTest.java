@@ -11,5 +11,4 @@ public class LoggerTest {
         Logger.print("Hello World", new IllegalArgumentException("just test"));
         Logger.setPrinter((message, e) -> System.out.println("test:: " + message + " -> " + e));
     }
-    
 }

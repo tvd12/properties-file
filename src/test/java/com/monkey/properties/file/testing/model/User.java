@@ -1,5 +1,3 @@
 package com.monkey.properties.file.testing.model;
 
-public interface User {
-
-}
+public interface User {}

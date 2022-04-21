@@ -27,21 +27,21 @@ public class MultiFileReaderTest {
         assert properties.get("hello").equals("world");
         assert properties.get("foo").equals("bar");
     }
-    
+
     @Test
     public void readEmptyProfiles() {
         FileReader reader = new MultiFileReader("alpha,");
         Properties properties = reader.read("application1.properties");
         Asserts.assertNull(properties.get("include.profiles"));
     }
-    
+
     @Test
     public void readNoProfiles() {
         FileReader reader = new MultiFileReader();
         Properties properties = reader.read("application1.properties");
         Asserts.assertNull(properties.get("include.profiles"));
     }
-    
+
     @Test
     public void readSystemFiles() {
         FileReader reader = new MultiFileReader(Arrays.asList("alpha", ""));
@@ -57,5 +57,4 @@ public class MultiFileReaderTest {
         assert properties.get("hello").equals("world");
         assert properties.get("foo").equals("bar");
     }
-    
 }
