@@ -107,17 +107,18 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(File file) {
+        Properties properties = null;
         try (InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file)) {
             if (inputStream != null) {
-                return loadInputStreamOrThrows(
+                properties = loadInputStreamOrThrows(
                     inputStream,
                     FileUtil.getFileExtension(file.getPath())
                 );
             }
-        } catch (IOException e) {
+        } catch (IOException ignored) {
             // do nothing
         }
-        return new Properties();
+        return properties != null ? properties : new Properties();
     }
 
     /**

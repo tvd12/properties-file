@@ -1,11 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="PropertiesFile">
-
     <test name="All">
         <packages>
-            <package name="com.monkey.properties.file.testing"/>
+            <package name="com.tvd12.properties.file.testing"/>
         </packages>
     </test>
-    
 </suite>
