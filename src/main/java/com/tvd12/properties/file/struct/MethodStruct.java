@@ -22,57 +22,57 @@ import lombok.Getter;
 public abstract class MethodStruct {
 
     //type of return type of getter method or parameter of setter method
-	protected Class<?> type;
+    protected Class<?> type;
 
-	//java method
-	protected Method method;
-	
-	//java field to get setter or getter method
-	protected Field field;
-	
-	//key is value of @PropertyForTest annotation or field name or method name
-	protected String key;
-	
-	@Getter(AccessLevel.NONE)
-	protected final PropertyAnnotations propertyAnnotations;
-	
-	public MethodStruct(PropertyAnnotations propertyAnnotations) {
-		this.propertyAnnotations = propertyAnnotations;
-	}
-	
-	/**
-	 * Initialize with java method, get key and type from java method
-	 * 
-	 * @param meth the method of class
-	 */
-	public void initWithMethod(Method meth) {
-		this.method = meth;
-		this.key = getKey(method);
-		this.type = getTypeFromMethod(method);
-	}
-	
-	/**
-	 * Initialize with java field, get setter or getter from java field object,
-	 * get type and key from java field object
-	 * 
-	 * @param clazz which class contains field
-	 * @param field java field 
-	 */
-	public void initWithField(Class<?> clazz, Field field) {
-	    this.field = field;
-		this.type = field.getType();
-		this.key = getKey(field);
-		this.method = getMethodByField(clazz, field);
-	}
-	
-	/**
-	 * Get setter or getter method of java field
-	 * 
-	 * @param clazz which class contains field
-	 * @param field java field
-	 * @return a java method object
-	 */
-	private Method getMethodByField(Class<?> clazz, Field field) {
+    //java method
+    protected Method method;
+    
+    //java field to get setter or getter method
+    protected Field field;
+    
+    //key is value of @PropertyForTest annotation or field name or method name
+    protected String key;
+    
+    @Getter(AccessLevel.NONE)
+    protected final PropertyAnnotations propertyAnnotations;
+    
+    public MethodStruct(PropertyAnnotations propertyAnnotations) {
+        this.propertyAnnotations = propertyAnnotations;
+    }
+    
+    /**
+     * Initialize with java method, get key and type from java method
+     * 
+     * @param meth the method of class
+     */
+    public void initWithMethod(Method meth) {
+        this.method = meth;
+        this.key = getKey(method);
+        this.type = getTypeFromMethod(method);
+    }
+    
+    /**
+     * Initialize with java field, get setter or getter from java field object,
+     * get type and key from java field object
+     * 
+     * @param clazz which class contains field
+     * @param field java field 
+     */
+    public void initWithField(Class<?> clazz, Field field) {
+        this.field = field;
+        this.type = field.getType();
+        this.key = getKey(field);
+        this.method = getMethodByField(clazz, field);
+    }
+    
+    /**
+     * Get setter or getter method of java field
+     * 
+     * @param clazz which class contains field
+     * @param field java field
+     * @return a java method object
+     */
+    private Method getMethodByField(Class<?> clazz, Field field) {
         try {
             String name = (field.getName());
             name = (name.startsWith("is")) 
@@ -83,49 +83,49 @@ public abstract class MethodStruct {
             return null;
         }
     }
-	
-	/**
-	 * Get setter or getter method from PropertyDescriptor object
-	 * 
-	 * @param descriptor PropertyDescriptor object
-	 * @return a java method
-	 */
-	protected abstract Method getMethod(PropertyDescriptor descriptor);
-	
-	/**
-	 * Get return type or parameter type of method
-	 * 
-	 * @param method java method object to get type
-	 * @return a Class (type) object
-	 */
-	protected abstract Class<?> getTypeFromMethod(Method method);
-	
-	protected String getMethodName() {
-	    return method.getName();
-	}
-	
-	/**
-	 * Get key related to method.
-	 * If method annotated with @PropertyForTest annotation then return value of @PropertyForTest annotation.
-	 * If key still null then return field name related to method.
-	 * If key still null then return method name
-	 * 
-	 * @param method java method object
-	 * @return key as string
-	 */
-	private String getKey(Method method) {
-		String mname = propertyAnnotations.getPropertyName(method);
-		if(!mname.isEmpty())
-			return mname;
-		mname = method.getName();
-		if(mname.startsWith("set"))
-			mname = mname.substring(3);
-		if(mname.length() < 2)
-			return mname;
-		return mname.substring(0, 1).toLowerCase() + mname.substring(1);
-	}
-	
-	/**
+    
+    /**
+     * Get setter or getter method from PropertyDescriptor object
+     * 
+     * @param descriptor PropertyDescriptor object
+     * @return a java method
+     */
+    protected abstract Method getMethod(PropertyDescriptor descriptor);
+    
+    /**
+     * Get return type or parameter type of method
+     * 
+     * @param method java method object to get type
+     * @return a Class (type) object
+     */
+    protected abstract Class<?> getTypeFromMethod(Method method);
+    
+    protected String getMethodName() {
+        return method.getName();
+    }
+    
+    /**
+     * Get key related to method.
+     * If method annotated with @PropertyForTest annotation then return value of @PropertyForTest annotation.
+     * If key still null then return field name related to method.
+     * If key still null then return method name
+     * 
+     * @param method java method object
+     * @return key as string
+     */
+    private String getKey(Method method) {
+        String mname = propertyAnnotations.getPropertyName(method);
+        if(!mname.isEmpty())
+            return mname;
+        mname = method.getName();
+        if(mname.startsWith("set"))
+            mname = mname.substring(3);
+        if(mname.length() < 2)
+            return mname;
+        return mname.substring(0, 1).toLowerCase() + mname.substring(1);
+    }
+    
+    /**
      * Get key related to field.
      * If method annotated with @PropertyForTest annotation then return value of @PropertyForTest annotation.
      * If key still null then return field name
@@ -133,45 +133,45 @@ public abstract class MethodStruct {
      * @param field java field object
      * @return key as string
      */
-	private String getKey(Field field) {
-	    String mname = propertyAnnotations.getPropertyName(field);
+    private String getKey(Field field) {
+        String mname = propertyAnnotations.getPropertyName(field);
         if(!mname.isEmpty())
             return mname;
         return field.getName();
-	}
-	
-	private String getPropertyName() {
-		String propertyName = "";
-		if(field != null)
-			propertyName = propertyAnnotations.getPropertyName(field);
-		if(propertyName.isEmpty() && method != null)
-			propertyName = propertyAnnotations.getPropertyName(method);
-		return propertyName;
-	}
-	
-	public String getPropertyPrefix(boolean guess) {
-		String prefix = "";
-		String propertyName = getPropertyName();
-		if(propertyName.isEmpty()) {
-			if(field != null)
-				prefix = propertyAnnotations.getPropertyPrefix(field);
-			if(prefix.isEmpty() && method != null)
-				prefix = propertyAnnotations.getPropertyPrefix(method);
-			if(prefix.isEmpty() && guess)
-				prefix = guestPropertyPrefix();
-		}
-		return prefix;
-	}
-	
-	public String guestPropertyPrefix() {
-		String key = getKey();
-		return PropertiesUtil.getPropertyNameInDotCase(key);
-	}
-	
-	public Type getGenericType() {
-		if(field != null)
-			return field.getGenericType();
-		return method.getGenericParameterTypes()[0];
-	}
-	
+    }
+    
+    private String getPropertyName() {
+        String propertyName = "";
+        if(field != null)
+            propertyName = propertyAnnotations.getPropertyName(field);
+        if(propertyName.isEmpty() && method != null)
+            propertyName = propertyAnnotations.getPropertyName(method);
+        return propertyName;
+    }
+    
+    public String getPropertyPrefix(boolean guess) {
+        String prefix = "";
+        String propertyName = getPropertyName();
+        if(propertyName.isEmpty()) {
+            if(field != null)
+                prefix = propertyAnnotations.getPropertyPrefix(field);
+            if(prefix.isEmpty() && method != null)
+                prefix = propertyAnnotations.getPropertyPrefix(method);
+            if(prefix.isEmpty() && guess)
+                prefix = guestPropertyPrefix();
+        }
+        return prefix;
+    }
+    
+    public String guestPropertyPrefix() {
+        String key = getKey();
+        return PropertiesUtil.getPropertyNameInDotCase(key);
+    }
+    
+    public Type getGenericType() {
+        if(field != null)
+            return field.getGenericType();
+        return method.getGenericParameterTypes()[0];
+    }
+    
 }

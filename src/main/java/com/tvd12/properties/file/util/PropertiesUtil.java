@@ -60,18 +60,18 @@ public class PropertiesUtil {
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static Properties getPropertiesByPrefix(Map properties, String prefix) {
-    	Properties answer = new Properties();
-    	if(prefix.isEmpty()) {
-    		answer.putAll(properties);
-    		return answer;
-    	}
+        Properties answer = new Properties();
+        if(prefix.isEmpty()) {
+            answer.putAll(properties);
+            return answer;
+        }
         for(Object key : properties.keySet()) {
-        	String keyString = key.toString();
+            String keyString = key.toString();
             if(keyString.startsWith(prefix)) {
-            	String newKey = "";
-            	if(keyString.length() > prefix.length() + 1)
-            		newKey = keyString.substring(prefix.length() + 1);
-            	answer.put(newKey, properties.get(key));
+                String newKey = "";
+                if(keyString.length() > prefix.length() + 1)
+                    newKey = keyString.substring(prefix.length() + 1);
+                answer.put(newKey, properties.get(key));
             }
         }
         return answer;
@@ -84,39 +84,39 @@ public class PropertiesUtil {
      * Example:
      * <pre>
      * properties(
-     * 	main_datasource.url=main
-     * 	main_datasource.username=main username
-     * 	main_datasource.password=main password
-     * 	test_datasource.url=test
-     * 	test_datasource.username=test username
-     * 	test_datasource.password=test password
+     *     main_datasource.url=main
+     *     main_datasource.username=main username
+     *     main_datasource.password=main password
+     *     test_datasource.url=test
+     *     test_datasource.username=test username
+     *     test_datasource.password=test password
      * )
      * </pre>
      * Will be splitted to:
      * <pre>
      * main_datasource: (
-     * 	url=main
-     * 	username=main username
-     * 	password=main password
+     *     url=main
+     *     username=main username
+     *     password=main password
      * )
      * 
      * test_datasource: (
-     * 	url=test
-     * 	username=test username
-     * 	password=test password
+     *     url=test
+     *     username=test username
+     *     password=test password
      * )
      * </pre> 
      * @param properties the input properties
      * @return the filtered properties
      */
     @SuppressWarnings("rawtypes")
-	public static Map<String, Properties> getPropertiesMap(Map properties) {
-    	Set<String> firstKeys = getFirstPropertyKeys(properties);
-    	Map<String, Properties> answer = new HashMap<>();
-    	for(String firstKey : firstKeys) {
-    		answer.put(firstKey, getPropertiesByPrefix(properties, firstKey));
-    	}
-    	return answer;
+    public static Map<String, Properties> getPropertiesMap(Map properties) {
+        Set<String> firstKeys = getFirstPropertyKeys(properties);
+        Map<String, Properties> answer = new HashMap<>();
+        for(String firstKey : firstKeys) {
+            answer.put(firstKey, getPropertiesByPrefix(properties, firstKey));
+        }
+        return answer;
     }
     
     
@@ -127,12 +127,12 @@ public class PropertiesUtil {
      * Example:
      * <pre>
      * properties(
-     * 	main_datasource.url=main
-     * 	main_datasource.username=main username
-     * 	main_datasource.password=main password
-     * 	test_datasource.url=test
-     * 	test_datasource.username=test username
-     * 	test_datasource.password=test password
+     *     main_datasource.url=main
+     *     main_datasource.username=main username
+     *     main_datasource.password=main password
+     *     test_datasource.url=test
+     *     test_datasource.username=test username
+     *     test_datasource.password=test password
      * )
      * </pre>
      * has first property keys are <code>main_datasource</code> and <code>test_datasource</code> 
@@ -141,8 +141,8 @@ public class PropertiesUtil {
      * @return the first key set
      */
     @SuppressWarnings("rawtypes")
-	public static Set<String> getFirstPropertyKeys(Map properties) {
-    	return new HashSet<>(getFirstPropertyKeyList(properties));
+    public static Set<String> getFirstPropertyKeys(Map properties) {
+        return new HashSet<>(getFirstPropertyKeyList(properties));
     }
     
     /**
@@ -194,15 +194,15 @@ public class PropertiesUtil {
      * @return contains or not
      */
     @SuppressWarnings("rawtypes")
-	public static boolean containsPrefix(Map properties, String prefix) {
-    	for(Object key : properties.keySet()) {
-        	String keyString = key.toString();
+    public static boolean containsPrefix(Map properties, String prefix) {
+        for(Object key : properties.keySet()) {
+            String keyString = key.toString();
             if(keyString.startsWith(prefix) && 
-            		keyString.length() > prefix.length()) {
-            	return true;
+                    keyString.length() > prefix.length()) {
+                return true;
             }
-    	}
-    	return false;
+        }
+        return false;
     }
     
     /**
@@ -211,16 +211,16 @@ public class PropertiesUtil {
      * @param properties the properties
      */
     public static void decorateProperties(Properties properties) {
-    	Map<String, Object> newKeyValues = new HashMap<>();
-    	for(Object key : properties.keySet()) {
-    		String newKey = key.toString()
-    				.toLowerCase()
-    				.replace('-', '.')
-    				.replace('_', '.');
-    		if(!properties.containsKey(newKey))
-    			newKeyValues.put(newKey, properties.get(key));
-    	}
-    	properties.putAll(newKeyValues);
+        Map<String, Object> newKeyValues = new HashMap<>();
+        for(Object key : properties.keySet()) {
+            String newKey = key.toString()
+                    .toLowerCase()
+                    .replace('-', '.')
+                    .replace('_', '.');
+            if(!properties.containsKey(newKey))
+                newKeyValues.put(newKey, properties.get(key));
+        }
+        properties.putAll(newKeyValues);
     }
     
     /**
@@ -232,15 +232,15 @@ public class PropertiesUtil {
      * @return the property name in dot case
      */
     public static String getPropertyNameInDotCase(String propertyName) {
-		StringBuilder builder = new StringBuilder();
-		for(int i = 0 ; i < propertyName.length() ; ++i) {
-			char ch = propertyName.charAt(i);
-			if(Character.isUpperCase(ch) && i > 0)
-				builder.append(".");
-			builder.append(Character.toLowerCase(ch));
-		}
-		return builder.toString();
-	}
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0 ; i < propertyName.length() ; ++i) {
+            char ch = propertyName.charAt(i);
+            if(Character.isUpperCase(ch) && i > 0)
+                builder.append(".");
+            builder.append(Character.toLowerCase(ch));
+        }
+        return builder.toString();
+    }
     
     /**
      * Get value from properties by key.
@@ -256,13 +256,13 @@ public class PropertiesUtil {
      * @return the value mapped to key
      */
     public static Object getValue(Properties properties, Object key) {
-		Object value = properties.get(key);
-		if(value == null) {
-			String keyInDotCase = getPropertyNameInDotCase(key.toString());
-			value = properties.get(keyInDotCase);
-		}
-		return value;
-	}
+        Object value = properties.get(key);
+        if(value == null) {
+            String keyInDotCase = getPropertyNameInDotCase(key.toString());
+            value = properties.get(keyInDotCase);
+        }
+        return value;
+    }
     
     /**
      * Get default value of type
@@ -271,23 +271,23 @@ public class PropertiesUtil {
      * @return the default value of the type
      */
     public static Object defaultValueOf(Class<?> type) {
-    	if(type == boolean.class)
-    		return false;
-    	if(type == byte.class)
-    		return (byte)0;
-    	if(type == char.class)
-    		return (char)0;
-    	if(type == double.class)
-    		return 0.0D;
-    	if(type == float.class)
-    		return 0.0F;
-    	if(type == int.class)
-    		return 0;
-    	if(type == long.class)
-    		return 0L;
-    	if(type == short.class)
-    		return (short)0;
-    	return null;
+        if(type == boolean.class)
+            return false;
+        if(type == byte.class)
+            return (byte)0;
+        if(type == char.class)
+            return (char)0;
+        if(type == double.class)
+            return 0.0D;
+        if(type == float.class)
+            return 0.0F;
+        if(type == int.class)
+            return 0;
+        if(type == long.class)
+            return 0L;
+        if(type == short.class)
+            return (short)0;
+        return null;
     }
     
     /**
@@ -298,8 +298,8 @@ public class PropertiesUtil {
      * @return the filtered properties
      */
     public static Properties filterPropertiesByKeyPrefix(
-    		Properties properties, String keyPrefix) {
-    	return filterProperties(properties, it -> it.startsWith(keyPrefix));
+            Properties properties, String keyPrefix) {
+        return filterProperties(properties, it -> it.startsWith(keyPrefix));
     }
     
     /**
@@ -310,13 +310,13 @@ public class PropertiesUtil {
      * @return the filtered properties
      */
     public static Properties filterProperties(
-    		Properties properties, Predicate<String> filter) {
-    	Properties answer = new Properties();
-    	for(Object key : properties.keySet()) {
-    		if(filter.test(key.toString()))
-    			answer.put(key, properties.get(key));
-    	}
-    	return answer;
+            Properties properties, Predicate<String> filter) {
+        Properties answer = new Properties();
+        for(Object key : properties.keySet()) {
+            if(filter.test(key.toString()))
+                answer.put(key, properties.get(key));
+        }
+        return answer;
     }
     
     /**
@@ -324,7 +324,7 @@ public class PropertiesUtil {
      * 
      * <pre>
      * {
-     * 	"hello": "world",
+     *     "hello": "world",
      *  "hi": "the ${hello}"
      * }
      * </pre>
@@ -341,14 +341,14 @@ public class PropertiesUtil {
      * @param properties the properties
      */
     public static void setVariableValues(Map<Object, Object> properties) {
-    	List<Object> keys = new ArrayList<>(properties.keySet());
-    	for(Object key : keys) {
-    		Object value = properties.get(key);
-    		if(value != null && value instanceof String) {
-    		    String valueString = ((String)value);
-    			Set<String> keyStrings = getKeysFromVariableName(valueString.trim());
-    			for (String keyString : keyStrings) {
-    			    Object variableValue = properties.get(keyString);
+        List<Object> keys = new ArrayList<>(properties.keySet());
+        for(Object key : keys) {
+            Object value = properties.get(key);
+            if(value != null && value instanceof String) {
+                String valueString = ((String)value);
+                Set<String> keyStrings = getKeysFromVariableName(valueString.trim());
+                for (String keyString : keyStrings) {
+                    Object variableValue = properties.get(keyString);
                     if (variableValue == null) {
                         variableValue = getSystemVariableValue(keyString);
                     }
@@ -358,10 +358,10 @@ public class PropertiesUtil {
                             variableValue.toString()
                         );
                     }
-    			}
-    			properties.put(key, valueString);
-    		}
-    	}
+                }
+                properties.put(key, valueString);
+            }
+        }
     }
     
     /**
@@ -373,12 +373,12 @@ public class PropertiesUtil {
      * @return the wrapped key in the variable name
      */
     public static String getKeyFromVariableName(String variableName) {
-    	if(variableName.startsWith("${") 
-    			&& variableName.endsWith("}")
-    			&& variableName.length() > 3) {
-    		return variableName.substring(2, variableName.length() - 1).trim();
-    	}
-    	return null;
+        if(variableName.startsWith("${") 
+                && variableName.endsWith("}")
+                && variableName.length() > 3) {
+            return variableName.substring(2, variableName.length() - 1).trim();
+        }
+        return null;
     }
     
     /**

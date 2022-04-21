@@ -13,7 +13,7 @@ This project support for interact with properties file
 
 ```java
 Properties properties = new BaseFileReader()
-	.read("application.properties");
+    .read("application.properties");
 ```
 
 **2. Read YAML file**
@@ -21,21 +21,21 @@ Properties properties = new BaseFileReader()
 
 ```java
 Properties yamlProperties = new BaseFileReader()
-	.read("application.yaml");
+    .read("application.yaml");
 ```
 
 **3. Read properties file with profiles**
 
 ```java
 Properties propertiesAlpha = new MultiFileReader("alpha")
-	.read("application.properties");
+    .read("application.properties");
 ```
 
 **4. Read YAML file with profiles**
 
 ```java
 Properties propertiesAlpha = new MultiFileReader("alpha")
-	.read("application.yaml");
+    .read("application.yaml");
 ```
 
 **5. Map properties or YAML file to POJO**
@@ -51,14 +51,14 @@ ApplicationConfig applicationConfigYaml = new PropertiesMapper()
 
 ```java
 public class Config {
-	@Property("n")
-	private String name;
-    	
-    	@Property("a")
-    	private int age;
-    	
-    	@Property("m")
-	private long money = 10;
+    @Property("n")
+    private String name;
+        
+        @Property("a")
+        private int age;
+        
+        @Property("m")
+    private long money = 10;
 }
 ```
 
@@ -84,9 +84,9 @@ Proprties and YAML are using in a lot of framework and application, so we want t
 
 ```xml
 <dependency>
-	<groupId>com.tvd12</groupId>
-	<artifactId>properties-file</artifactId>
-	<version>1.1.6</version>
+    <groupId>com.tvd12</groupId>
+    <artifactId>properties-file</artifactId>
+    <version>1.1.6</version>
 </dependency>
 ```
 # API Reference

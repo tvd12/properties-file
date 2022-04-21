@@ -5,6 +5,6 @@ import java.util.Properties;
 
 public interface InputStreamReader {
 
-	Properties readInputStream(InputStream inputStream);
-	
+    Properties readInputStream(InputStream inputStream);
+    
 }

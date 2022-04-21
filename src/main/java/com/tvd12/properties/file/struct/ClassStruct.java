@@ -23,47 +23,47 @@ import com.tvd12.properties.file.util.ReflectionClassUtil;
  *
  */
 public abstract class ClassStruct {
-	
+    
     //java class to parse
-	protected final Class<?> clazz;
-	
-	protected final MappingLevel mappingLevel;
-	
-	protected final MethodFilter methodFilter;
-	
-	//map of method structure and key
-	protected final Map<String, MethodStruct> methods;
-	
-	protected final List<MethodStruct> declaredFieldStructs;
-	
-	protected final PropertyAnnotations propertyAnnotations;
-	
-	/**
-	 * construct with java class
-	 * 
-	 * @param clazz java class
-	 * @param mappingLevel the mapping level
-	 * @param propertyAnnotations the properties annotation filter
-	 */
+    protected final Class<?> clazz;
+    
+    protected final MappingLevel mappingLevel;
+    
+    protected final MethodFilter methodFilter;
+    
+    //map of method structure and key
+    protected final Map<String, MethodStruct> methods;
+    
+    protected final List<MethodStruct> declaredFieldStructs;
+    
+    protected final PropertyAnnotations propertyAnnotations;
+    
+    /**
+     * construct with java class
+     * 
+     * @param clazz java class
+     * @param mappingLevel the mapping level
+     * @param propertyAnnotations the properties annotation filter
+     */
     public ClassStruct(
-    		Class<?> clazz, 
-    		MappingLevel mappingLevel, 
-    		PropertyAnnotations propertyAnnotations) {
-    	this.clazz = clazz;
-    	this.mappingLevel = mappingLevel;
-    	this.propertyAnnotations = propertyAnnotations;
-    	this.methods = new HashMap<>();
-    	this.declaredFieldStructs = new ArrayList<>();
-    	this.methodFilter = methodFilter();
-		this.initWithFields();
+            Class<?> clazz, 
+            MappingLevel mappingLevel, 
+            PropertyAnnotations propertyAnnotations) {
+        this.clazz = clazz;
+        this.mappingLevel = mappingLevel;
+        this.propertyAnnotations = propertyAnnotations;
+        this.methods = new HashMap<>();
+        this.declaredFieldStructs = new ArrayList<>();
+        this.methodFilter = methodFilter();
+        this.initWithFields();
         this.initWithMethods();
         this.initWithDeclaredFields();
     }
-	
-	
-	/**
-	 * get all annotated fields and get their reader or setter method
-	 */
+    
+    
+    /**
+     * get all annotated fields and get their reader or setter method
+     */
     private void initWithFields() {
         Set<Field> fields = getAcceptedFields();
         for(Field field : fields) {
@@ -86,8 +86,8 @@ public abstract class ClassStruct {
     private void initWithDeclaredFields() {
         Field[] fields = clazz.getDeclaredFields();
         for(Field field : fields) {
-        	if(!Modifier.isStatic(field.getModifiers()))
-        		declaredFieldStructs.add(initWithField(field));
+            if(!Modifier.isStatic(field.getModifiers()))
+                declaredFieldStructs.add(initWithField(field));
         }
     }
 
@@ -117,7 +117,7 @@ public abstract class ClassStruct {
     protected abstract boolean validateMethod(Method method);
     
     protected boolean containsKey(String key) {
-    	return methods.containsKey(key);
+        return methods.containsKey(key);
     }
     
     /**
@@ -141,7 +141,7 @@ public abstract class ClassStruct {
      * @return a method structure or null
      */
     protected MethodStruct getMethodStruct(String key) {
-    	return methods.get(key);
+        return methods.get(key);
     }
 
     /**
@@ -150,7 +150,7 @@ public abstract class ClassStruct {
      * @param method MethodStruct object to add
      */
     protected void addMethod(MethodStruct method) {
-    	methods.put(method.getKey(), method);
+        methods.put(method.getKey(), method);
     }
     
     /**
@@ -161,17 +161,17 @@ public abstract class ClassStruct {
      * @return set of java fields
      */
     protected Set<Field> getAcceptedFields() {
-		Set<Field> fields;
-	    if(mappingLevel == MappingLevel.ALL)
-	        fields = ReflectionClassUtil.getValidFields(clazz);
-	    else
-    		fields = ReflectionClassUtil.getFieldsWithAnnotations(
-    				clazz, 
-    				propertyAnnotations.getAnnotationClasses());
-	    return fields;
-	}
-	
-	/**
+        Set<Field> fields;
+        if(mappingLevel == MappingLevel.ALL)
+            fields = ReflectionClassUtil.getValidFields(clazz);
+        else
+            fields = ReflectionClassUtil.getFieldsWithAnnotations(
+                    clazz, 
+                    propertyAnnotations.getAnnotationClasses());
+        return fields;
+    }
+    
+    /**
      * If mappingLevel == MappingLevel.ALL then return all methods in class.
      * If mappingLevel == MappingLevel.ANNOTATION any fields and methods annotated with
      * PropertyForTest annotation then return annotated methods 
@@ -179,50 +179,50 @@ public abstract class ClassStruct {
      * @return set of java methods
      */
     protected Set<Method> getAcceptedMethods() {
-		Set<Method> methods;
-		if(mappingLevel == MappingLevel.ALL)
-    		methods = ReflectionClassUtil.getPublicMethods(clazz);
-	    else
-    		methods = ReflectionClassUtil.getMethodsWithAnnotations(
-    				clazz, 
-    				propertyAnnotations.getAnnotationClasses());
-	    return methods;
-	}
-	
-	/**
-	 * 
-	 * @return set of keys
-	 */
-	public Set<String> keySet() {
-	    return methods.keySet();
-	}
-	
-	/**
-	 * 
-	 * @return number of methods
-	 */
-	public int methodCount() {
-	    return methods.size();
-	}
-	
-	/**
-	 * @return a filter object to filter invalid method
-	 */
-	protected MethodFilter methodFilter() {
-	    return method -> validateMethod(method) && !containsMethod(method);
-	}
-	
-	@SuppressWarnings("rawtypes")
-	public Constructor getNoArgsDeclaredConstructor() {
-		return ReflectionClassUtil.getNoArgsDeclaredConstructor(clazz);
-	}
-	
-	public Constructor<?> getMaxArgsDeclaredConstructor() {
-		return ReflectionClassUtil.getMaxArgsDeclaredConstructor(clazz);
-	}
-	
-	public Object newObjectInstance() {
-		return ReflectionClassUtil.newInstance(clazz);
-	}
+        Set<Method> methods;
+        if(mappingLevel == MappingLevel.ALL)
+            methods = ReflectionClassUtil.getPublicMethods(clazz);
+        else
+            methods = ReflectionClassUtil.getMethodsWithAnnotations(
+                    clazz, 
+                    propertyAnnotations.getAnnotationClasses());
+        return methods;
+    }
+    
+    /**
+     * 
+     * @return set of keys
+     */
+    public Set<String> keySet() {
+        return methods.keySet();
+    }
+    
+    /**
+     * 
+     * @return number of methods
+     */
+    public int methodCount() {
+        return methods.size();
+    }
+    
+    /**
+     * @return a filter object to filter invalid method
+     */
+    protected MethodFilter methodFilter() {
+        return method -> validateMethod(method) && !containsMethod(method);
+    }
+    
+    @SuppressWarnings("rawtypes")
+    public Constructor getNoArgsDeclaredConstructor() {
+        return ReflectionClassUtil.getNoArgsDeclaredConstructor(clazz);
+    }
+    
+    public Constructor<?> getMaxArgsDeclaredConstructor() {
+        return ReflectionClassUtil.getMaxArgsDeclaredConstructor(clazz);
+    }
+    
+    public Object newObjectInstance() {
+        return ReflectionClassUtil.newInstance(clazz);
+    }
 
 }

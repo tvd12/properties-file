@@ -21,7 +21,7 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(Class<?> context, String filePath) {
-    	return read(context.getClassLoader(), filePath);
+        return read(context.getClassLoader(), filePath);
     }
     
     /**
@@ -34,8 +34,8 @@ public interface FileReader {
     default Properties read(ClassLoader classLoader, String filePath) {
         try (InputStream inputStream = InputStreamUtil.getInputStream(classLoader, filePath)) {
             return loadInputStreamOrThrows(
-            		inputStream, 
-            		FileUtil.getFileExtension(filePath)
+                    inputStream, 
+                    FileUtil.getFileExtension(filePath)
             );
         } catch (IOException e) {
             return new Properties();
@@ -50,7 +50,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(Class<?> context, String... filePaths) {
-    	return read(context.getClassLoader(), filePaths);
+        return read(context.getClassLoader(), filePaths);
     }
     
     /**
@@ -61,8 +61,8 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(ClassLoader classLoader, String... filePaths) {
-    	List<Properties> result = new ArrayList<>();
-    	for(String file : filePaths)
+        List<Properties> result = new ArrayList<>();
+        for(String file : filePaths)
             result.add(read(classLoader, file));
         return result;
     }
@@ -75,7 +75,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(Class<?> context, Collection<String> filePaths) {
-    	return read(context.getClassLoader(), filePaths);
+        return read(context.getClassLoader(), filePaths);
     }
     
     /**
@@ -86,7 +86,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(ClassLoader classLoader, Collection<String> filePaths) {
-    	return read(classLoader, filePaths.toArray(new String[filePaths.size()]));
+        return read(classLoader, filePaths.toArray(new String[filePaths.size()]));
     }
     
     /**
@@ -96,7 +96,7 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(String filePath) {
-    	return read(InputStreamUtil.getDefaultClassLoader(), filePath);
+        return read(InputStreamUtil.getDefaultClassLoader(), filePath);
     }
     
     /**
@@ -106,7 +106,7 @@ public interface FileReader {
      * @return array of properties object
      */
     default List<Properties> read(String... filePaths) {
-    	return read(InputStreamUtil.getDefaultClassLoader(), filePaths);
+        return read(InputStreamUtil.getDefaultClassLoader(), filePaths);
     }
 
     /**
@@ -116,7 +116,7 @@ public interface FileReader {
      * @return properties the properties
      */
     default Properties loadInputStream(InputStream inputStream) {
-    	return loadInputStream(inputStream, null);
+        return loadInputStream(inputStream, null);
     }
     
     /**
@@ -147,7 +147,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> loadInputStreams(InputStream... inputStreams) {
-    	List<Properties> result = new ArrayList<>();
+        List<Properties> result = new ArrayList<>();
         for(InputStream inputStream : inputStreams)
             result.add(loadInputStream(inputStream));
         return result;
@@ -160,7 +160,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> loadInputStreams(Collection<InputStream> inputStreams) {
-    	return loadInputStreams(inputStreams.toArray(new InputStream[inputStreams.size()]));
+        return loadInputStreams(inputStreams.toArray(new InputStream[inputStreams.size()]));
     }
     
     /**
@@ -170,18 +170,18 @@ public interface FileReader {
      * @return properties object
      */
     default Properties read(File file) {
-    	try(InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file)) {
+        try(InputStream inputStream = InputStreamUtil.getInputStreamByAbsolutePath(file)) {
             if(inputStream != null) {
                 return loadInputStreamOrThrows(
                     inputStream,
                     FileUtil.getFileExtension(file.getPath())
                 );
             }
-    	}
-    	catch (IOException e) {
-    	    // do nothing
         }
-    	return new Properties();
+        catch (IOException e) {
+            // do nothing
+        }
+        return new Properties();
     }
     
     /**
@@ -191,7 +191,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(File... files) {
-    	List<Properties> result = new ArrayList<>();
+        List<Properties> result = new ArrayList<>();
         for(File file : files)
             result.add(read(file));
         return result;
@@ -204,7 +204,7 @@ public interface FileReader {
      * @return list of properties object
      */
     default List<Properties> read(Collection<File> files) {
-    	return read(files.toArray(new File[files.size()]));
+        return read(files.toArray(new File[files.size()]));
     }
 
 }

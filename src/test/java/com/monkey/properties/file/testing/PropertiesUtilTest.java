@@ -25,39 +25,39 @@ public class PropertiesUtilTest extends BaseTest {
     
     @Test
     public void getPropertiesByPrefixTest() {
-    	Properties properties = new Properties();
-    	properties.put("datasource", "database");
-    	properties.put("datasource.username", "hello");
-    	Properties expected = new Properties();
-    	expected.put("", "database");
-    	expected.put("username", "hello");
-    	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), expected);
+        Properties properties = new Properties();
+        properties.put("datasource", "database");
+        properties.put("datasource.username", "hello");
+        Properties expected = new Properties();
+        expected.put("", "database");
+        expected.put("username", "hello");
+        assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, "datasource"), expected);
     }
     
     @Test
     public void getPropertiesByEmptyPrefixTest() {
-    	Properties properties = new Properties();
-    	properties.put("datasource", "database");
-    	properties.put("datasource.username", "hello");
-    	assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, ""), properties);
+        Properties properties = new Properties();
+        properties.put("datasource", "database");
+        properties.put("datasource.username", "hello");
+        assertEquals(PropertiesUtil.getPropertiesByPrefix(properties, ""), properties);
     }
     
     @Test
     public void getFirstPropertyKeysWithFirstDotIndex0() {
-    	// given
-    	Properties properties = new Properties();
-    	properties.put("", "foo");
-    	properties.put(".", "database");
-    	properties.put("hello", "world");
-    	properties.put("hello.1", "world");
-    	properties.put("hello1.2", "world");
-    	
-    	// when
-    	Set<String> actual = PropertiesUtil.getFirstPropertyKeys(properties);
-    	
-    	// then
-    	Set<String> expected = new HashSet<>(Arrays.asList("", ".", "hello", "hello1"));
-    	assertEquals(actual, expected);
+        // given
+        Properties properties = new Properties();
+        properties.put("", "foo");
+        properties.put(".", "database");
+        properties.put("hello", "world");
+        properties.put("hello.1", "world");
+        properties.put("hello1.2", "world");
+        
+        // when
+        Set<String> actual = PropertiesUtil.getFirstPropertyKeys(properties);
+        
+        // then
+        Set<String> expected = new HashSet<>(Arrays.asList("", ".", "hello", "hello1"));
+        assertEquals(actual, expected);
     }
     
     @Test
@@ -80,15 +80,15 @@ public class PropertiesUtilTest extends BaseTest {
     
     @Test
     public void filterPropertiesByPrefixTest() {
-    	Properties properties = new Properties();
-    	properties.put("datasource", "database");
-    	properties.put("datasource.username", "hello");
-    	properties.put("cache.username", "hello");
-    	properties.put("cache.pass", "pass");
-    	Properties expected = new Properties();
-    	expected.put("datasource", "database");
-    	expected.put("datasource.username", "hello");
-    	assertEquals(PropertiesUtil.filterPropertiesByKeyPrefix(properties, "datasource"), expected);
+        Properties properties = new Properties();
+        properties.put("datasource", "database");
+        properties.put("datasource.username", "hello");
+        properties.put("cache.username", "hello");
+        properties.put("cache.pass", "pass");
+        Properties expected = new Properties();
+        expected.put("datasource", "database");
+        expected.put("datasource.username", "hello");
+        assertEquals(PropertiesUtil.filterPropertiesByKeyPrefix(properties, "datasource"), expected);
     }
     
     @Test

@@ -41,15 +41,15 @@ public class SetterMethodTest {
     
     @Test
     public void getKeyStartWithNotSet() throws Exception {
-    	// given
-    	SetterMethod method = new SetterMethod(new PropertyAnnotations());
-    	method.initWithMethod(ClassA.class.getDeclaredMethod("value", String.class));
-    	
-    	// when
-    	String key = method.getKey();
-    	
-    	// then
-    	assertEquals(key, "value");
+        // given
+        SetterMethod method = new SetterMethod(new PropertyAnnotations());
+        method.initWithMethod(ClassA.class.getDeclaredMethod("value", String.class));
+        
+        // when
+        String key = method.getKey();
+        
+        // then
+        assertEquals(key, "value");
     }
     
     @Data
@@ -61,7 +61,7 @@ public class SetterMethodTest {
         public void value(String value) {}
         
         public boolean isValid() {
-        	return true;
+            return true;
         }
     }
     

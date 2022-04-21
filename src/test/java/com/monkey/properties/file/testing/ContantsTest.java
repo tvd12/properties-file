@@ -5,9 +5,9 @@ import com.tvd12.test.base.BaseTest;
 
 public class ContantsTest extends BaseTest {
 
-	@Override
-	public Class<?> getTestClass() {
-		return Constants.class;
-	}
-	
+    @Override
+    public Class<?> getTestClass() {
+        return Constants.class;
+    }
+    
 }

@@ -12,33 +12,33 @@ import lombok.Data;
 
 public class ClassStructTest {
 
-	@Test
-	public void testContainsKey() {
-		ClassWrapperA wrapper = new ClassWrapperA(A.class);
-		assert wrapper.containsKey("value");
-		assert !wrapper.containsKey("abccc");
-		assertEquals(wrapper.keySet().size(), 1);
-		assertEquals(wrapper.methodCount(), 1);
-	}
-	
-	public static class ClassWrapperA extends ClassWrapper {
+    @Test
+    public void testContainsKey() {
+        ClassWrapperA wrapper = new ClassWrapperA(A.class);
+        assert wrapper.containsKey("value");
+        assert !wrapper.containsKey("abccc");
+        assertEquals(wrapper.keySet().size(), 1);
+        assertEquals(wrapper.methodCount(), 1);
+    }
+    
+    public static class ClassWrapperA extends ClassWrapper {
 
-		public ClassWrapperA(Class<?> clazz) {
-			super(clazz, MappingLevel.ALL, new PropertyAnnotations());
-		}
-		
-		@Override
-		public boolean containsKey(String key) {
-			return super.containsKey(key);
-		}
-		
-	}
-	
-	@Data
-	public static class A {
-		
-		public String value;
-		
-	}
-	
+        public ClassWrapperA(Class<?> clazz) {
+            super(clazz, MappingLevel.ALL, new PropertyAnnotations());
+        }
+        
+        @Override
+        public boolean containsKey(String key) {
+            return super.containsKey(key);
+        }
+        
+    }
+    
+    @Data
+    public static class A {
+        
+        public String value;
+        
+    }
+    
 }

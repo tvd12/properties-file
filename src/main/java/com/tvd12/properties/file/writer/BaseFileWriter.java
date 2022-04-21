@@ -44,10 +44,10 @@ public class BaseFileWriter implements FileWriter {
     @Override
     public void write(Properties properties, File file) {
         try(ByteArrayOutputStream out = write(properties)) {
-    		if(!file.exists())
-    			file.createNewFile();
-    		byte[] bytes = encode(out);
-    		writeBytes0(file, bytes);
+            if(!file.exists())
+                file.createNewFile();
+            byte[] bytes = encode(out);
+            writeBytes0(file, bytes);
         }
         catch(IOException e) {
             throw new PropertiesFileException("Can not write properties to file", e);
@@ -75,7 +75,7 @@ public class BaseFileWriter implements FileWriter {
      * @throws FileNotFoundException exception
      */
     protected FileOutputStream newFileOutputStream(File file) throws FileNotFoundException {
-    	return new FileOutputStream(file);
+        return new FileOutputStream(file);
     }
 
     /**

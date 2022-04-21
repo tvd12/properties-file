@@ -82,16 +82,16 @@ public class PropertiesMapperTest {
     
     @Test
     public void testMapPropertiesToBeanWithFields() {
-    	Properties properties = new Properties();
+        Properties properties = new Properties();
         properties.setProperty("name", "hello");
         properties.put("age", 24);
         properties.put("clazz", ClassC.class.getName());
         properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
         properties.put("datasource.username", "hello");
-		properties.put("datasource.password", "world");
-		properties.put("cors_config-detail.enable", true);
-		properties.put("cors_config-detail.host", "*");
-		properties.put("corsConfigDetailEnable", true);
+        properties.put("datasource.password", "world");
+        properties.put("cors_config-detail.enable", true);
+        properties.put("cors_config-detail.host", "*");
+        properties.put("corsConfigDetailEnable", true);
         
         ClassC object = new PropertiesMapper()
                 .data(PropertiesUtil.toMap(properties))
@@ -109,33 +109,33 @@ public class PropertiesMapperTest {
         assertEquals(object.dataSourceProperties, dataSourceProperties);
         System.out.println("dataSourceProperties: " + dataSourceProperties);
         
-		assert object.corsConfigDetail.enable;
-		assert object.corsConfigDetail.host.equals("*");
+        assert object.corsConfigDetail.enable;
+        assert object.corsConfigDetail.host.equals("*");
     }
     
     @Test
     public void testMapPropertiesToBeanWithAnntations() {
-    	Properties properties = new Properties();
+        Properties properties = new Properties();
         properties.setProperty("name", "hello");
         properties.put("value", "world");
         properties.put("age", 24);
         properties.put("clazz", ClassC.class.getName());
         properties.put("date", new SimpleDateFormat(Dates.getPattern()).format(new Date()));
         properties.put("datasource.username", "hello");
-		properties.put("datasource.password", "world");
-		properties.put("datasource.driver", "dahlia");
+        properties.put("datasource.password", "world");
+        properties.put("datasource.driver", "dahlia");
         
-		ClassD object = new PropertiesMapper()
+        ClassD object = new PropertiesMapper()
                 .data(PropertiesUtil.toMap(properties))
                 .mappingLevel(MappingLevel.ANNOTATION)
                 .addPropertyAnnotation(new PropertyAnnotation(
-                		PropertyForTest.class, 
-                		a -> ((PropertyForTest)a).value(), 
-                		a -> ((PropertyForTest)a).prefix()))
+                        PropertyForTest.class, 
+                        a -> ((PropertyForTest)a).value(), 
+                        a -> ((PropertyForTest)a).prefix()))
                 .addPropertyAnnotation(new PropertyAnnotation(
-                		PropertyForTest.class, 
-                		a -> ((PropertyForTest)a).value(), 
-                		a -> ((PropertyForTest)a).prefix()))
+                        PropertyForTest.class, 
+                        a -> ((PropertyForTest)a).value(), 
+                        a -> ((PropertyForTest)a).prefix()))
                 .map(ClassD.class);
         assertEquals(object.name, "hello");
         assertEquals(object.value, "value");
@@ -155,11 +155,11 @@ public class PropertiesMapperTest {
     
     @Test
     public void testWithNoClassCase() {
-    	Properties properties = new Properties();
-    	Object output = new PropertiesMapper()
-    		.data(properties)
-    		.map();
-    	assert properties == output;
+        Properties properties = new Properties();
+        Object output = new PropertiesMapper()
+            .data(properties)
+            .map();
+        assert properties == output;
     }
     
     @Test(expectedExceptions = {IllegalStateException.class})
@@ -191,54 +191,54 @@ public class PropertiesMapperTest {
     
     @Test
     public void mapByConstructorTest() {
-    	Properties properties = new Properties();
-    	properties.put("host", "0.0.0.0");
-    	properties.put("port", 3005);
-    	properties.put("admin.name", "Admin");
-    	properties.put("guest.name", "Guest");
-    	ServerConfig output = new PropertiesMapper()
-    		.data(properties)
-    		.map(ServerConfig.class);
-    	assert output.getHost().equals("0.0.0.0");
-    	assert output.getPort() == 3005;
-    	assert output.getAdminName().equals("Admin");
-    	assert output.getAdminPassword() == null;
+        Properties properties = new Properties();
+        properties.put("host", "0.0.0.0");
+        properties.put("port", 3005);
+        properties.put("admin.name", "Admin");
+        properties.put("guest.name", "Guest");
+        ServerConfig output = new PropertiesMapper()
+            .data(properties)
+            .map(ServerConfig.class);
+        assert output.getHost().equals("0.0.0.0");
+        assert output.getPort() == 3005;
+        assert output.getAdminName().equals("Admin");
+        assert output.getAdminPassword() == null;
     }
     
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void mapFailsDueToNoClassNoBean() {
-    	new PropertiesMapper()
-    		.map(null);
+        new PropertiesMapper()
+            .map(null);
     }
     
     @Test
     public void mapToMapValueWithNoGenericType() {
-    	// given
-    	Properties properties = new Properties();
-    	properties.put("host", "0.0.0.0");
-    	
-    	// when
-    	Object actual = new PropertiesMapper()
-    			.data(properties)
-    			.map(Map.class, null);
-    	
-    	// then
-    	assertEquals(actual, properties);
+        // given
+        Properties properties = new Properties();
+        properties.put("host", "0.0.0.0");
+        
+        // when
+        Object actual = new PropertiesMapper()
+                .data(properties)
+                .map(Map.class, null);
+        
+        // then
+        assertEquals(actual, properties);
     }
     
     @Test
     public void mapToMapValueWithInvalidGenericType() {
-    	// given
-    	Properties properties = new Properties();
-    	properties.put("host", "0.0.0.0");
-    	
-    	// when
-    	Object actual = new PropertiesMapper()
-    			.data(properties)
-    			.map(Map.class, String.class);
-    	
-    	// then
-    	assertEquals(actual, properties);
+        // given
+        Properties properties = new Properties();
+        properties.put("host", "0.0.0.0");
+        
+        // when
+        Object actual = new PropertiesMapper()
+                .data(properties)
+                .map(Map.class, String.class);
+        
+        // then
+        assertEquals(actual, properties);
     }
     
     @Data
@@ -280,36 +280,36 @@ public class PropertiesMapperTest {
     }
     
     public static class ClassD extends ClassDBase implements IClassD {
-    	@Property
+        @Property
         protected long money = 10;
         
-    	@Property
+        @Property
         protected Date date;
         
-    	@Property
+        @Property
         protected Class<?> clazz;
         
-    	@Setter
+        @Setter
         protected DataSourceConfig dataSourceConfig;
         
-    	@Setter
+        @Setter
         protected Properties dataSourceProperties;
-    	
-    	@Property
-    	protected String datasourceDriver;
+        
+        @Property
+        protected String datasourceDriver;
     }
     
     public static class ClassDBase {
-    	@Property
+        @Property
         public String name;
-    	@Property
+        @Property
         public int age;
-    	@Property
-    	public final String value = "value";
+        @Property
+        public final String value = "value";
     }
     
     public static interface IClassD extends IIClassD {
-    	
+        
         @Property(prefix = "datasource")
         public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
 
@@ -318,7 +318,7 @@ public class PropertiesMapperTest {
     }
     
     public static interface IIClassD {
-    	
+        
         @Property(prefix = "datasource")
         public void setDataSourceConfig(DataSourceConfig dataSourceConfig);
 
@@ -326,49 +326,49 @@ public class PropertiesMapperTest {
         public void setDataSourceProperties(Properties dataSourceProperties);
     }
     
-	public static class DataSourceConfig {
-		protected String username;
-		protected String password;
-		@PropertyForTest("driver")
-		protected String driverClass;
-	}
-	
-	public static class Cors {
-		protected boolean enable;
-		protected String host;
-	}
-	
-	@Getter
-	public static class ServerConfig {
-		public static String DEFAULT1 = "1";
-		private String host;
-		private int port;
-		private String adminName;
-		private String adminPassword;
-		public static String DEFAULT2 = "2";
-		
-		public ServerConfig(
-			String host,
-			int port,
-			String adminName,
-			String adminPassword,
-			boolean booleanValue,
-			byte byteValue,
-			char charValue,
-			double doubleValue,
-			float floatValue,
-			int intValue,
-			long longValue,
-			short shortValue,
-			Boolean wrapperBooleanValue
-		) {
-			this.host = host;
-			this.port = port;
-			this.adminName = adminName;
-			this.adminPassword = adminPassword;
-		}
-		
-		private String admin;
-		private int guest;
-	}
+    public static class DataSourceConfig {
+        protected String username;
+        protected String password;
+        @PropertyForTest("driver")
+        protected String driverClass;
+    }
+    
+    public static class Cors {
+        protected boolean enable;
+        protected String host;
+    }
+    
+    @Getter
+    public static class ServerConfig {
+        public static String DEFAULT1 = "1";
+        private String host;
+        private int port;
+        private String adminName;
+        private String adminPassword;
+        public static String DEFAULT2 = "2";
+        
+        public ServerConfig(
+            String host,
+            int port,
+            String adminName,
+            String adminPassword,
+            boolean booleanValue,
+            byte byteValue,
+            char charValue,
+            double doubleValue,
+            float floatValue,
+            int intValue,
+            long longValue,
+            short shortValue,
+            Boolean wrapperBooleanValue
+        ) {
+            this.host = host;
+            this.port = port;
+            this.adminName = adminName;
+            this.adminPassword = adminPassword;
+        }
+        
+        private String admin;
+        private int guest;
+    }
 }

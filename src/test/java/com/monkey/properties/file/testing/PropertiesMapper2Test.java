@@ -72,37 +72,37 @@ public class PropertiesMapper2Test {
     
     @Data
     public static class ClassA {
-    	@Property("name")
+        @Property("name")
         private String name;
-    	
-    	@Property("age")
+        
+        @Property("age")
         private int age;
-    	
-    	@Property("money")
+        
+        @Property("money")
         private long money = 10;
         
-    	@Property("date")
+        @Property("date")
         private Date date;
         
-    	@Property("clazz")
+        @Property("clazz")
         private Class<?> clazz;
-    	
-    	@Property("x")
-    	private String string;
-    	
-    	@Property("y")
-    	private String string2 = "st2";
-    	
-    	@Property("notExist")
-    	private String notExists;
-    	
-    	@Property("valid")
-    	private boolean valid;
-    	
-    	@Property
-    	public void setA(String a) {
-    		
-    	}
+        
+        @Property("x")
+        private String string;
+        
+        @Property("y")
+        private String string2 = "st2";
+        
+        @Property("notExist")
+        private String notExists;
+        
+        @Property("valid")
+        private boolean valid;
+        
+        @Property
+        public void setA(String a) {
+            
+        }
     }
     
     public static class ClassB {

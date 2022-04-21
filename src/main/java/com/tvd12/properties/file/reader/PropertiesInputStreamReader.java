@@ -10,23 +10,23 @@ import com.tvd12.properties.file.util.InputStreamUtil;
 
 public class PropertiesInputStreamReader implements InputStreamReader {
 
-	@Override
-	public Properties readInputStream(InputStream inputStream) {
-		Properties properties = new Properties();
-	    try {
-	    	byte[] contentBytes = InputStreamUtil.toByteArray(inputStream);
-	    	ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
-			try {
-				properties.load(stream);
-			}
-			finally {
-				stream.close();
-				inputStream.close();
-			}
-	    } catch (IOException e) {
+    @Override
+    public Properties readInputStream(InputStream inputStream) {
+        Properties properties = new Properties();
+        try {
+            byte[] contentBytes = InputStreamUtil.toByteArray(inputStream);
+            ByteArrayInputStream stream = new ByteArrayInputStream(contentBytes);
+            try {
+                properties.load(stream);
+            }
+            finally {
+                stream.close();
+                inputStream.close();
+            }
+        } catch (IOException e) {
             throw new PropertiesFileException("Can not read properties file", e);
         }
-	    return properties;
-	}
-	
+        return properties;
+    }
+    
 }
