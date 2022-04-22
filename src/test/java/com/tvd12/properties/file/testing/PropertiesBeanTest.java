@@ -53,6 +53,30 @@ public class PropertiesBeanTest {
         mapping.put("date", "abc");
     }
 
+    @Test
+    public void bindFromEnv() {
+        // given
+        PropertiesBean mapping = new PropertiesBean(ClassC.class);
+
+        // when
+        mapping.putAll(new Properties());
+
+        // then
+        System.out.println("ObjectC: " + mapping.getObject());
+    }
+
+    public static class ClassC {
+        @Property("PATH")
+        public String path;
+
+        @Override
+        public String toString() {
+            return "ClassC{" +
+                "path='" + path + '\'' +
+                '}';
+        }
+    }
+
     @Data
     public static class ClassA {
         public String value;

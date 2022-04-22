@@ -8,13 +8,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static com.tvd12.properties.file.constant.Constants.*;
+
 public class AesDecrypter {
 
     private static final AesDecrypter INSTANCE = new AesDecrypter();
-    private static final String ENCRYPTION_PREFIX = "ENC(";
-    private static final String ENCRYPTION_SUFFIX = ")";
-    private static final int MIN_ENCRYPTED_MESSAGE_LENGTH =
-        ENCRYPTION_PREFIX.length() + ENCRYPTION_SUFFIX.length();
 
     private AesDecrypter() {}
 
@@ -34,21 +32,20 @@ public class AesDecrypter {
                 ENCRYPTION_PREFIX.length(),
                 message.length() - ENCRYPTION_SUFFIX.length()
             );
-            return decrypt(encryptedMessage, key.getBytes());
+            try {
+                return decrypt(encryptedMessage, key.getBytes());
+            } catch (Exception e) {
+                Logger.print("decrypt message: " + message + " failed", e);
+            }
         }
         return message;
     }
 
-    private String decrypt(String message, byte[] key) {
-        try {
-            byte[] bytes = Base64.getDecoder().decode(
-                message.getBytes(StandardCharsets.UTF_8)
-            );
-            return new String(decrypt(bytes, key), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            Logger.print("decrypt message: " + message + " failed", e);
-            return message;
-        }
+    private String decrypt(String message, byte[] key) throws Exception {
+        byte[] bytes = Base64.getDecoder().decode(
+            message.getBytes(StandardCharsets.UTF_8)
+        );
+        return new String(decrypt(bytes, key), StandardCharsets.UTF_8);
     }
 
     private byte[] decrypt(byte[] message, byte[] key) throws Exception {
