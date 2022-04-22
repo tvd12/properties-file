@@ -1,5 +1,6 @@
 package com.tvd12.properties.file.testing;
 
+import static com.tvd12.properties.file.constant.Constants.PROPERTIES_KEY_DECRYPTION_KEY;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import com.tvd12.test.util.RandomUtil;
 import org.testng.annotations.Test;
 import org.testng.collections.Sets;
 
@@ -141,5 +143,88 @@ public class PropertiesUtilTest extends BaseTest {
             PropertiesUtil.getKeysFromVariableName("${a}, ${b}, ${c}"),
             Sets.newHashSet("a", "b", "c")
         );
+    }
+
+    @Test
+    public void getValueFromSystemProperty() {
+        // given
+        String key = RandomUtil.randomShortAlphabetString();
+        String value = RandomUtil.randomShortAlphabetString();
+        System.setProperty(key, value);
+
+        Properties properties = new Properties();
+
+        // when
+        Object actual = PropertiesUtil.getValue(properties, key);
+
+        // then
+        Asserts.assertEquals(actual, value);
+    }
+
+    @Test
+    public void getValueFromSystemEnv() {
+        // given
+        Properties properties = new Properties();
+
+        // when
+        Object actual = PropertiesUtil.getValue(properties, "PATH");
+
+        // then
+        System.out.println(actual);
+    }
+
+    @Test
+    public void getSystemVariableValueFromSystemProperty() {
+        // given
+        String key = RandomUtil.randomShortAlphabetString();
+        String value = RandomUtil.randomShortAlphabetString();
+        System.setProperty(key, value);
+
+        // when
+        Object actual = PropertiesUtil.getSystemVariableValue(key);
+
+        // then
+        Asserts.assertEquals(actual, value);
+    }
+
+    @Test
+    public void getSystemVariableValueSystemEnv() {
+        // given
+        // when
+        Object actual = PropertiesUtil.getSystemVariableValue("PATH");
+
+        // then
+        System.out.println(actual);
+    }
+
+    @Test
+    public void decryptedAndSetVariableValues() {
+        // given
+        Properties properties = new Properties();
+
+        String key1 = RandomUtil.randomShortAlphabetString();
+        int value1 = RandomUtil.randomInt();
+        properties.put(key1, value1);
+
+        String key2 = RandomUtil.randomShortAlphabetString();
+        String value2 = RandomUtil.randomShortAlphabetString();
+
+        String encryptionKey = AesEncrypter.getInstance()
+            .randomKey();
+        System.setProperty(PROPERTIES_KEY_DECRYPTION_KEY, encryptionKey);
+
+        String encryptedValue2 = AesEncrypter.getInstance()
+            .encryptAndWrap(value2, encryptionKey);
+        properties.put(key2, encryptedValue2);
+
+        // when
+        PropertiesUtil.setVariableValues(properties);
+
+        // then
+        Properties expected = new Properties();
+        expected.put(key1, value1);
+        expected.put(key2, value2);
+
+        Asserts.assertEquals(properties, expected);
     }
 }

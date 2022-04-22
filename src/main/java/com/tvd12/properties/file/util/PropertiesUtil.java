@@ -1,14 +1,12 @@
 package com.tvd12.properties.file.util;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import com.tvd12.properties.file.encryption.AesDecrypter;
+
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
 import java.util.function.Predicate;
+
+import static com.tvd12.properties.file.constant.Constants.PROPERTIES_KEY_DECRYPTION_KEY;
 
 /**
  * Support to convert properties to map or map to properties.
@@ -250,11 +248,23 @@ public class PropertiesUtil {
      * @param key        the key
      * @return the value mapped to key
      */
-    public static Object getValue(Properties properties, Object key) {
+    public static Object getValue(Map<Object, Object> properties, Object key) {
         Object value = properties.get(key);
         if (value == null) {
             String keyInDotCase = getPropertyNameInDotCase(key.toString());
             value = properties.get(keyInDotCase);
+            if (value == null) {
+                value = System.getProperty(key.toString());
+                if (value == null) {
+                    value = System.getProperty(keyInDotCase);
+                }
+            }
+            if (value == null) {
+                value = System.getenv(key.toString());
+                if (value == null) {
+                    value = System.getenv(keyInDotCase);
+                }
+            }
         }
         return value;
     }
@@ -343,6 +353,28 @@ public class PropertiesUtil {
      * @param properties the properties
      */
     public static void setVariableValues(Map<Object, Object> properties) {
+        decryptPropertiesValues(properties);
+        doSetVariableValues(properties);
+    }
+
+    public static void decryptPropertiesValues(Map<Object, Object> properties) {
+        Object decryptionKey = getValue(properties, PROPERTIES_KEY_DECRYPTION_KEY);
+        if (decryptionKey == null) {
+            return;
+        }
+        String decryptionKeyString = decryptionKey.toString();
+        List<Object> keys = new ArrayList<>(properties.keySet());
+        for (Object key : keys) {
+            Object value = properties.get(key);
+            if (value instanceof String) {
+                String decryptedValue = AesDecrypter.getInstance()
+                    .decryptOrIgnore((String) value, decryptionKeyString);
+                properties.put(key, decryptedValue);
+            }
+        }
+    }
+
+    private static void doSetVariableValues(Map<Object, Object> properties) {
         List<Object> keys = new ArrayList<>(properties.keySet());
         for (Object key : keys) {
             Object value = properties.get(key);
@@ -428,6 +460,10 @@ public class PropertiesUtil {
      * @return the variable value
      */
     public static String getSystemVariableValue(String variableName) {
-        return System.getenv(variableName);
+        String value = System.getProperty(variableName);
+        if (value == null) {
+            value = System.getenv(variableName);
+        }
+        return value;
     }
 }

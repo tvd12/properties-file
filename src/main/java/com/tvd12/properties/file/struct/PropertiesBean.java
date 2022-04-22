@@ -1,13 +1,5 @@
 package com.tvd12.properties.file.struct;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Properties;
-
 import com.tvd12.properties.file.annotation.PropertyAnnotations;
 import com.tvd12.properties.file.io.DefaultValueConverter;
 import com.tvd12.properties.file.io.ValueConverter;
@@ -16,6 +8,10 @@ import com.tvd12.properties.file.mapping.PropertiesMapper;
 import com.tvd12.properties.file.util.Logger;
 import com.tvd12.properties.file.util.PropertiesUtil;
 import com.tvd12.properties.file.util.ReflectionClassUtil;
+
+import java.lang.reflect.*;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Holds structure of java bean class,
@@ -143,7 +139,9 @@ public class PropertiesBean {
 
     private Object transform(
         MethodStruct methodStruct,
-        Object value, Properties properties) {
+        Object value,
+        Properties properties
+    ) {
         boolean guessPrefix = properties != null && value == null;
         String prefix = methodStruct.getPropertyPrefix(guessPrefix);
         Class argumentType = getWriteArgumentType(methodStruct);
