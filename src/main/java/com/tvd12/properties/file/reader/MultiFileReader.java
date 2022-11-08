@@ -38,7 +38,8 @@ public class MultiFileReader extends BaseFileReader {
 
     private Properties read(
         ClassLoader classLoader,
-        String filePath, Set<String> passedFilePaths) {
+        String filePath, Set<String> passedFilePaths
+    ) {
         List<String> filePaths = new ArrayList<>();
         filePaths.add(filePath);
         for (String profile : includeProfiles) {
